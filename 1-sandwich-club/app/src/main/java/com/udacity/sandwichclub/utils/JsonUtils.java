@@ -24,10 +24,15 @@ public class JsonUtils {
         }
 
         String placeOfOrigin = reader.getString("placeOfOrigin");
+
         String description = reader.getString("description");
+
         String imgURL = reader.getString("image");
+
+
         JSONArray ingredientsJson = reader.getJSONArray("ingredients");
         ArrayList<String> ingredients = new ArrayList<>();
+
         if(!ingredientsJson.isNull(0)) {
             for(int i = 0; i < ingredientsJson.length(); i++) {
                 ingredients.add(ingredientsJson.getString(i));
