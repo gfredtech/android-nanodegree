@@ -73,5 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private void makePopularMoviesQuery() {
         URL popularMovies = NetworkUtils.buildPopularMoviesQuery();
         new MovieQueryTask().execute(popularMovies);
+        System.out.println(" function called");
     }
 }

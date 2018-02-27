@@ -29,6 +29,7 @@ public class JsonUtils {
 
     public static List<Movie> parseListMovies(String json) throws JSONException {
         JSONObject reader = new JSONObject(json);
+        System.out.println("json gotten");
         JSONArray moviesJson = reader.getJSONArray("results");
         List<Movie> movieList = new ArrayList<>();
         if(moviesJson.length() != 0) {
