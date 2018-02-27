@@ -34,12 +34,14 @@ public class NetworkUtils {
     }
 
     public static URL buildPopularMoviesQuery() {
+
         Uri builtUri = Uri.parse(MOVIE_URL).buildUpon()
                 .appendPath(PARAM_POPULAR)
                 .appendQueryParameter(PARAM_API, apiKey)
                 .build();
 
         URL url = null;
+        System.out.print(builtUri.toString());
         try {
             url = new URL(builtUri.toString());
         }catch (MalformedURLException e) {
@@ -50,14 +52,16 @@ public class NetworkUtils {
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+        System.out.println("response here");
         try {
             InputStream in = urlConnection.getInputStream();
-            Scanner scanner = new Scanner(in)
-                    .useDelimiter("\\A");
+            Scanner scanner = new Scanner(in);
             if(scanner.hasNext()) {
-                return scanner.next();
+                String result = scanner.next();
+                System.out.println(scanner.next());
+                return result;
             } else {
+                System.out.println("null gotten");
                 return null;
             }
         }
