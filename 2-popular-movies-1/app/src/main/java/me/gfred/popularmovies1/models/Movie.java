@@ -53,4 +53,12 @@ public class Movie {
    private double voteAverage;
    private String releaseDate;
 
+   public Movie(String originalTitle, String posterPath, String overview, double voteAverage, String releaseDate) {
+       this.originalTitle = originalTitle;
+       this.posterPath = posterPath;
+       this.overview = overview;
+       this.voteAverage = voteAverage;
+       this.releaseDate = releaseDate;
+   }
+
 }
