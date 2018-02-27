@@ -13,13 +13,14 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.gfred.popularmovies1.models.Movie;
 
 /**
  * Created by Gfred on 2/27/2018.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private Context mContext;
     private List<Movie> movies;
 
@@ -31,22 +32,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         view = inflater.inflate(R.layout.cardview_movie_poster, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-
+    public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
+
+        String image = "http://image.tmdb.org/t/p/w185/" + movies.get(position).getPosterPath();
         Picasso.with(mContext)
-                .load(movies.get(position).getPosterPath())
+                .load(image)
                 .into(holder.mMovieImage);
     }
+
 
 
     @Override
@@ -54,15 +56,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return movies.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.movie_title)
         TextView mMovieTitle;
         @BindView(R.id.movie_image)
         ImageView mMovieImage;
 
-        public ViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(itemView);
         }
     }
 }
