@@ -31,8 +31,10 @@ public class JsonUtils {
         JSONObject reader = new JSONObject(json);
         JSONArray moviesJson = reader.getJSONArray("results");
         List<Movie> movieList = new ArrayList<>();
-        for(int i = 0; i < 100; i++) {
-            movieList.add(parseMovie(moviesJson.getString(i)));
+        if(moviesJson.length() != 0) {
+            for (int i = 0; i < moviesJson.length(); i++) {
+                movieList.add(parseMovie(moviesJson.getString(i)));
+            }
         }
 
         return movieList;
