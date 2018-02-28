@@ -14,7 +14,6 @@ import me.gfred.popularmovies1.models.Movie;
  */
 
 public class JsonUtils {
-    final String API_KEY = " ";
 
     public static Movie parseMovie(String json) throws JSONException {
         JSONObject reader = new JSONObject(json);
@@ -27,14 +26,17 @@ public class JsonUtils {
         return new Movie(originalTitle, imgURL, overview, voteAverage, releaseDate);
     }
 
-    public static List<Movie> parseListMovies(String json) throws JSONException {
+    public static ArrayList<Movie> parseListMovies(String json) throws JSONException {
         JSONObject reader = new JSONObject(json);
         System.out.println("json gotten");
         JSONArray moviesJson = reader.getJSONArray("results");
-        List<Movie> movieList = new ArrayList<>();
+        ArrayList<Movie> movieList = new ArrayList<>();
         if(moviesJson.length() != 0) {
-            for (int i = 0; i < moviesJson.length(); i++) {
+            System.out.println("too raw");
+            for (int i = 0; i < 10; i++) {
                 movieList.add(parseMovie(moviesJson.getString(i)));
+                System.out.println(movieList.get(i).getOriginalTitle() + " "
+                        + movieList.get(i).getVoteAverage());
             }
         }
 
