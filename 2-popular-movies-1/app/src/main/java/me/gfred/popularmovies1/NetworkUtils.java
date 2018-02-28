@@ -1,9 +1,12 @@
 package me.gfred.popularmovies1;
 
 import android.net.Uri;
+import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,7 +44,6 @@ public class NetworkUtils {
                 .build();
 
         URL url = null;
-        System.out.print(builtUri.toString());
         try {
             url = new URL(builtUri.toString());
         }catch (MalformedURLException e) {
@@ -51,22 +53,52 @@ public class NetworkUtils {
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        System.out.println("response here");
+        HttpURLConnection urlConnection;
+        String server_response = null;
         try {
-            InputStream in = urlConnection.getInputStream();
-            Scanner scanner = new Scanner(in);
-            if(scanner.hasNext()) {
-                String result = scanner.next();
-                System.out.println(scanner.next());
-                return result;
-            } else {
-                System.out.println("null gotten");
-                return null;
+
+            urlConnection = (HttpURLConnection) url
+                    .openConnection();
+
+
+            int responseCode = urlConnection.getResponseCode();
+
+            if(responseCode == HttpURLConnection.HTTP_OK){
+                server_response = readStream(urlConnection.getInputStream());
+                Log.v("CatalogClient", server_response);
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return server_response;
+
+
+    }
+
+    private static String readStream(InputStream in) {
+        BufferedReader reader = null;
+        StringBuffer response = new StringBuffer();
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        finally {
-            urlConnection.disconnect();
-        }
+        return response.toString();
     }
 }

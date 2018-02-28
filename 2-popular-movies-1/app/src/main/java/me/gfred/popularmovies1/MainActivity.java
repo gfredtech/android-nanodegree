@@ -15,10 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.gfred.popularmovies1.models.Movie;
 
 public class MainActivity extends AppCompatActivity {
-    List<Movie> movies;
+    ArrayList<Movie> movies;
     String popularMoviesJson;
 
     @BindView(R.id.movie_recyclerview)
@@ -28,33 +29,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         makePopularMoviesQuery();
-        // Log.i("JSON", popularMoviesJson)
+
+        while (popularMoviesJson == null) {
+            // Do nothing
+        }
 
         try {
-
-                movies = JsonUtils.parseListMovies(popularMoviesJson);
+            movies = JsonUtils.parseListMovies(popularMoviesJson);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        System.out.println("ha!");
+        for(Movie i: movies) {
+            System.out.println(i.getOriginalTitle());
+        }
+
         RecyclerAdapter adapter = new RecyclerAdapter(this, movies);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
-
-
-
-
     }
 
     public class MovieQueryTask extends AsyncTask<URL, Void, String> {
         @Override
         protected String doInBackground(URL... urls) {
             URL url = urls[0];
+            System.out.println("URL be " + url.toString());
             String jsonResults = null;
             try {
                 jsonResults = NetworkUtils.getResponseFromHttpUrl(url);
+                Log.v("JSON", jsonResults);
+                popularMoviesJson = jsonResults;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -63,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            super.onPostExecute(s);
             if (s != null && !s.equals("")) {
-                    popularMoviesJson = s;
+
 
             }
         }
@@ -73,6 +82,6 @@ public class MainActivity extends AppCompatActivity {
     private void makePopularMoviesQuery() {
         URL popularMovies = NetworkUtils.buildPopularMoviesQuery();
         new MovieQueryTask().execute(popularMovies);
-        System.out.println(" function called");
+
     }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -22,10 +23,10 @@ import me.gfred.popularmovies1.models.Movie;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Movie> movies;
+    private ArrayList<Movie> movies;
 
 
-    public RecyclerAdapter(Context mContext, List<Movie> movies) {
+    public RecyclerAdapter(Context mContext, ArrayList<Movie> movies) {
         this.movies = movies;
         this.mContext = mContext;
     }
@@ -58,14 +59,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.movie_title)
+
         TextView mMovieTitle;
-        @BindView(R.id.movie_image)
+
         ImageView mMovieImage;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            mMovieTitle = (TextView) itemView.findViewById(R.id.movie_title);
+            mMovieImage = (ImageView) itemView.findViewById(R.id.movie_image);
+
         }
     }
 }
