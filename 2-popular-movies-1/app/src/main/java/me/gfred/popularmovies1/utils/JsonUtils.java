@@ -28,15 +28,14 @@ public class JsonUtils {
 
     public static ArrayList<Movie> parseListMovies(String json) throws JSONException {
         JSONObject reader = new JSONObject(json);
-        System.out.println("json gotten");
+
         JSONArray moviesJson = reader.getJSONArray("results");
         ArrayList<Movie> movieList = new ArrayList<>();
         if(moviesJson.length() != 0) {
-            System.out.println("too raw");
-            for (int i = 0; i < 10; i++) {
+
+            for (int i = 0; i < moviesJson.length(); i++) {
                 movieList.add(parseMovie(moviesJson.getString(i)));
-                System.out.println(movieList.get(i).getOriginalTitle() + " "
-                        + movieList.get(i).getVoteAverage());
+
             }
         }
 

@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1;
+package me.gfred.popularmovies1.models;
 
 import android.net.Uri;
 import android.util.Log;
@@ -46,6 +46,7 @@ public class NetworkUtils {
         URL url = null;
         try {
             url = new URL(builtUri.toString());
+            System.out.println(url.toString());
         }catch (MalformedURLException e) {
             e.printStackTrace();
         }
