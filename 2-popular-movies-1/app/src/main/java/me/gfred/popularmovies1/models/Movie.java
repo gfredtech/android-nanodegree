@@ -1,15 +1,19 @@
 
 package me.gfred.popularmovies1.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Movie {
+public class Movie implements Serializable {
 
     public String getOriginalTitle() {
         return originalTitle;
     }
+
+    public int getId() { return id; }
+    public void setId() { this.id = id; }
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
@@ -52,13 +56,15 @@ public class Movie {
    private String overview;
    private double voteAverage;
    private String releaseDate;
+   private int id;
 
-   public Movie(String originalTitle, String posterPath, String overview, double voteAverage, String releaseDate) {
+   public Movie(String originalTitle, String posterPath, String overview, double voteAverage, String releaseDate, int id) {
        this.originalTitle = originalTitle;
        this.posterPath = posterPath;
        this.overview = overview;
        this.voteAverage = voteAverage;
        this.releaseDate = releaseDate;
+       this.id = id;
    }
 
 }
