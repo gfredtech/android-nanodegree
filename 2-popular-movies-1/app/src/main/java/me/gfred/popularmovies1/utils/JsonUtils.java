@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1;
+package me.gfred.popularmovies1.utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +22,9 @@ public class JsonUtils {
         String overview = reader.getString("overview");
         Double voteAverage = reader.getDouble("vote_average");
         String releaseDate = reader.getString("release_date");
+        int id = reader.getInt("id");
 
-        return new Movie(originalTitle, imgURL, overview, voteAverage, releaseDate);
+        return new Movie(originalTitle, imgURL, overview, voteAverage, releaseDate, id);
     }
 
     public static ArrayList<Movie> parseListMovies(String json) throws JSONException {

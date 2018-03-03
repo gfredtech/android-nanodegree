@@ -11,10 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import me.gfred.popularmovies1.models.Movie;
 
 /**
@@ -22,13 +19,21 @@ import me.gfred.popularmovies1.models.Movie;
  */
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
+    static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
     private Context mContext;
     private ArrayList<Movie> movies;
 
+    final private MovieClickListener mclickListener;
 
-    public RecyclerAdapter(Context mContext, ArrayList<Movie> movies) {
+
+    public RecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
         this.movies = movies;
         this.mContext = mContext;
+        this.mclickListener = clickListener;
+    }
+
+    public interface MovieClickListener {
+        void onMovieClicked(Movie movie);
     }
 
 
@@ -44,10 +49,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
 
-        String image = "http://image.tmdb.org/t/p/w185/" + movies.get(position).getPosterPath();
+        String image = IMAGE_PARAM + movies.get(position).getPosterPath();
         Picasso.with(mContext)
                 .load(image)
                 .into(holder.mMovieImage);
+
+
+
     }
 
 
@@ -57,7 +65,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return movies.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
         TextView mMovieTitle;
@@ -66,9 +74,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            mMovieTitle = (TextView) itemView.findViewById(R.id.movie_title);
-            mMovieImage = (ImageView) itemView.findViewById(R.id.movie_image);
+            mMovieTitle = itemView.findViewById(R.id.movie_title);
+            mMovieImage = itemView.findViewById(R.id.movie_image);
+            itemView.setOnClickListener(this);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            Movie movie = movies.get(getAdapterPosition());
+
+            mclickListener.onMovieClicked(movie);
         }
     }
 }

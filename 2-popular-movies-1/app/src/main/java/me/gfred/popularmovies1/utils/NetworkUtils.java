@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.models;
+package me.gfred.popularmovies1.utils;
 
 import android.net.Uri;
 import android.util.Log;
