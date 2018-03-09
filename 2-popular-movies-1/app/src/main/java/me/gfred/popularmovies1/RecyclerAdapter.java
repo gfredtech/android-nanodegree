@@ -7,11 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
 import me.gfred.popularmovies1.models.Movie;
 
 /**
@@ -47,15 +44,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
 
-        String image = IMAGE_PARAM + movies.get(position).getPosterPath();
-        Picasso.with(mContext)
-                .load(image)
-                .into(holder.mMovieImage);
-
-
-
+            holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
+            String image = IMAGE_PARAM + movies.get(position).getPosterPath();
+            Picasso.with(mContext)
+                    .load(image)
+                    .into(holder.mMovieImage);
     }
 
 
