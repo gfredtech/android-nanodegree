@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
+
+
 import java.util.ArrayList;
+
 import me.gfred.popularmovies1.models.Movie;
 
 /**
@@ -20,8 +23,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     private Context mContext;
     private ArrayList<Movie> movies;
 
-    final private MovieClickListener mclickListener;
 
+
+    final private MovieClickListener mclickListener;
 
     public RecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
         this.movies = movies;
@@ -60,7 +64,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
 
         TextView mMovieTitle;
 
