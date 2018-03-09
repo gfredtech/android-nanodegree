@@ -3,8 +3,12 @@ package me.gfred.popularmovies1;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.squareup.picasso.Picasso;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.gfred.popularmovies1.models.Movie;
 
 /**
@@ -13,10 +17,29 @@ import me.gfred.popularmovies1.models.Movie;
 
 public class DetailActivity extends AppCompatActivity {
 
+    static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w500/";
+    @BindView(R.id.image_iv)
+    ImageView imageView;
+
+    @BindView(R.id.original_title_tv)
+    TextView title;
+
+    @BindView(R.id.overview_tv)
+    TextView overview;
+
+    @BindView(R.id.rating_tv)
+    TextView vote;
+
+    @BindView(R.id.release_date_tv)
+    TextView releaseDate;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
         Movie movie = null;
 
         Intent intent = getIntent();
@@ -25,20 +48,19 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if (movie != null) {
+            setTitle(movie.getOriginalTitle());
             populateUI(movie);
         }
-
-
-
-
 
     }
 
     void populateUI(Movie movie) {
-        TextView title = findViewById(R.id.original_title_tv);
-        TextView overview = findViewById(R.id.overview_tv);
-        TextView vote = findViewById(R.id.vote_average_tv);
-        TextView releaseDate = findViewById(R.id.release_date_tv);
+
+        String image = IMAGE_PARAM + movie.getPosterPath();
+        Log.v("IMAGE_URL", image);
+
+        Picasso.with(DetailActivity.this)
+                .load(image).into(imageView);
 
         title.setText(movie.getOriginalTitle());
         overview.setText(movie.getOverview());

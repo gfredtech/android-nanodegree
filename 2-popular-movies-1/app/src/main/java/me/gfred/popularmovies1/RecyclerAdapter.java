@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
-
-
 import java.util.ArrayList;
-
 import me.gfred.popularmovies1.models.Movie;
 
 /**

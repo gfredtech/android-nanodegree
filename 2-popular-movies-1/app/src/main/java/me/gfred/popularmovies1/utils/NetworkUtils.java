@@ -16,22 +16,9 @@ import java.net.URL;
 public class NetworkUtils {
     public final static String MOVIE_URL = "https://api.themoviedb.org/3/movie";
     public final static String PARAM_POPULAR = "popular";
+    private final static String PARAM_TOP_RATED = "top_rated";
     public final static String PARAM_API ="api_key";
     final static String apiKey = "**REMOVED**";
-
-    public static URL buildMovieQuery(int id) {
-        Uri builtUri = Uri.parse(MOVIE_URL).buildUpon()
-                .appendPath(String.valueOf(id))
-                .appendQueryParameter(PARAM_API, apiKey)
-                .build();
-        URL url = null;
-        try {
-            url = new URL(builtUri.toString());
-        }catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
 
     public static URL buildPopularMoviesQuery() {
 
@@ -43,7 +30,20 @@ public class NetworkUtils {
         URL url = null;
         try {
             url = new URL(builtUri.toString());
-            System.out.println(url.toString());
+        }catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    public static URL buildTopRatedMoviesQuery() {
+        Uri builtUri = Uri.parse(MOVIE_URL).buildUpon()
+                .appendPath(PARAM_TOP_RATED)
+                .appendQueryParameter(PARAM_API, apiKey)
+                .build();
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
         }catch (MalformedURLException e) {
             e.printStackTrace();
         }
