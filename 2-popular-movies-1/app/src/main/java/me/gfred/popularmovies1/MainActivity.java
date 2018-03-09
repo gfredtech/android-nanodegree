@@ -1,7 +1,11 @@
 package me.gfred.popularmovies1;
 
-
 import android.content.Intent;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
         RecyclerAdapter adapter = new RecyclerAdapter(this, movies, this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
+
     }
 
 
@@ -57,5 +62,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
         startActivity(intent);
 
     }
+
 
 }
