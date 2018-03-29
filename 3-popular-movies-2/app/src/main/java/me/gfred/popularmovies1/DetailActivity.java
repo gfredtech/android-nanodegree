@@ -44,7 +44,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent.hasExtra("movie")) {
-            movie = (Movie) intent.getSerializableExtra("movie");
+            movie = intent.getParcelableExtra("movie");
         }
 
         if (movie != null) {

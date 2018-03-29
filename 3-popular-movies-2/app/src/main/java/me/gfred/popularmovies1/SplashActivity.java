@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
             Thread t = new Thread() {
                 public void run() {
                     try {
-                        //sleep thread for 10 seconds
+                        //sleep thread for 3 seconds
                         sleep(3000);
                         finish();
 

@@ -1,6 +1,8 @@
 package me.gfred.popularmovies1;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,10 +13,13 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.popularmovies1.data.FavoriteMoviesContract;
+import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
 import me.gfred.popularmovies1.utils.JsonUtils;
 
-public class MainActivity extends AppCompatActivity implements RecyclerAdapter.MovieClickListener {
+public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener {
+    private SQLiteDatabase db;
     ArrayList<Movie> popularMovies;
     ArrayList<Movie> topRatedMovies;
     String json[];
@@ -22,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
+    FavoriteRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
         if(intent.hasExtra("movies_data")) {
             json = intent.getExtras().getStringArray("movies_data");
         }
+
+        FavoriteMoviesDBHelper helper = new FavoriteMoviesDBHelper(this);
+
+        db = helper.getWritableDatabase();
+
+        Cursor cursor = getFavoriteMovies();
+
+        mAdapter = new FavoriteRecyclerAdapter(this, cursor);
 
 
         if(json != null) {
@@ -49,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
         }
 
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, popularMovies, this);
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
         isPopular = true;
@@ -77,13 +91,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
         int id = item.getItemId();
         if(id == R.id.toggle_layout) {
             if(isPopular) {
-                RecyclerAdapter adapter = new RecyclerAdapter(this, topRatedMovies, this);
+                MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                 recyclerView.setAdapter(adapter);
                 isPopular = false;
                 item.setTitle(R.string.popular_menu);
             } else {
-                RecyclerAdapter adapter = new RecyclerAdapter(this, popularMovies, this);
+                MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                 recyclerView.setAdapter(adapter);
                 isPopular = true;
@@ -91,5 +105,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Cursor getFavoriteMovies() {
+        return db.query(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
     }
 }

@@ -1,10 +1,13 @@
 
 package me.gfred.popularmovies1.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
     public String getOriginalTitle() {
         return originalTitle;
@@ -65,4 +68,13 @@ public class Movie implements Serializable {
        this.id = id;
    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }

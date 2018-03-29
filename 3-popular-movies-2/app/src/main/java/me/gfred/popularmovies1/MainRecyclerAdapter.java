@@ -9,14 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+
 import me.gfred.popularmovies1.models.Movie;
 
 /**
  * Created by Gfred on 2/27/2018.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
+    private static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
     private Context mContext;
     private ArrayList<Movie> movies;
 
@@ -24,7 +25,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     final private MovieClickListener mclickListener;
 
-    public RecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
+    MainRecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
         this.movies = movies;
         this.mContext = mContext;
         this.mclickListener = clickListener;
@@ -54,7 +55,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
 
-
     @Override
     public int getItemCount() {
         return movies.size();
@@ -66,7 +66,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         ImageView mMovieImage;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             mMovieTitle = itemView.findViewById(R.id.movie_title);
             mMovieImage = itemView.findViewById(R.id.movie_image);
