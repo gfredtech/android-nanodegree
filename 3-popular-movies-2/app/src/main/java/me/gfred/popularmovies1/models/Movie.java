@@ -4,7 +4,6 @@ package me.gfred.popularmovies1.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 
 
 public class Movie implements Parcelable {
@@ -70,11 +69,39 @@ public class Movie implements Parcelable {
 
     @Override
     public int describeContents() {
-        return 0;
+        return hashCode();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+       dest.writeString(originalTitle);
+       dest.writeString(posterPath);
+       dest.writeString(overview);
+       dest.writeDouble(voteAverage);
+       dest.writeString(releaseDate);
+       dest.writeInt(id);
+    }
+
+    public Movie(Parcel parcel)  {
+       originalTitle = parcel.readString();
+       posterPath = parcel.readString();
+       overview = parcel.readString();
+       voteAverage = parcel.readDouble();
+       releaseDate = parcel.readString();
+       id = parcel.readInt();
 
     }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[0];
+        }
+    };
 }

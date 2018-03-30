@@ -1,14 +1,21 @@
 package me.gfred.popularmovies1;
 
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import java.util.ArrayList;
 import butterknife.BindView;
@@ -44,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         FavoriteMoviesDBHelper helper = new FavoriteMoviesDBHelper(this);
 
         db = helper.getWritableDatabase();
-
         Cursor cursor = getFavoriteMovies();
 
         mAdapter = new FavoriteRecyclerAdapter(this, cursor);
@@ -81,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     }
 
     @Override
+    public void onMovieLongClicked(Movie movie) {
+      AlertDialog dialog = getDialog(movie);
+        dialog.show();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -103,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 isPopular = true;
                 item.setTitle(R.string.toprated_menu);
             }
+        } else if(id == R.id.favorite) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            recyclerView.setAdapter(mAdapter);
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -115,5 +131,35 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 null,
                 null,
                 FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
+    }
+
+    AlertDialog getDialog(final Movie movie) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("Add to Favorites?");
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                addMovieToFavorite(movie.getId());
+
+                Toast.makeText(builder.getContext(), "Added", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                Log.i("CANCEL", "CANCEL");
+                dialog.dismiss();
+            }
+        });
+
+       return builder.create();
+    }
+
+    long addMovieToFavorite(int id) {
+        ContentValues cv = new ContentValues();
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, id);
+        return db.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
     }
 }

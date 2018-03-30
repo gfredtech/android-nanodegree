@@ -3,14 +3,17 @@ package me.gfred.popularmovies1;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import me.gfred.popularmovies1.data.FavoriteMoviesContract;
 
 public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecyclerAdapter.FavoriteViewHolder> {
 
-    private Context mContext;
+    Context mContext;
 
     private Cursor mCursor;
 
@@ -21,7 +24,10 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
 
     @Override
     public FavoriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view;
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        view = inflater.inflate(R.layout.cardview_movie_poster, parent, false);
+        return new FavoriteViewHolder(view);
     }
 
     @Override
@@ -37,11 +43,30 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
         return mCursor.getCount();
     }
 
-    public class FavoriteViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder {
+    void swapCursor(Cursor cursor) {
 
+        if(mCursor != null) mCursor.close();
+        mCursor = cursor;
 
-        public FavoriteViewHolder(View itemView) {
+        if(cursor != null) this.notifyDataSetChanged();
+    }
+
+    public class FavoriteViewHolder extends android.support.v7.widget.RecyclerView.ViewHolder
+            implements View.OnClickListener{
+        TextView mMovieTitle;
+
+        ImageView mMovieImage;
+
+        FavoriteViewHolder(View itemView) {
             super(itemView);
+            mMovieTitle = itemView.findViewById(R.id.movie_title);
+            mMovieImage = itemView.findViewById(R.id.movie_image);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }

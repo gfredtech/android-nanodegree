@@ -1,6 +1,11 @@
 package me.gfred.popularmovies1;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +16,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import me.gfred.popularmovies1.models.Movie;
+
+import static android.app.PendingIntent.getActivity;
 
 /**
  * Created by Gfred on 2/27/2018.
@@ -33,6 +40,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public interface MovieClickListener {
         void onMovieClicked(Movie movie);
+        void onMovieLongClicked(Movie movie);
     }
 
 
@@ -60,7 +68,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return movies.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView mMovieTitle;
 
@@ -71,6 +79,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             mMovieTitle = itemView.findViewById(R.id.movie_title);
             mMovieImage = itemView.findViewById(R.id.movie_image);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
 
         }
 
@@ -80,5 +89,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             mclickListener.onMovieClicked(movie);
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+
+            Movie movie = movies.get(getAdapterPosition());
+            mclickListener.onMovieLongClicked(movie);
+            return false;
+        }
     }
+
 }

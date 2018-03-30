@@ -4,5 +4,8 @@
     <item android:title="@string/toprated_menu"
         android:id="@+id/toggle_layout"
         app:showAsAction="ifRoom"/>
+    <item android:title="@string/favorites"
+        android:id="@+id/favorite"
+        app:showAsAction="never"/>
 
 </menu>
