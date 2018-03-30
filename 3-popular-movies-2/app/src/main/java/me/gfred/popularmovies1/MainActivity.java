@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -25,7 +24,7 @@ import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
 import me.gfred.popularmovies1.utils.JsonUtils;
 
-public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener {
+public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener, FavoriteRecyclerAdapter.MovieClickListener {
     private SQLiteDatabase db;
     ArrayList<Movie> popularMovies;
     ArrayList<Movie> topRatedMovies;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         db = helper.getWritableDatabase();
         Cursor cursor = getFavoriteMovies();
 
-        mAdapter = new FavoriteRecyclerAdapter(this, cursor);
+        mAdapter = new FavoriteRecyclerAdapter(this, cursor, this);
 
 
         if(json != null) {
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                addMovieToFavorite(movie.getId());
+                addMovieToFavorite(movie);
 
                 Toast.makeText(builder.getContext(), "Added", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -157,9 +156,14 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
        return builder.create();
     }
 
-    long addMovieToFavorite(int id) {
+    long addMovieToFavorite(Movie movie) {
         ContentValues cv = new ContentValues();
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, id);
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE, movie.getOriginalTitle());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTERPATH, movie.getPosterPath());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_OVERVIEW, movie.getOverview());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE, movie.getReleaseDate());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_VOTEAVERAGE, movie.getVoteAverage());
         return db.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
     }
 }
