@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     ArrayList<Movie> topRatedMovies;
     String json[];
     Boolean isPopular;
+    Cursor cursor;
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         FavoriteMoviesDBHelper helper = new FavoriteMoviesDBHelper(this);
 
         db = helper.getWritableDatabase();
-        Cursor cursor = getFavoriteMovies();
+        cursor = getFavoriteMovies();
 
         mAdapter = new FavoriteRecyclerAdapter(this, cursor, this);
 
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 item.setTitle(R.string.toprated_menu);
             }
         } else if(id == R.id.favorite) {
+
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setAdapter(mAdapter);
 
@@ -140,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 addMovieToFavorite(movie);
+                mAdapter.swapCursor(getFavoriteMovies());
 
                 Toast.makeText(builder.getContext(), "Added", Toast.LENGTH_LONG).show();
                 dialog.dismiss();

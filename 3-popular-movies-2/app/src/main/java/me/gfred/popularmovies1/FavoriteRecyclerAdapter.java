@@ -30,7 +30,6 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
     }
 
     public interface MovieClickListener {
-        void onMovieClicked(Movie movie);
     }
 
     @Override
@@ -63,6 +62,7 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
     void swapCursor(Cursor cursor) {
 
         if(mCursor != null) mCursor.close();
+
         mCursor = cursor;
 
         if(cursor != null) this.notifyDataSetChanged();
@@ -83,6 +83,8 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
 
         @Override
         public void onClick(View v) {
+            mCursor.moveToPosition(getAdapterPosition());
+
             String name = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE));
             int id = mCursor.getInt(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID));
             String posterpath = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTERPATH));

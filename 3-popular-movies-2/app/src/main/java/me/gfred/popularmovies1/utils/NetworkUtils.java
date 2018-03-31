@@ -18,7 +18,7 @@ public class NetworkUtils {
     public final static String PARAM_POPULAR = "popular";
     private final static String PARAM_TOP_RATED = "top_rated";
     public final static String PARAM_API ="api_key";
-    final static String apiKey = "**REMOVED**";
+    final static String apiKey = "*REMOVED*";
 
     public static URL buildPopularMoviesQuery() {
 
