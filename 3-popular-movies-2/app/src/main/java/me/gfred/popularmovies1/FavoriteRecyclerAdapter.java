@@ -17,19 +17,19 @@ import me.gfred.popularmovies1.models.Movie;
 public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecyclerAdapter.FavoriteViewHolder> {
     private static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
 
-    Context mContext;
+    private Context mContext;
 
     private Cursor mCursor;
 
     final private MainRecyclerAdapter.MovieClickListener mclickListener;
 
-    public FavoriteRecyclerAdapter(Context context, Cursor cursor, MainRecyclerAdapter.MovieClickListener mclickListener) {
+    FavoriteRecyclerAdapter(Context context, Cursor cursor, MainRecyclerAdapter.MovieClickListener mclickListener) {
         this.mContext = context;
         this.mCursor = cursor;
         this.mclickListener = mclickListener;
     }
 
-    public interface MovieClickListener {
+    interface MovieClickListener {
     }
 
     @Override

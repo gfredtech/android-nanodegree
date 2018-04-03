@@ -14,11 +14,11 @@ import java.net.URL;
  */
 
 public class NetworkUtils {
-    public final static String MOVIE_URL = "https://api.themoviedb.org/3/movie";
-    public final static String PARAM_POPULAR = "popular";
+    private final static String MOVIE_URL = "https://api.themoviedb.org/3/movie";
+    private final static String PARAM_POPULAR = "popular";
     private final static String PARAM_TOP_RATED = "top_rated";
-    public final static String PARAM_API ="api_key";
-    final static String apiKey = "*REMOVED*";
+    private final static String PARAM_API ="api_key";
+    private final static String apiKey = "";
 
     public static URL buildPopularMoviesQuery() {
 
@@ -50,7 +50,7 @@ public class NetworkUtils {
         return url;
     }
 
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
+    public static String getResponseFromHttpUrl(URL url) {
         HttpURLConnection urlConnection;
         String server_response = null;
         try {
@@ -77,7 +77,7 @@ public class NetworkUtils {
 
     private static String readStream(InputStream in) {
         BufferedReader reader = null;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
         try {
             reader = new BufferedReader(new InputStreamReader(in));
             String line;

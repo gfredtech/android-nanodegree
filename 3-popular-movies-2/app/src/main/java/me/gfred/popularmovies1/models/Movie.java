@@ -13,18 +13,9 @@ public class Movie implements Parcelable {
     }
 
     public int getId() { return id; }
-    public void setId() { this.id = id; }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
-    }
 
     public String getPosterPath() {
         return posterPath;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
     }
 
     public String getOverview() {
@@ -39,16 +30,8 @@ public class Movie implements Parcelable {
         return voteAverage;
     }
 
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
     public String getReleaseDate() {
         return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
     }
 
     private String originalTitle;
@@ -82,7 +65,7 @@ public class Movie implements Parcelable {
        dest.writeInt(id);
     }
 
-    public Movie(Parcel parcel)  {
+    private Movie(Parcel parcel)  {
        originalTitle = parcel.readString();
        posterPath = parcel.readString();
        overview = parcel.readString();

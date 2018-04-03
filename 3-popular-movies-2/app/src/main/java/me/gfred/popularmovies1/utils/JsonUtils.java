@@ -13,13 +13,14 @@ import me.gfred.popularmovies1.models.Movie;
 
 public class JsonUtils {
 
-    public static Movie parseMovie(String json) throws JSONException {
+    private static Movie parseMovie(String json) throws JSONException {
         JSONObject reader = new JSONObject(json);
         String originalTitle = reader.getString("original_title");
         String imgURL = reader.getString("poster_path");
         String overview = reader.getString("overview");
         Double voteAverage = reader.getDouble("vote_average");
         String releaseDate = reader.getString("release_date");
+
         int id = reader.getInt("id");
 
         return new Movie(originalTitle, imgURL, overview, voteAverage, releaseDate, id);

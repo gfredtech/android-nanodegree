@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
-import java.io.IOException;
+
 import java.net.URL;
 
 import me.gfred.popularmovies1.utils.NetworkUtils;
@@ -51,6 +51,7 @@ public class SplashActivity extends AppCompatActivity {
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
     }
@@ -62,13 +63,9 @@ public class SplashActivity extends AppCompatActivity {
             URL popularURL = urls[0];
             URL topRatedURL = urls[1];
             String jsonResults[] = new String[2];
-            try {
 
-                jsonResults[0] = NetworkUtils.getResponseFromHttpUrl(popularURL);
-                jsonResults[1] = NetworkUtils.getResponseFromHttpUrl(topRatedURL);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            jsonResults[0] = NetworkUtils.getResponseFromHttpUrl(popularURL);
+            jsonResults[1] = NetworkUtils.getResponseFromHttpUrl(topRatedURL);
             return jsonResults;
         }
 

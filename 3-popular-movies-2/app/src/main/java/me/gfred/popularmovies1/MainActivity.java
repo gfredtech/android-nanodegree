@@ -62,19 +62,15 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 popularMovies = JsonUtils.parseListMovies(json[0]);
                 topRatedMovies = JsonUtils.parseListMovies(json[1]);
 
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
         isPopular = true;
-
-
     }
 
 
@@ -83,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra("movie", movie);
         startActivity(intent);
-
     }
 
     @Override
@@ -101,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.toggle_layout) {
+        if(id == R.id.top_rated) {
             if(isPopular) {
                 MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -159,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
        return builder.create();
     }
 
-    long addMovieToFavorite(Movie movie) {
+    void addMovieToFavorite(Movie movie) {
         ContentValues cv = new ContentValues();
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE, movie.getOriginalTitle());
@@ -167,6 +162,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_OVERVIEW, movie.getOverview());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE, movie.getReleaseDate());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_VOTEAVERAGE, movie.getVoteAverage());
-        return db.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
+        db.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
     }
 }

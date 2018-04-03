@@ -1,23 +1,18 @@
 package me.gfred.popularmovies1;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import me.gfred.popularmovies1.models.Movie;
-
-import static android.app.PendingIntent.getActivity;
 
 /**
  * Created by Gfred on 2/27/2018.
