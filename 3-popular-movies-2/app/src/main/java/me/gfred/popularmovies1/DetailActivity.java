@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
@@ -66,5 +69,20 @@ public class DetailActivity extends AppCompatActivity {
         overview.setText(movie.getOverview());
         vote.setText(String.valueOf(movie.getVoteAverage()));
         releaseDate.setText(movie.getReleaseDate());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.detail_favorite) {
+            //TODO: add to favorite
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

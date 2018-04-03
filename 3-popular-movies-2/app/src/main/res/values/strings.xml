@@ -11,4 +11,5 @@
     <string name="release_date_label">Release Date</string>
     <string name="img_poster">Image Poster</string>
     <string name="favorites">Favorites</string>
+    <string name="add_to_favorites">Add to Favorites</string>
 </resources>
