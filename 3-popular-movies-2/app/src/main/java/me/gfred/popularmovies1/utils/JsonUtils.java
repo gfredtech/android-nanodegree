@@ -3,7 +3,10 @@ package me.gfred.popularmovies1.utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import me.gfred.popularmovies1.models.Movie;
 
@@ -20,7 +23,6 @@ public class JsonUtils {
         String overview = reader.getString("overview");
         Double voteAverage = reader.getDouble("vote_average");
         String releaseDate = reader.getString("release_date");
-
         int id = reader.getInt("id");
 
         return new Movie(originalTitle, imgURL, overview, voteAverage, releaseDate, id);
@@ -40,5 +42,21 @@ public class JsonUtils {
         }
 
         return movieList;
+    }
+
+    public static List<String> parseReviews(String json) throws JSONException {
+        JSONObject reader = new JSONObject(json);
+
+        JSONArray reviewsJson = reader.getJSONArray("results");
+        ArrayList<String> reviews = new ArrayList<>();
+        if(reviewsJson.length() != 0) {
+            for(int i = 0; i < reviewsJson.length(); i++) {
+                JSONObject a = reviewsJson.getJSONObject(i);
+                String author = a.getString("author");
+                String review = a.getString("content");
+                reviews.add(review + " written by " + author);
+            }
+        }
+        return reviews;
     }
 }

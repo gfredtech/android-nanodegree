@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
 
-    MainRecyclerAdapter mAdapter;
+
     MainRecyclerAdapter cursorAdapter;
 
     @Override

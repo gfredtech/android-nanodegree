@@ -3,6 +3,7 @@ package me.gfred.popularmovies1;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,11 +15,18 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
+import java.net.URL;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
 import me.gfred.popularmovies1.utils.DBUtils;
+import me.gfred.popularmovies1.utils.JsonUtils;
+import me.gfred.popularmovies1.utils.NetworkUtils;
 
 /**
  * Created by Gfred on 3/3/2018.
@@ -28,7 +36,7 @@ public class DetailActivity extends AppCompatActivity {
     static boolean isFavorite;
 
     SQLiteDatabase db;
-    Movie movie;
+    static Movie movie;
     Cursor cursor;
 
 
@@ -62,6 +70,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if (movie != null) {
+            makeQuery(movie);
             setTitle(movie.getOriginalTitle());
             populateUI(movie);
         }
@@ -99,7 +108,7 @@ public class DetailActivity extends AppCompatActivity {
         int id = item.getItemId();
         boolean changed = false;
         if(id == R.id.detail_favorite) {
-            //TODO: add to favorite
+
             if(isFavorite) {
                 if(DBUtils.removeMovieFromFavorite(db, movie.getId())) {
                     changed = true;
@@ -125,4 +134,40 @@ public class DetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public static class TrailerReviewTask extends AsyncTask<URL, Void, String[]> {
+
+        @Override
+        protected String[] doInBackground(URL... urls) {
+            URL reviewURl = urls[0];
+            URL trailerURL = urls[1];
+
+            String[] jsonResults = new String[2];
+
+            jsonResults[0] = NetworkUtils.getResponseFromHttpUrl(reviewURl);
+            jsonResults[1] = NetworkUtils.getResponseFromHttpUrl(trailerURL);
+            return jsonResults;
+
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            System.out.println(strings[1]);
+            List<String> reviews = null;
+            try {
+               reviews = JsonUtils.parseReviews(strings[1]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+           if(reviews != null && reviews.size() > 0) System.out.println("this " + reviews.get(0));
+            movie.setReviews(reviews);
+        }
+    }
+
+    private void makeQuery(Movie movie) {
+        URL reviews = NetworkUtils.buildMovieReviewsQuery(movie.getId());
+        new TrailerReviewTask().execute(reviews, reviews);
+    }
+
 }
