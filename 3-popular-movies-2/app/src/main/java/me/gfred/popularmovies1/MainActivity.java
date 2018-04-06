@@ -1,30 +1,30 @@
 package me.gfred.popularmovies1;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.json.JSONException;
+
 import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.gfred.popularmovies1.data.FavoriteMoviesContract;
 import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
+import me.gfred.popularmovies1.utils.DBUtils;
 import me.gfred.popularmovies1.utils.JsonUtils;
 
-public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener, FavoriteRecyclerAdapter.MovieClickListener {
+public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener{
     private SQLiteDatabase db;
     ArrayList<Movie> popularMovies;
     ArrayList<Movie> topRatedMovies;
@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
-    FavoriteRecyclerAdapter mAdapter;
+
+    MainRecyclerAdapter mAdapter;
+    MainRecyclerAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         FavoriteMoviesDBHelper helper = new FavoriteMoviesDBHelper(this);
 
         db = helper.getWritableDatabase();
-        cursor = getFavoriteMovies();
+        cursor = DBUtils.getFavoriteMovies(db);
 
-        mAdapter = new FavoriteRecyclerAdapter(this, cursor, this);
-
+        cursorAdapter = new MainRecyclerAdapter(this, cursor, this);
 
         if(json != null) {
 
@@ -78,7 +79,19 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     public void onMovieClicked(Movie movie) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra("movie", movie);
-        startActivity(intent);
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 2) {
+            if(data != null) {
+                Boolean message = data.getBooleanExtra("changed", false);
+
+                if(message) cursorAdapter.swapCursor(DBUtils.getFavoriteMovies(db));
+            }
+        }
     }
 
     @Override
@@ -103,65 +116,60 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 recyclerView.setAdapter(adapter);
                 isPopular = false;
                 item.setTitle(R.string.popular_menu);
+                setTitle(getString(R.string.toprated_menu));
             } else {
                 MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                 recyclerView.setAdapter(adapter);
                 isPopular = true;
                 item.setTitle(R.string.toprated_menu);
+                setTitle(getString(R.string.popular_menu));
             }
         } else if(id == R.id.favorite) {
 
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            recyclerView.setAdapter(mAdapter);
+            recyclerView.setAdapter(cursorAdapter);
+            setTitle(R.string.favorites);
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private Cursor getFavoriteMovies() {
-        return db.query(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
-    }
-
     AlertDialog getDialog(final Movie movie) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage("Add to Favorites?");
+        final boolean isFavorite = DBUtils.CheckIfDataAlreadyInDBorNot(db, movie.getId());
+
+        String message = isFavorite ? "Remove from Favorites?" : "Add to Favorites?";
+        builder.setMessage(message);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                addMovieToFavorite(movie);
-                mAdapter.swapCursor(getFavoriteMovies());
+                if(isFavorite) {
 
-                Toast.makeText(builder.getContext(), "Added", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
+                    if(DBUtils.removeMovieFromFavorite(db, movie.getId()))
+                        Toast.makeText(builder.getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+
+                    cursorAdapter.swapCursor(DBUtils.getFavoriteMovies(db));
+                    dialog.dismiss();
+
+
+                } else {
+                    DBUtils.addMovieToFavorite(db, movie);
+                    cursorAdapter.swapCursor(DBUtils.getFavoriteMovies(db));
+                    Toast.makeText(builder.getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
-                Log.i("CANCEL", "CANCEL");
+
                 dialog.dismiss();
             }
         });
 
        return builder.create();
-    }
-
-    void addMovieToFavorite(Movie movie) {
-        ContentValues cv = new ContentValues();
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE, movie.getOriginalTitle());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTERPATH, movie.getPosterPath());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_OVERVIEW, movie.getOverview());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE, movie.getReleaseDate());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_VOTEAVERAGE, movie.getVoteAverage());
-        db.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
     }
 }
