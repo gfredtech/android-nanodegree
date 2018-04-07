@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1;
+package me.gfred.popularmovies1.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,10 +14,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import me.gfred.popularmovies1.R;
 import me.gfred.popularmovies1.data.FavoriteMoviesContract;
 import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
-import me.gfred.popularmovies1.utils.DBUtils;
 
 /**
  * Created by Gfred on 2/27/2018.
@@ -35,14 +35,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     final private MovieClickListener mclickListener;
 
-    MainRecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
+    public MainRecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
         this.movies = movies;
         this.mContext = mContext;
         this.mCursor = null;
         this.mclickListener = clickListener;
     }
 
-    MainRecyclerAdapter(Context mContext, Cursor cursor, MovieClickListener clickListener) {
+    public MainRecyclerAdapter(Context mContext, Cursor cursor, MovieClickListener clickListener) {
         this.mCursor = cursor;
         this.movies = null;
         this.mContext = mContext;

@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1;
+package me.gfred.popularmovies1.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;

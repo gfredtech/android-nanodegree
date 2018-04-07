@@ -1,16 +1,12 @@
-package me.gfred.popularmovies1;
+package me.gfred.popularmovies1.activity;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.util.Pair;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.popularmovies1.R;
 import me.gfred.popularmovies1.adapter.ReviewsAdapter;
 import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
@@ -204,8 +200,6 @@ public class DetailActivity extends AppCompatActivity {
                reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
                        context, LinearLayoutManager.HORIZONTAL, false));
                reviewRecyclerView.setAdapter(adapter);
-
-
 
            }
 
