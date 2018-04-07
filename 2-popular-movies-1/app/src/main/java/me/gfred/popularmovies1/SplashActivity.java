@@ -1,5 +1,4 @@
 package me.gfred.popularmovies1;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -33,7 +32,6 @@ public class SplashActivity extends AppCompatActivity {
 
             Thread t = new Thread() {
                 public void run() {
-
                     try {
                         //sleep thread for 10 seconds
                         sleep(3000);

@@ -73,8 +73,6 @@ public class NetworkUtils {
         }
 
         return server_response;
-
-
     }
 
     private static String readStream(InputStream in) {
