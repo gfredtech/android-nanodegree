@@ -3,6 +3,7 @@ package me.gfred.popularmovies1.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.util.Pair;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ public class Movie implements Parcelable {
 
     public int getId() { return id; }
 
-    public void setReviews(List<String> reviews) {
+    public void setReviews(List<Pair<String, String>> reviews) {
         this.reviews = reviews;
     }
 
-    public List<String> getReviews() {
+    public List<Pair<String, String>> getReviews() {
         return reviews;
     }
 
@@ -47,7 +48,7 @@ public class Movie implements Parcelable {
     private String originalTitle;
     private String posterPath;
     private String overview;
-    private List<String> reviews;
+    private List<Pair<String, String>> reviews;
     private double voteAverage;
     private String releaseDate;
     private int id;

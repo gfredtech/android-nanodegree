@@ -12,4 +12,6 @@
     <string name="img_poster">Image Poster</string>
     <string name="favorites">Favorites</string>
     <string name="add_to_favorites">Add to Favorites</string>
+    <string name="loadin_text">Loading…</string>
+    <string name="reviews">Reviews:</string>
 </resources>

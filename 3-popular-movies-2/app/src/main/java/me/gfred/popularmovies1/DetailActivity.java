@@ -1,15 +1,27 @@
 package me.gfred.popularmovies1;
 
+import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.util.Pair;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.popularmovies1.adapter.ReviewsAdapter;
 import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies1.models.Movie;
 import me.gfred.popularmovies1.utils.DBUtils;
@@ -38,6 +51,8 @@ public class DetailActivity extends AppCompatActivity {
     SQLiteDatabase db;
     static Movie movie;
     Cursor cursor;
+    Context context;
+
 
 
     static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w500/";
@@ -55,6 +70,14 @@ public class DetailActivity extends AppCompatActivity {
 
     @BindView(R.id.release_date_tv)
     TextView releaseDate;
+
+    @BindView(R.id.review_recyclerview)
+    RecyclerView reviewRecyclerView;
+
+    @BindView(R.id.textView5)
+    TextView reviewsTitle;
+
+
 
 
     @Override
@@ -75,6 +98,9 @@ public class DetailActivity extends AppCompatActivity {
             populateUI(movie);
         }
 
+        context = this;
+
+
     }
 
     void populateUI(Movie movie) {
@@ -93,6 +119,7 @@ public class DetailActivity extends AppCompatActivity {
         db = new FavoriteMoviesDBHelper(this).getReadableDatabase();
         cursor = DBUtils.getFavoriteMovies(db);
        isFavorite = DBUtils.CheckIfDataAlreadyInDBorNot(db, movie.getId());
+       cursor.close();
     }
 
     @Override
@@ -135,7 +162,7 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class TrailerReviewTask extends AsyncTask<URL, Void, String[]> {
+    public class TrailerReviewTask extends AsyncTask<URL, Void, String[]> {
 
         @Override
         protected String[] doInBackground(URL... urls) {
@@ -153,15 +180,35 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] strings) {
             System.out.println(strings[1]);
-            List<String> reviews = null;
+            List<Pair<String,String>> reviews = null;
             try {
                reviews = JsonUtils.parseReviews(strings[1]);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-           if(reviews != null && reviews.size() > 0) System.out.println("this " + reviews.get(0));
-            movie.setReviews(reviews);
+           if(reviews != null && reviews.size() > 0) {
+               System.out.println("this " + reviews.get(0));
+               movie.setReviews(reviews);
+               reviewsTitle.setVisibility(View.VISIBLE);
+
+              ViewGroup.LayoutParams params = reviewRecyclerView.getLayoutParams();
+               int height = (int) TypedValue.applyDimension(
+                       TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+
+               params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+               params.height = height;
+               reviewRecyclerView.setLayoutParams(params);
+
+               ReviewsAdapter adapter = new ReviewsAdapter(context, reviews);
+               reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
+                       context, LinearLayoutManager.HORIZONTAL, false));
+               reviewRecyclerView.setAdapter(adapter);
+
+
+
+           }
+
         }
     }
 

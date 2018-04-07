@@ -20,7 +20,7 @@ public class NetworkUtils {
     private final static String PARAM_REVIEWS = "reviews";
     private final static String PARAM_TRAILERS = "trailers";
     private final static String PARAM_API ="api_key";
-    private final static String apiKey = "";
+    private final static String apiKey = "b16c34514b915ef016d679c43db8e6a6";
 
     public static URL buildPopularMoviesQuery() {
 
