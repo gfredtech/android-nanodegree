@@ -28,11 +28,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
     private Context mContext;
     private ArrayList<Movie> movies;
-    SQLiteDatabase db;
+    private SQLiteDatabase db;
 
     private Cursor mCursor;
-
-
 
     final private MovieClickListener mclickListener;
 

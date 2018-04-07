@@ -15,4 +15,5 @@
     <string name="loadin_text">Loading…</string>
     <string name="reviews">Reviews:</string>
     <string name="trailers_text">Trailers</string>
+    <string name="trailer_thumbnail">Trailer Thumbnail</string>
 </resources>

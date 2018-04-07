@@ -25,9 +25,9 @@ public class Movie implements Parcelable {
         return reviews;
     }
 
-    public void setTrailers(List<Pair<String, URL>> trailers) { this.trailers = trailers; }
+    public void setTrailers(List<Pair<String, String>> trailers) { this.trailers = trailers; }
 
-    public List<Pair<String, URL>> getTrailers() { return trailers; }
+    public List<Pair<String, String>> getTrailers() { return trailers; }
 
     public String getPosterPath() {
         return posterPath;
@@ -53,7 +53,7 @@ public class Movie implements Parcelable {
     private String posterPath;
     private String overview;
     private List<Pair<String, String>> reviews;
-    private List<Pair<String, URL>> trailers;
+    private List<Pair<String, String>> trailers;
     private double voteAverage;
     private String releaseDate;
     private int id;

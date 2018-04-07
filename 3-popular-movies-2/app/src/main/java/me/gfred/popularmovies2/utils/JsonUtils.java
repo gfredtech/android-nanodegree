@@ -64,16 +64,16 @@ public class JsonUtils {
         return reviews;
     }
 
-    public static List<Pair<String, URL>> parseTrailers(String json) throws JSONException, MalformedURLException {
-        final String YOUTUBE_BASE_URL = "https://youtube.com/watch?";
+    public static List<Pair<String, String>> parseTrailers(String json) throws JSONException {
+
         JSONObject reader  = new JSONObject(json);
         JSONArray trailersJson = reader.getJSONArray("results");
-        ArrayList<Pair<String, URL>> trailers = new ArrayList<>();
+        ArrayList<Pair<String, String>> trailers = new ArrayList<>();
         if(trailersJson != null) {
             for(int i = 0; i < trailersJson.length(); i++) {
                 JSONObject a = trailersJson.getJSONObject(i);
                 String title = a.getString("name");
-                URL link = new URL(YOUTUBE_BASE_URL + a.getString("key"));
+                String link = a.getString("key");
                 System.out.println(link);
                 trailers.add(new Pair<>(title, link));
             }

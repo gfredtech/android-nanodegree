@@ -27,7 +27,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        System.out.println("deux");
+
         view = inflater.inflate(R.layout.cardview_review, parent, false);
         return new MyViewHolder(view);
     }
@@ -37,7 +37,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
         holder.review.setText(reviews.get(position).first);
         holder.review.setMovementMethod(new ScrollingMovementMethod());
         holder.author.setText(reviews.get(position).second);
-        System.out.println("cocc");
+       
     }
 
     @Override

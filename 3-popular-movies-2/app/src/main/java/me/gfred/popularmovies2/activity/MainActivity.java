@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         startActivityForResult(intent, 2);
     }
 
+    //get data and update cursor if favorite movies changed.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
