@@ -56,6 +56,23 @@ public class NetworkUtils {
         return url;
     }
 
+    public static URL buildMovieTrailersQuery(int id) {
+        Uri builtUri = Uri.parse(MOVIE_URL).buildUpon()
+                .appendPath(String.valueOf(id))
+                .appendPath(PARAM_TRAILERS)
+                .appendQueryParameter(PARAM_API, apiKey)
+                .build();
+
+        URL url = null;
+
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
     public static URL buildTopRatedMoviesQuery() {
         Uri builtUri = Uri.parse(MOVIE_URL).buildUpon()
                 .appendPath(PARAM_TOP_RATED)

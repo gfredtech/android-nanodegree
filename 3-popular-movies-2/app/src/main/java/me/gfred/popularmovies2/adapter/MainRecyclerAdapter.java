@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
-import me.gfred.popularmovies2.models.Movie;
+import me.gfred.popularmovies2.model.Movie;
 
 /**
  * Created by Gfred on 2/27/2018.

@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.ReviewsAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
-import me.gfred.popularmovies2.models.Movie;
+import me.gfred.popularmovies2.model.Movie;
 import me.gfred.popularmovies2.utils.DBUtils;
 import me.gfred.popularmovies2.utils.JsonUtils;
 import me.gfred.popularmovies2.utils.NetworkUtils;
@@ -73,6 +74,9 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.textView5)
     TextView reviewsTitle;
 
+    @BindView(R.id.trailers_text)
+    TextView trailersText;
+
 
 
 
@@ -89,7 +93,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if (movie != null) {
-            makeQuery(movie);
+            makeQuery(movie.getId());
             setTitle(movie.getOriginalTitle());
             populateUI(movie);
         }
@@ -177,13 +181,17 @@ public class DetailActivity extends AppCompatActivity {
         protected void onPostExecute(String[] strings) {
             System.out.println(strings[1]);
             List<Pair<String,String>> reviews = null;
+            List<Pair<String, URL>> trailers = null;
             try {
+                trailers = JsonUtils.parseTrailers(strings[0]);
                reviews = JsonUtils.parseReviews(strings[1]);
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
 
-           if(reviews != null && reviews.size() > 0) {
+            if(reviews != null && reviews.size() > 0) {
                System.out.println("this " + reviews.get(0));
                movie.setReviews(reviews);
                reviewsTitle.setVisibility(View.VISIBLE);
@@ -203,12 +211,22 @@ public class DetailActivity extends AppCompatActivity {
 
            }
 
+           if(trailers!= null && trailers.size() > 0) {
+                //TODO: insert trailers here
+               System.out.println("trailers: " + trailers.get(0).first);
+               movie.setTrailers(trailers);
+               trailersText.setVisibility(View.VISIBLE);
+
+
+           }
+
         }
     }
 
-    private void makeQuery(Movie movie) {
-        URL reviews = NetworkUtils.buildMovieReviewsQuery(movie.getId());
-        new TrailerReviewTask().execute(reviews, reviews);
+    private void makeQuery(int id) {
+        URL trailers = NetworkUtils.buildMovieTrailersQuery(id);
+        URL reviews = NetworkUtils.buildMovieReviewsQuery(id);
+        new TrailerReviewTask().execute(trailers, reviews);
     }
 
 }

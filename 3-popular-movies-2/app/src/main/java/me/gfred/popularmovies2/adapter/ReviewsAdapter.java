@@ -29,7 +29,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
         LayoutInflater inflater = LayoutInflater.from(mContext);
         System.out.println("deux");
         view = inflater.inflate(R.layout.cardview_review, parent, false);
-        return new ReviewsAdapter.MyViewHolder(view);
+        return new MyViewHolder(view);
     }
 
     @Override

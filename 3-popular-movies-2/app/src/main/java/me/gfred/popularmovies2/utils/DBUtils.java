@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
-import me.gfred.popularmovies2.models.Movie;
+import me.gfred.popularmovies2.model.Movie;
 
 public class DBUtils {
 

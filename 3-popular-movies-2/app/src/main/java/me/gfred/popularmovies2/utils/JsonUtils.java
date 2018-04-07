@@ -6,10 +6,13 @@ import android.support.v4.util.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.gfred.popularmovies2.models.Movie;
+import me.gfred.popularmovies2.model.Movie;
 
 /**
  * Created by Gfred on 2/27/2018.
@@ -59,5 +62,23 @@ public class JsonUtils {
             }
         }
         return reviews;
+    }
+
+    public static List<Pair<String, URL>> parseTrailers(String json) throws JSONException, MalformedURLException {
+        final String YOUTUBE_BASE_URL = "https://youtube.com/watch?";
+        JSONObject reader  = new JSONObject(json);
+        JSONArray trailersJson = reader.getJSONArray("results");
+        ArrayList<Pair<String, URL>> trailers = new ArrayList<>();
+        if(trailersJson != null) {
+            for(int i = 0; i < trailersJson.length(); i++) {
+                JSONObject a = trailersJson.getJSONObject(i);
+                String title = a.getString("name");
+                URL link = new URL(YOUTUBE_BASE_URL + a.getString("key"));
+                System.out.println(link);
+                trailers.add(new Pair<>(title, link));
+            }
+        }
+
+        return trailers;
     }
 }
