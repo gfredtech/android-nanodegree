@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.data;
+package me.gfred.popularmovies2.data;
 
 import android.provider.BaseColumns;
 

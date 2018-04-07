@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.adapter;
+package me.gfred.popularmovies2.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,10 +14,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import me.gfred.popularmovies1.R;
-import me.gfred.popularmovies1.data.FavoriteMoviesContract;
-import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
-import me.gfred.popularmovies1.models.Movie;
+
+import me.gfred.popularmovies2.R;
+import me.gfred.popularmovies2.data.FavoriteMoviesContract;
+import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
+import me.gfred.popularmovies2.models.Movie;
 
 /**
  * Created by Gfred on 2/27/2018.

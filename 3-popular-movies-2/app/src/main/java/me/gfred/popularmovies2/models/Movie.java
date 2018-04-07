@@ -1,5 +1,5 @@
 
-package me.gfred.popularmovies1.models;
+package me.gfred.popularmovies2.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

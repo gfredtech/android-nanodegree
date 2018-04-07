@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.utils;
+package me.gfred.popularmovies2.utils;
 
 import android.net.Uri;
 import java.io.BufferedReader;

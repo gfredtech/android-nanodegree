@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.adapter;
+package me.gfred.popularmovies2.adapter;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import me.gfred.popularmovies1.R;
+import me.gfred.popularmovies2.R;
+
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHolder> {
     private Context mContext;

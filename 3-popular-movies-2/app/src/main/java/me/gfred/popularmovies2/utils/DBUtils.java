@@ -1,11 +1,11 @@
-package me.gfred.popularmovies1.utils;
+package me.gfred.popularmovies2.utils;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import me.gfred.popularmovies1.data.FavoriteMoviesContract;
-import me.gfred.popularmovies1.models.Movie;
+import me.gfred.popularmovies2.data.FavoriteMoviesContract;
+import me.gfred.popularmovies2.models.Movie;
 
 public class DBUtils {
 

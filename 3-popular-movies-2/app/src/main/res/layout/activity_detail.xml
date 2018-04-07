@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:id="@+id/detail_activity_id"
     android:layout_height="match_parent"
-    tools:context="me.gfred.popularmovies1.activity.DetailActivity">
+    tools:context=".activity.DetailActivity">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

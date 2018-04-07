@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.activity;
+package me.gfred.popularmovies2.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import java.net.URL;
 
-import me.gfred.popularmovies1.utils.NetworkUtils;
+import me.gfred.popularmovies2.utils.NetworkUtils;
 
 /**
  * Created by Gfred on 3/9/2018.

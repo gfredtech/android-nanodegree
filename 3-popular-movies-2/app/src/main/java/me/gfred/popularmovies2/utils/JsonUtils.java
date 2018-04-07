@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.utils;
+package me.gfred.popularmovies2.utils;
 
 
 import android.support.v4.util.Pair;
@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.gfred.popularmovies1.models.Movie;
+import me.gfred.popularmovies2.models.Movie;
 
 /**
  * Created by Gfred on 2/27/2018.

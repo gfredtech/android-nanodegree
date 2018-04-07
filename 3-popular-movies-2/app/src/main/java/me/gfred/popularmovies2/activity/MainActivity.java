@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1.activity;
+package me.gfred.popularmovies2.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,12 +19,12 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.gfred.popularmovies1.R;
-import me.gfred.popularmovies1.adapter.MainRecyclerAdapter;
-import me.gfred.popularmovies1.data.FavoriteMoviesDBHelper;
-import me.gfred.popularmovies1.models.Movie;
-import me.gfred.popularmovies1.utils.DBUtils;
-import me.gfred.popularmovies1.utils.JsonUtils;
+import me.gfred.popularmovies2.R;
+import me.gfred.popularmovies2.adapter.MainRecyclerAdapter;
+import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
+import me.gfred.popularmovies2.models.Movie;
+import me.gfred.popularmovies2.utils.DBUtils;
+import me.gfred.popularmovies2.utils.JsonUtils;
 
 public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener{
     private SQLiteDatabase db;

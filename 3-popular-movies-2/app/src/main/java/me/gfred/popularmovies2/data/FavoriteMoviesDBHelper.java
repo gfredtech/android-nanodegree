@@ -1,6 +1,6 @@
-package me.gfred.popularmovies1.data;
+package me.gfred.popularmovies2.data;
 
-import me.gfred.popularmovies1.data.FavoriteMoviesContract.FavoriteMoviesEntry;
+import me.gfred.popularmovies2.data.FavoriteMoviesContract.FavoriteMoviesEntry;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

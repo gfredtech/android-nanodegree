@@ -1,4 +1,4 @@
-package me.gfred.popularmovies1;
+package me.gfred.popularmovies2;
 
 import org.junit.Test;
 
