@@ -14,6 +14,8 @@ import java.util.List;
 import me.gfred.popularmovies2.R;
 
 
+//adapter for movie reviews
+
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHolder> {
     private Context mContext;
     private List<Pair<String, String>> reviews;
@@ -37,7 +39,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
         holder.review.setText(reviews.get(position).first);
         holder.review.setMovementMethod(new ScrollingMovementMethod());
         holder.author.setText(reviews.get(position).second);
-       
+
     }
 
     @Override
@@ -45,11 +47,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
         return reviews.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         TextView review;
         TextView author;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             review = itemView.findViewById(R.id.review_tv);
             author = itemView.findViewById(R.id.review_author_tv);

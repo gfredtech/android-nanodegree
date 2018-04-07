@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.util.Pair;
 
-import java.net.URL;
 import java.util.List;
 
 

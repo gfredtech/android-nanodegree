@@ -46,13 +46,10 @@ import me.gfred.popularmovies2.utils.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity implements TrailersAdapter.TrailerClickListener {
     static boolean isFavorite;
-
     SQLiteDatabase db;
     static Movie movie;
     Cursor cursor;
     Context context;
-
-
 
     static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w500/";
     static final String YOUTUBE_BASE_URL = "http://www.youtube.com/watch?v=";
@@ -134,7 +131,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         MenuItem item = menu.getItem(0);
-        if(isFavorite) item.setTitle("Remove from favorites");
+        if(isFavorite) item.setTitle(R.string.remove_frm_favs);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -147,17 +144,17 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
             if(isFavorite) {
                 if(DBUtils.removeMovieFromFavorite(db, movie.getId())) {
                     changed = true;
-                    Toast.makeText(this, "Removed from favorites",
+                    Toast.makeText(this, R.string.removed_from_favorites,
                             Toast.LENGTH_SHORT).show();
                 }
-                item.setTitle("Add to favorites");
+                item.setTitle(R.string.add_to_favs);
 
 
             } else {
                 DBUtils.addMovieToFavorite(db, movie);
-                Toast.makeText(this, "Added to favorites",
+                Toast.makeText(this, R.string.added_to_favorites,
                         Toast.LENGTH_SHORT).show();
-                item.setTitle("Remove from favorites");
+                item.setTitle(R.string.remove_frm_favs);
                 changed = true;
             }
 
@@ -207,8 +204,6 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
            }
 
            if(trailers!= null && trailers.size() > 0) {
-                //TODO: insert trailers here
-               System.out.println("trailers: " + trailers.get(0).first);
                movie.setTrailers(trailers);
               displayTrailers(movie.getTrailers());
            }
@@ -224,13 +219,6 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         trailerRecyclerView.setAdapter(trailersAdapter);
         trailerRecyclerView.setClickable(true);
     }
-
-    private void makeQuery(int id) {
-        URL trailers = NetworkUtils.buildMovieTrailersQuery(id);
-        URL reviews = NetworkUtils.buildMovieReviewsQuery(id);
-        new TrailerReviewTask().execute(trailers, reviews);
-    }
-
 
     void displayReviews(List<Pair<String, String>> reviews) {
 
@@ -249,6 +237,13 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
                 context, LinearLayoutManager.HORIZONTAL, false));
         reviewRecyclerView.setAdapter(adapter);
+    }
+
+
+    private void makeQuery(int id) {
+        URL trailers = NetworkUtils.buildMovieTrailersQuery(id);
+        URL reviews = NetworkUtils.buildMovieReviewsQuery(id);
+        new TrailerReviewTask().execute(trailers, reviews);
     }
 
 }

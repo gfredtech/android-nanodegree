@@ -28,7 +28,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
     private Context mContext;
     private ArrayList<Movie> movies;
-    private SQLiteDatabase db;
 
     private Cursor mCursor;
 
@@ -46,7 +45,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         this.movies = null;
         this.mContext = mContext;
         this.mclickListener = clickListener;
-        db = new FavoriteMoviesDBHelper(mContext).getReadableDatabase();
+        new FavoriteMoviesDBHelper(mContext).getReadableDatabase();
     }
 
     public interface MovieClickListener {
@@ -147,15 +146,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
-    Movie cursorClick() {
+    private Movie cursorClick() {
         String name = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE));
         int id = mCursor.getInt(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID));
         String posterpath = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTERPATH));
         String overview = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_OVERVIEW));
         String release = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE));
         double vote = mCursor.getDouble(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_VOTEAVERAGE));
-        Movie movie = new Movie(name, posterpath, overview, vote, release, id);
-       return movie;
+        return new Movie(name, posterpath, overview, vote, release, id);
     }
 
 

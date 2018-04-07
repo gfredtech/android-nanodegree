@@ -16,4 +16,8 @@
     <string name="reviews">Reviews:</string>
     <string name="trailers_text">Trailers</string>
     <string name="trailer_thumbnail">Trailer Thumbnail</string>
+    <string name="add_to_favs">Add to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="remove_frm_favs">Remove from favorites</string>
 </resources>

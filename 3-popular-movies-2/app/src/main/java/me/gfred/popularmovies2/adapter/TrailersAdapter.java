@@ -19,14 +19,14 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
     private static final String YOUTUBE_THUMBNAIL_BASE_URL= "http://img.youtube.com/vi/";
     private static final String YOUTUBE_THUMBNAIL_PARAM = "/0.jpg";
 
-    Context mContext;
-    List<Pair<String, String>> mTrailers;
+    private Context mContext;
+    private List<Pair<String, String>> mTrailers;
 
-    final private TrailerClickListener mTrailerClicklistener;
+    final private TrailerClickListener mTrailerClickListener;
 
-    public TrailersAdapter(Context context, TrailerClickListener mTrailerClicklistener) {
+    public TrailersAdapter(Context context, TrailerClickListener mTrailerClickListener) {
         this.mContext = context;
-        this.mTrailerClicklistener = mTrailerClicklistener;
+        this.mTrailerClickListener = mTrailerClickListener;
     }
 
     public void setTrailers(List<Pair<String, String>> trailers) {
@@ -78,7 +78,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
         public void onClick(View v) {
            String url =  mTrailers.get(getAdapterPosition()).second;
 
-           mTrailerClicklistener.onTrailerClicked(url);
+           mTrailerClickListener.onTrailerClicked(url);
         }
     }
 }
