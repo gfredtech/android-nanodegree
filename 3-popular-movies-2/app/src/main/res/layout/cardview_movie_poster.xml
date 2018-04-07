@@ -22,7 +22,7 @@
             android:id="@+id/movie_title"
             tools:text="@string/movie_name_label"
             android:text="@string/movie_name_label"
-            android:textColor="@color/colorAccent"
+            android:textColor="#0f0d0d"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

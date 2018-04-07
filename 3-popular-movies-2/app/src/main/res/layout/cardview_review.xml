@@ -11,7 +11,7 @@
             android:fillViewport="true"
             android:scrollbars="vertical">
             <LinearLayout
-                android:background="#808080"
+                android:background="#e8e8ef"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
