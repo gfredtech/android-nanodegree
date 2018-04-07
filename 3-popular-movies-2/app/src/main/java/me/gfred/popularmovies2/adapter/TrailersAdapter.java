@@ -8,13 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.net.URL;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyViewHolder> {
@@ -36,7 +32,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.trailerTextView.setText(mTrailers.get(0).first);
+        holder.trailerTextView.setText(mTrailers.get(position).first);
     }
 
     @Override
@@ -45,12 +41,11 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-       @BindView(R.id.trailer_tv)
        TextView trailerTextView;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            trailerTextView = itemView.findViewById(R.id.trailer_tv);
         }
     }
 }

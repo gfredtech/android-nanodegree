@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.ReviewsAdapter;
+import me.gfred.popularmovies2.adapter.TrailersAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies2.model.Movie;
 import me.gfred.popularmovies2.utils.DBUtils;
@@ -70,6 +71,9 @@ public class DetailActivity extends AppCompatActivity {
 
     @BindView(R.id.review_recyclerview)
     RecyclerView reviewRecyclerView;
+
+    @BindView(R.id.trailers_recyclerview)
+    RecyclerView trailerRecyclerView;
 
     @BindView(R.id.textView5)
     TextView reviewsTitle;
@@ -179,7 +183,8 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String[] strings) {
-            System.out.println(strings[1]);
+            System.out.println("kjdla " + strings[0]);
+            System.out.println("jtjiro " + strings[1]);
             List<Pair<String,String>> reviews = null;
             List<Pair<String, URL>> trailers = null;
             try {
@@ -192,7 +197,7 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             if(reviews != null && reviews.size() > 0) {
-               System.out.println("this " + reviews.get(0));
+               System.out.println("this^ " + reviews.get(0));
                movie.setReviews(reviews);
                reviewsTitle.setVisibility(View.VISIBLE);
 
@@ -217,7 +222,19 @@ public class DetailActivity extends AppCompatActivity {
                movie.setTrailers(trailers);
                trailersText.setVisibility(View.VISIBLE);
 
+               ViewGroup.LayoutParams params = trailerRecyclerView.getLayoutParams();
+               int height = (int) TypedValue.applyDimension(
+                       TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
 
+               params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+               params.height = height;
+               trailerRecyclerView.setLayoutParams(params);
+
+               TrailersAdapter trailersAdapter = new TrailersAdapter(context, trailers);
+               trailerRecyclerView.setLayoutManager(new LinearLayoutManager(
+                       context, LinearLayoutManager.HORIZONTAL, false));
+
+               trailerRecyclerView.setAdapter(trailersAdapter);
            }
 
         }
