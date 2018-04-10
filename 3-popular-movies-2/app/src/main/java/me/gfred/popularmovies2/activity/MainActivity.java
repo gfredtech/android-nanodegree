@@ -85,11 +85,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                         recyclerView.setAdapter(adapter);
                         sort_type = SORT_TYPE.POPULAR;
+                        setTitle(R.string.popular_menu);
                         break;
                     case FAVORITES:
                         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                         recyclerView.setAdapter(cursorAdapter);
                         sort_type = SORT_TYPE.FAVORITES;
+                        setTitle(R.string.favorites);
                         break;
 
                     case TOP_RATED:
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                         recyclerView.setAdapter(adapter);
                         sort_type = SORT_TYPE.TOP_RATED;
+                        setTitle(R.string.toprated_menu);
                         break;
                 }
             }
