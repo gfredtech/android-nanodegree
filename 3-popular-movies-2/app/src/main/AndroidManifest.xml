@@ -15,6 +15,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/SplashTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +27,12 @@
         </activity>
         <activity android:name=".activity.DetailActivity"
             android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.gfred.popularmovies2.activity.MainActivity" />
         </activity>
     </application>
+
+
 
 </manifest>

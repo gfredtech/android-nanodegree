@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 
@@ -91,6 +92,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+
         Intent intent = getIntent();
         if(intent.hasExtra("movie")) {
             movie = intent.getParcelableExtra("movie");
@@ -131,7 +133,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         MenuItem item = menu.getItem(0);
-        if(isFavorite) item.setTitle(R.string.remove_frm_favs);
+        if(DBUtils.CheckIfDataAlreadyInDBorNot(db, movie.getId())) item.setTitle(R.string.remove_frm_favs);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -139,6 +141,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         boolean changed = false;
+
         if(id == R.id.detail_favorite) {
 
             if(isFavorite) {
@@ -146,16 +149,16 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
                     changed = true;
                     Toast.makeText(this, R.string.removed_from_favorites,
                             Toast.LENGTH_SHORT).show();
+                    item.setTitle(R.string.add_to_favs);
+                    isFavorite = false;
                 }
-                item.setTitle(R.string.add_to_favs);
-
-
             } else {
                 DBUtils.addMovieToFavorite(db, movie);
                 Toast.makeText(this, R.string.added_to_favorites,
                         Toast.LENGTH_SHORT).show();
                 item.setTitle(R.string.remove_frm_favs);
                 changed = true;
+                isFavorite = true;
             }
 
             Intent intentMessage = new Intent();

@@ -11,6 +11,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -28,10 +30,11 @@ import me.gfred.popularmovies2.utils.JsonUtils;
 
 public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.MovieClickListener{
     private SQLiteDatabase db;
-    ArrayList<Movie> popularMovies;
-    ArrayList<Movie> topRatedMovies;
+    static ArrayList<Movie> popularMovies;
+    static ArrayList<Movie> topRatedMovies;
     String json[];
     Cursor cursor;
+    boolean stateChange = false;
 
     enum SORT_TYPE {
         POPULAR, TOP_RATED, FAVORITES,
@@ -50,11 +53,15 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        json = new String[2];
 
         Intent intent = getIntent();
         if(intent.hasExtra("movies_data")) {
+            json = new String[2];
             json = intent.getExtras().getStringArray("movies_data");
+        }
+
+        if(json != null && json.length != 0) {
+            jsonParser(json);
         }
 
         FavoriteMoviesDBHelper helper = new FavoriteMoviesDBHelper(this);
@@ -64,21 +71,11 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         cursorAdapter = new MainRecyclerAdapter(this, cursor, this);
 
-        if(json != null) {
-
-            try {
-                popularMovies = JsonUtils.parseListMovies(json[0]);
-                topRatedMovies = JsonUtils.parseListMovies(json[1]);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         if(savedInstanceState != null) {
             SORT_TYPE sort_type1 = (SORT_TYPE) savedInstanceState.getSerializable("sort_type");
             MainRecyclerAdapter adapter;
             if(sort_type1 != null) {
+                stateChange = true;
                 switch (sort_type1) {
                     case POPULAR:
                         adapter = new MainRecyclerAdapter(this, popularMovies, this);
@@ -103,12 +100,17 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                         break;
                 }
             }
+            else if(savedInstanceState.getParcelableArrayList("popular") != null) {
+                popularMovies = savedInstanceState.getParcelableArrayList("popular");
+                topRatedMovies = savedInstanceState.getParcelableArrayList("top_rated");
+            }
         } else {
 
             MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setAdapter(adapter);
             sort_type = SORT_TYPE.POPULAR;
+            setTitle(R.string.popular_menu);
         }
 
     }
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("sort_type", sort_type);
+        System.out.println("instance state saved");
 
     }
 
@@ -130,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     //get data and update cursor if favorite movies changed.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("Instance state no be null");
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 2) {
             if(data != null) {
@@ -157,8 +161,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 case POPULAR:
                     menu.getItem(0).setTitle(R.string.toprated_menu);
                     break;
-
             }
+        } else{
+            menu.getItem(0).setTitle(R.string.popular_menu);
         }
         return true;
     }
@@ -167,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.top_rated) {
-            if(sort_type == SORT_TYPE.POPULAR) {
+            if(item.getTitle().equals("Top Rated")) {
                 MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                 recyclerView.setAdapter(adapter);
@@ -183,9 +188,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 sort_type = SORT_TYPE.POPULAR;
             }
         } else if(id == R.id.favorite) {
-
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setAdapter(cursorAdapter);
+            if (recyclerView.getLayoutManager().getItemCount() == 0)
+                Toast.makeText(this, "You have no favorite movies yet.", Toast.LENGTH_SHORT).show();
             setTitle(R.string.favorites);
             sort_type = SORT_TYPE.FAVORITES;
 
@@ -229,5 +235,16 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         });
 
        return builder.create();
+    }
+
+    void jsonParser(String[] jsonData) {
+        try {
+            popularMovies = JsonUtils.parseListMovies(jsonData[0]);
+            topRatedMovies = JsonUtils.parseListMovies(jsonData[1]);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }
