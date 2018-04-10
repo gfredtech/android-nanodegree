@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
             MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setAdapter(adapter);
+            sort_type = SORT_TYPE.POPULAR;
         }
 
     }
@@ -148,6 +149,17 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if(sort_type != null) {
+            switch (sort_type) {
+                case TOP_RATED:
+                   menu.getItem(0).setTitle(R.string.popular_menu);
+                    break;
+                case POPULAR:
+                    menu.getItem(0).setTitle(R.string.toprated_menu);
+                    break;
+
+            }
+        }
         return true;
     }
 
