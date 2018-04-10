@@ -31,8 +31,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     ArrayList<Movie> popularMovies;
     ArrayList<Movie> topRatedMovies;
     String json[];
-    Boolean isPopular;
     Cursor cursor;
+
+    enum SORT_TYPE {
+        POPULAR, TOP_RATED, FAVORITES,
+    }
+
+    SORT_TYPE sort_type;
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
@@ -70,12 +75,46 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
             }
         }
 
-        MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setAdapter(adapter);
-        isPopular = true;
+        if(savedInstanceState != null) {
+            SORT_TYPE sort_type1 = (SORT_TYPE) savedInstanceState.getSerializable("sort_type");
+            MainRecyclerAdapter adapter;
+            if(sort_type1 != null) {
+                switch (sort_type1) {
+                    case POPULAR:
+                        adapter = new MainRecyclerAdapter(this, popularMovies, this);
+                        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                        recyclerView.setAdapter(adapter);
+                        sort_type = SORT_TYPE.POPULAR;
+                        break;
+                    case FAVORITES:
+                        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                        recyclerView.setAdapter(cursorAdapter);
+                        sort_type = SORT_TYPE.FAVORITES;
+                        break;
+
+                    case TOP_RATED:
+                        adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
+                        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+                        recyclerView.setAdapter(adapter);
+                        sort_type = SORT_TYPE.TOP_RATED;
+                        break;
+                }
+            }
+        } else {
+
+            MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            recyclerView.setAdapter(adapter);
+        }
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("sort_type", sort_type);
+
+    }
 
     @Override
     public void onMovieClicked(Movie movie) {
@@ -113,26 +152,27 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.top_rated) {
-            if(isPopular) {
+            if(sort_type == SORT_TYPE.POPULAR) {
                 MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                 recyclerView.setAdapter(adapter);
-                isPopular = false;
                 item.setTitle(R.string.popular_menu);
                 setTitle(getString(R.string.toprated_menu));
+                sort_type = SORT_TYPE.TOP_RATED;
             } else {
                 MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
                 recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
                 recyclerView.setAdapter(adapter);
-                isPopular = true;
                 item.setTitle(R.string.toprated_menu);
                 setTitle(getString(R.string.popular_menu));
+                sort_type = SORT_TYPE.POPULAR;
             }
         } else if(id == R.id.favorite) {
 
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setAdapter(cursorAdapter);
             setTitle(R.string.favorites);
+            sort_type = SORT_TYPE.FAVORITES;
 
         }
         return super.onOptionsItemSelected(item);
