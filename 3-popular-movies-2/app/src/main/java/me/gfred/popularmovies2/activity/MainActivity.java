@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         Intent intent = getIntent();
         if(intent.hasExtra("movies_data")) {
             json = intent.getExtras().getStringArray("movies_data");
@@ -87,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         }
 
         currentState = s;
-
     }
 
     @Override
@@ -207,10 +205,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         try {
             popularMovies = JsonUtils.parseListMovies(jsonData[0]);
             topRatedMovies = JsonUtils.parseListMovies(jsonData[1]);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 }
