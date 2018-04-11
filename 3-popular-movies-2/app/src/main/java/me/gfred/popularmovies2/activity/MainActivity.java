@@ -32,21 +32,15 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     private SQLiteDatabase db;
     static ArrayList<Movie> popularMovies;
     static ArrayList<Movie> topRatedMovies;
-    String json[];
+    static String json[];
+    static String currentState;
     Cursor cursor;
-    boolean stateChange = false;
-
-    enum SORT_TYPE {
-        POPULAR, TOP_RATED, FAVORITES,
-    }
-
-    SORT_TYPE sort_type;
+    private MainRecyclerAdapter popularAdapter;
+    private MainRecyclerAdapter topRatedAdapter;
+    MainRecyclerAdapter cursorAdapter;
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
-
-
-    MainRecyclerAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         Intent intent = getIntent();
         if(intent.hasExtra("movies_data")) {
-            json = new String[2];
             json = intent.getExtras().getStringArray("movies_data");
         }
 
@@ -70,57 +63,37 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         cursor = DBUtils.getFavoriteMovies(db);
 
         cursorAdapter = new MainRecyclerAdapter(this, cursor, this);
+        popularAdapter = new MainRecyclerAdapter(this, popularMovies, this);
+        topRatedAdapter = new MainRecyclerAdapter(this, topRatedMovies, this);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        if(savedInstanceState != null) {
-            SORT_TYPE sort_type1 = (SORT_TYPE) savedInstanceState.getSerializable("sort_type");
-            MainRecyclerAdapter adapter;
-            if(sort_type1 != null) {
-                stateChange = true;
-                switch (sort_type1) {
-                    case POPULAR:
-                        adapter = new MainRecyclerAdapter(this, popularMovies, this);
-                        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-                        recyclerView.setAdapter(adapter);
-                        sort_type = SORT_TYPE.POPULAR;
-                        setTitle(R.string.popular_menu);
-                        break;
-                    case FAVORITES:
-                        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-                        recyclerView.setAdapter(cursorAdapter);
-                        sort_type = SORT_TYPE.FAVORITES;
-                        setTitle(R.string.favorites);
-                        break;
+        String s = "POPULAR";
+        if(savedInstanceState != null)
+         s = savedInstanceState.getString("state", "POPULAR");
 
-                    case TOP_RATED:
-                        adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
-                        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-                        recyclerView.setAdapter(adapter);
-                        sort_type = SORT_TYPE.TOP_RATED;
-                        setTitle(R.string.toprated_menu);
-                        break;
-                }
-            }
-            else if(savedInstanceState.getParcelableArrayList("popular") != null) {
-                popularMovies = savedInstanceState.getParcelableArrayList("popular");
-                topRatedMovies = savedInstanceState.getParcelableArrayList("top_rated");
-            }
-        } else {
-
-            MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            recyclerView.setAdapter(adapter);
-            sort_type = SORT_TYPE.POPULAR;
-            setTitle(R.string.popular_menu);
+        switch (s) {
+            case "POPULAR":
+                recyclerView.setAdapter(popularAdapter);
+                setTitle(R.string.popular_menu);
+                break;
+            case "TOP_RATED":
+                recyclerView.setAdapter(topRatedAdapter);
+                setTitle(R.string.toprated_menu);
+                break;
+            case "FAVORITE":
+                recyclerView.setAdapter(cursorAdapter);
+                setTitle(R.string.favorites);
+                break;
         }
+
+        currentState = s;
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("sort_type", sort_type);
-        System.out.println("instance state saved");
-
+        outState.putString("state", currentState);
     }
 
     @Override
@@ -133,14 +106,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     //get data and update cursor if favorite movies changed.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("Instance state no be null");
+
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 2) {
-            if(data != null) {
+        if(requestCode == 2 && data != null) {
                 Boolean message = data.getBooleanExtra("changed", false);
 
                 if(message) cursorAdapter.swapCursor(DBUtils.getFavoriteMovies(db));
-            }
         }
     }
 
@@ -153,17 +124,16 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if(sort_type != null) {
-            switch (sort_type) {
-                case TOP_RATED:
-                   menu.getItem(0).setTitle(R.string.popular_menu);
-                    break;
-                case POPULAR:
-                    menu.getItem(0).setTitle(R.string.toprated_menu);
-                    break;
-            }
-        } else{
-            menu.getItem(0).setTitle(R.string.popular_menu);
+        switch (currentState) {
+            case "POPULAR":
+                menu.getItem(0).setTitle(R.string.toprated_menu);
+                break;
+            case "TOP_RATED":
+                menu.getItem(0).setTitle(R.string.popular_menu);
+                break;
+            case "FAVORITE":
+                menu.getItem(0).setTitle(R.string.popular_menu);
+                break;
         }
         return true;
     }
@@ -173,28 +143,24 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         int id = item.getItemId();
         if(id == R.id.top_rated) {
             if(item.getTitle().equals("Top Rated")) {
-                MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, topRatedMovies, this);
-                recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-                recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(topRatedAdapter);
                 item.setTitle(R.string.popular_menu);
                 setTitle(getString(R.string.toprated_menu));
-                sort_type = SORT_TYPE.TOP_RATED;
+                currentState = "TOP_RATED";
+
             } else {
-                MainRecyclerAdapter adapter = new MainRecyclerAdapter(this, popularMovies, this);
-                recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-                recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(popularAdapter);
                 item.setTitle(R.string.toprated_menu);
                 setTitle(getString(R.string.popular_menu));
-                sort_type = SORT_TYPE.POPULAR;
+                currentState = "POPULAR";
+
             }
         } else if(id == R.id.favorite) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setAdapter(cursorAdapter);
             if (recyclerView.getLayoutManager().getItemCount() == 0)
                 Toast.makeText(this, "You have no favorite movies yet.", Toast.LENGTH_SHORT).show();
             setTitle(R.string.favorites);
-            sort_type = SORT_TYPE.FAVORITES;
-
+            currentState = "FAVORITE";
         }
         return super.onOptionsItemSelected(item);
     }

@@ -91,8 +91,6 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-
-
         Intent intent = getIntent();
         if(intent.hasExtra("movie")) {
             movie = intent.getParcelableExtra("movie");
