@@ -50,11 +50,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         Intent intent = getIntent();
         if(intent.hasExtra("movies_data")) {
             json = intent.getExtras().getStringArray("movies_data");
+            if(json != null && json.length != 0) {
+                jsonParser(json);
+            }
         }
 
-        if(json != null && json.length != 0) {
-            jsonParser(json);
-        }
+
 
         FavoriteMoviesDBHelper helper = new FavoriteMoviesDBHelper(this);
 
@@ -176,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 if(isFavorite) {
 
                     if(DBUtils.removeMovieFromFavorite(db, movie.getId()))
-                        Toast.makeText(builder.getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(builder.getContext(), "Removed from favorites",
+                                Toast.LENGTH_SHORT).show();
 
                     cursorAdapter.swapCursor(DBUtils.getFavoriteMovies(db));
                     dialog.dismiss();

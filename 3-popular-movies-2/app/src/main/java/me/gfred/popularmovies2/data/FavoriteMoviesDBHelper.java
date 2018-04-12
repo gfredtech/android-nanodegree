@@ -28,8 +28,6 @@ public class FavoriteMoviesDBHelper extends SQLiteOpenHelper {
                 ");";
 
         db.execSQL(SQL_CREATE_FAVORITE_TABLE);
-
-
     }
 
     @Override
