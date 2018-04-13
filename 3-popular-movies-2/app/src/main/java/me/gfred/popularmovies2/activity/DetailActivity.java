@@ -47,7 +47,7 @@ import me.gfred.popularmovies2.utils.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity implements TrailersAdapter.TrailerClickListener {
     static boolean isFavorite;
-    SQLiteDatabase db;
+
     static Movie movie;
     Cursor cursor;
     Context context;
@@ -121,8 +121,8 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         vote.setText(String.valueOf(movie.getVoteAverage()));
         releaseDate.setText(movie.getReleaseDate());
 
-        db = new FavoriteMoviesDBHelper(this).getReadableDatabase();
-        cursor = DBUtils.getFavoriteMovies(db);
+
+
        isFavorite = DBUtils.CheckIfDataAlreadyInDBorNot(db, movie.getId());
        cursor.close();
     }
@@ -138,13 +138,12 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        boolean changed = false;
 
         if(id == R.id.detail_favorite) {
 
             if(isFavorite) {
                 if(DBUtils.removeMovieFromFavorite(db, movie.getId())) {
-                    changed = true;
+
                     Toast.makeText(this, R.string.removed_from_favorites,
                             Toast.LENGTH_SHORT).show();
                     item.setTitle(R.string.add_to_favs);
@@ -155,15 +154,9 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
                 Toast.makeText(this, R.string.added_to_favorites,
                         Toast.LENGTH_SHORT).show();
                 item.setTitle(R.string.remove_frm_favs);
-                changed = true;
+
                 isFavorite = true;
             }
-
-            Intent intentMessage = new Intent();
-
-            //tells the cursor object to update to reflect latest information, since it's changed.
-            intentMessage.putExtra("changed", changed);
-            setResult(2, intentMessage);
         }
         return super.onOptionsItemSelected(item);
     }
