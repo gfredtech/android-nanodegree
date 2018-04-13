@@ -12,9 +12,6 @@ import static me.gfred.popularmovies2.data.FavoriteMoviesContract.FavoriteMovies
 
 public class DBUtils {
 
-
-
-
     public static ContentValues addMovieToFavorite(Movie movie) {
         ContentValues cv = new ContentValues();
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
@@ -24,14 +21,17 @@ public class DBUtils {
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE, movie.getReleaseDate());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_VOTEAVERAGE, movie.getVoteAverage());
         return cv;
-
-
     }
 
    public static Uri deleteFavorite(int id) {
         String stringId = Integer.toString(id);
         Uri uri = CONTENT_URI;
         return uri.buildUpon().appendPath(stringId).build();
+    }
 
+    public static Uri queryFavorite(int id) {
+        String stringId = Integer.toString(id);
+        Uri uri = CONTENT_URI;
+        return uri.buildUpon().appendPath(stringId).build();
     }
 }

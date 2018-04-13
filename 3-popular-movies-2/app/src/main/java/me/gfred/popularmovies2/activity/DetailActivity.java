@@ -1,5 +1,6 @@
 package me.gfred.popularmovies2.activity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,11 +36,14 @@ import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.ReviewsAdapter;
 import me.gfred.popularmovies2.adapter.TrailersAdapter;
+import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies2.model.Movie;
 import me.gfred.popularmovies2.utils.DBUtils;
 import me.gfred.popularmovies2.utils.JsonUtils;
 import me.gfred.popularmovies2.utils.NetworkUtils;
+
+import static me.gfred.popularmovies2.data.FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI;
 
 /**
  * Created by Gfred on 3/3/2018.
@@ -121,9 +125,13 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         vote.setText(String.valueOf(movie.getVoteAverage()));
         releaseDate.setText(movie.getReleaseDate());
 
+        Cursor cursor = getContentResolver().query(DBUtils.queryFavorite(movie.getId()),
+                null,
+                null,
+                null,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
 
-
-       isFavorite = DBUtils.CheckIfDataAlreadyInDBorNot(db, movie.getId());
+        isFavorite = cursor != null && cursor.getCount() == 1;
        cursor.close();
     }
 
@@ -131,7 +139,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         MenuItem item = menu.getItem(0);
-        if(DBUtils.CheckIfDataAlreadyInDBorNot(db, movie.getId())) item.setTitle(R.string.remove_frm_favs);
+        if(isFavorite) item.setTitle(R.string.remove_frm_favs);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -142,20 +150,24 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         if(id == R.id.detail_favorite) {
 
             if(isFavorite) {
-                if(DBUtils.removeMovieFromFavorite(db, movie.getId())) {
-
+                Uri uri = DBUtils.deleteFavorite(movie.getId());
+                getContentResolver().delete(uri, null, null);
                     Toast.makeText(this, R.string.removed_from_favorites,
                             Toast.LENGTH_SHORT).show();
                     item.setTitle(R.string.add_to_favs);
                     isFavorite = false;
-                }
-            } else {
-                DBUtils.addMovieToFavorite(db, movie);
-                Toast.makeText(this, R.string.added_to_favorites,
-                        Toast.LENGTH_SHORT).show();
-                item.setTitle(R.string.remove_frm_favs);
 
-                isFavorite = true;
+            } else {
+                ContentValues cv = DBUtils.addMovieToFavorite(movie);
+                Uri uri = getContentResolver().insert(CONTENT_URI, cv);
+
+                if (uri != null) {
+                    Toast.makeText(this, R.string.added_to_favorites,
+                            Toast.LENGTH_SHORT).show();
+                    item.setTitle(R.string.remove_frm_favs);
+
+                    isFavorite = true;
+                }
             }
         }
         return super.onOptionsItemSelected(item);

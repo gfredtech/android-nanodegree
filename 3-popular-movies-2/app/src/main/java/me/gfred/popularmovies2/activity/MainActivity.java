@@ -167,7 +167,14 @@ public class MainActivity extends AppCompatActivity implements
     AlertDialog getDialog(final Movie movie) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        getContentResolver().query()
+        Cursor cursor = getContentResolver().query(DBUtils.queryFavorite(movie.getId()),
+                null,
+                null,
+                null,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
+
+        final boolean isFavorite = cursor != null && cursor.getCount() == 1;
+
 
         String message = isFavorite ? "Remove from Favorites?" : "Add to Favorites?";
         builder.setMessage(message);
@@ -190,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements
                     Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
                     if (uri != null) {
                         Toast.makeText(builder.getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                        getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, MainActivity.this);
                         dialog.dismiss();
-
                     }
                 }
             }

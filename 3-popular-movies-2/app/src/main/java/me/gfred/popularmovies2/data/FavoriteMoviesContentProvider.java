@@ -60,8 +60,10 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
                 break;
 
             case FAVORITE_ID:
+                System.out.println(uri.toString());
                 String id = uri.getPathSegments().get(1);
-                String mSelection = "_id?=";
+                System.out.println(id);
+                String mSelection = "movie_id=?";
                 String[] mSelectionArgs = new String[]{id};
 
                 returnCursor = db.query(TABLE_NAME,
@@ -70,7 +72,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
                         mSelectionArgs,
                         null,
                         null,
-                        sortOrder);
+                        null);
                 break;
 
             default:
@@ -129,7 +131,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
             case FAVORITE_ID:
                 String id = uri.getPathSegments().get(1);
                 deleted = db.delete(TABLE_NAME,
-                        "_id=?", new String[]{id});
+                        "movie_id=?", new String[]{id});
                 break;
 
             default:
