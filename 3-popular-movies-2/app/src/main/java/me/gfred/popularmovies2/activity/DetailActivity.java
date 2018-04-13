@@ -103,9 +103,6 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         }
 
         context = this;
-
-         trailersAdapter = new TrailersAdapter(this, this);
-
     }
 
     void populateUI(Movie movie) {
@@ -222,6 +219,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     private void displayTrailers(List<Pair<String, String>> trailers) {
         trailersText.setVisibility(View.VISIBLE);
 
+        trailersAdapter = new TrailersAdapter(context, this);
         trailersAdapter.setTrailers(trailers);
         trailerRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         trailerRecyclerView.setAdapter(trailersAdapter);
@@ -230,21 +228,18 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
 
     void displayReviews(List<Pair<String, String>> reviews) {
 
-        //enable visibility of reviews label, and scale height of recyclerview to display items
-        reviewsTitle.setVisibility(View.VISIBLE);
-        ViewGroup.LayoutParams params = reviewRecyclerView.getLayoutParams();
-        int height = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+        if(reviewRecyclerView.getAdapter() == null) {
 
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = height;
-        reviewRecyclerView.setLayoutParams(params);
+            //enable visibility of reviews label, and scale height of recyclerview to display items
+            reviewsTitle.setVisibility(View.VISIBLE);
 
-        //load reviews into recyclerview
-        reviewsAdapter = new ReviewsAdapter(context, reviews);
-        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
-                context, LinearLayoutManager.HORIZONTAL, false));
-        reviewRecyclerView.setAdapter(reviewsAdapter);
+            //load reviews into recyclerview
+            reviewsAdapter = new ReviewsAdapter(context, reviews);
+            reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
+                    context, LinearLayoutManager.HORIZONTAL, false));
+            reviewRecyclerView.setAdapter(reviewsAdapter);
+            reviewsAdapter.notifyDataSetChanged();
+        }
     }
 
 
