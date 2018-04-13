@@ -1,4 +1,5 @@
 package me.gfred.popularmovies2.activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -56,6 +57,7 @@ public class SplashActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnected();
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class PopularMoviesQueryTask extends AsyncTask<URL, Void, String[]> {
 
         @Override

@@ -1,5 +1,6 @@
 package me.gfred.popularmovies2.activity;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -179,6 +180,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_BASE_URL + url)));
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class TrailerReviewTask extends AsyncTask<URL, Void, String[]> {
 
         @Override
