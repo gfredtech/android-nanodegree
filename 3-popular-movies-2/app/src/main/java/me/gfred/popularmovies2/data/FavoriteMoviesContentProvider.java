@@ -131,7 +131,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
                 break;
 
             default:
-                throw new UnsupportedOperationException("Uknown uri: " + uri);
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         if(deleted != 0) {

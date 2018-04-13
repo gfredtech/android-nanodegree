@@ -23,13 +23,11 @@ public class DBUtils {
 
    public static Uri deleteFavorite(int id) {
         String stringId = Integer.toString(id);
-        Uri uri = CONTENT_URI;
-        return uri.buildUpon().appendPath(stringId).build();
+       return CONTENT_URI.buildUpon().appendPath(stringId).build();
     }
 
     public static Uri queryFavorite(int id) {
         String stringId = Integer.toString(id);
-        Uri uri = CONTENT_URI;
-        return uri.buildUpon().appendPath(stringId).build();
+        return CONTENT_URI.buildUpon().appendPath(stringId).build();
     }
 }
