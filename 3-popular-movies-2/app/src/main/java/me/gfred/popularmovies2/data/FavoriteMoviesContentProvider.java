@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -77,8 +76,6 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
-
-
         }
 
         return returnCursor;
@@ -113,7 +110,6 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
-
 
         }
         return returnUri;

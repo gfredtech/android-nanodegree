@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +36,6 @@ import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.ReviewsAdapter;
 import me.gfred.popularmovies2.adapter.TrailersAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
-import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies2.model.Movie;
 import me.gfred.popularmovies2.utils.DBUtils;
 import me.gfred.popularmovies2.utils.JsonUtils;
@@ -54,7 +51,6 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     static boolean isFavorite;
 
     static Movie movie;
-    Cursor cursor;
     Context context;
 
     static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w500/";
@@ -88,6 +84,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     TextView trailersText;
 
     TrailersAdapter trailersAdapter;
+    ReviewsAdapter reviewsAdapter;
 
 
     @Override
@@ -132,8 +129,11 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
                 null,
                 FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
 
-        isFavorite = cursor != null && cursor.getCount() == 1;
-       cursor.close();
+        if(cursor!= null) {
+            isFavorite = cursor.getCount() == 1;
+
+            cursor.close();
+        }
     }
 
     @Override
@@ -241,10 +241,10 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         reviewRecyclerView.setLayoutParams(params);
 
         //load reviews into recyclerview
-        ReviewsAdapter adapter = new ReviewsAdapter(context, reviews);
+        reviewsAdapter = new ReviewsAdapter(context, reviews);
         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
                 context, LinearLayoutManager.HORIZONTAL, false));
-        reviewRecyclerView.setAdapter(adapter);
+        reviewRecyclerView.setAdapter(reviewsAdapter);
     }
 
 

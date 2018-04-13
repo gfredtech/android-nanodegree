@@ -1,8 +1,6 @@
 package me.gfred.popularmovies2.utils;
 
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;

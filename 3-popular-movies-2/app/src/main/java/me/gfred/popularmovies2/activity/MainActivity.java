@@ -103,10 +103,6 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(intent, 2);
     }
 
-    //get data and update cursor if favorite movies changed.
-
-
-
     @Override
     public void onMovieLongClicked(Movie movie) {
       AlertDialog dialog = getDialog(movie);
@@ -167,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements
     AlertDialog getDialog(final Movie movie) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        Cursor cursor = getContentResolver().query(DBUtils.queryFavorite(movie.getId()),
+        final Cursor cursor = getContentResolver().query(DBUtils.queryFavorite(movie.getId()),
                 null,
                 null,
                 null,
@@ -176,12 +172,14 @@ public class MainActivity extends AppCompatActivity implements
         final boolean isFavorite = cursor != null && cursor.getCount() == 1;
 
 
+
         String message = isFavorite ? "Remove from Favorites?" : "Add to Favorites?";
         builder.setMessage(message);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(isFavorite) {
+                    cursor.close();
 
                     getContentResolver().delete(DBUtils.deleteFavorite(movie.getId()), null, null);
                     getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, MainActivity.this);
@@ -206,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
-
                 dialog.dismiss();
             }
         });
@@ -229,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements
 
         return new AsyncTaskLoader<Cursor>(this) {
 
-            // Initialize a Cursor, this will hold all the task data
+            // Initialize a Cursor, this will hold all the favorites
             Cursor mFavoriteData = null;
 
             // onStartLoading() is called when a loader first starts loading data
@@ -247,10 +244,6 @@ public class MainActivity extends AppCompatActivity implements
             // loadInBackground() performs asynchronous loading of data
             @Override
             public Cursor loadInBackground() {
-                // Will implement to load data
-
-                // COMPLETED (5) Query and load all task data in the background; sort by priority
-                // [Hint] use a try/catch block to catch any errors in loading data
 
                 try {
                     return getContentResolver().query(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
@@ -266,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
-            // deliverResult sends the result of the load, a Cursor, to the registered listener
             public void deliverResult(Cursor data) {
                 mFavoriteData = data;
                 super.deliverResult(data);
@@ -278,13 +270,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
-
-
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
-
     }
 }
