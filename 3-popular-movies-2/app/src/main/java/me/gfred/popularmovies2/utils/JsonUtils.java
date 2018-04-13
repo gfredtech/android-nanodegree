@@ -72,7 +72,6 @@ public class JsonUtils {
                 JSONObject a = trailersJson.getJSONObject(i);
                 String title = a.getString("name");
                 String link = a.getString("key");
-                System.out.println(link);
                 trailers.add(new Pair<>(title, link));
             }
         }

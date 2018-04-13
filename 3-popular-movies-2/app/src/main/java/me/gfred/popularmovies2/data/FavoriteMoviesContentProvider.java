@@ -59,9 +59,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
                 break;
 
             case FAVORITE_ID:
-                System.out.println(uri.toString());
                 String id = uri.getPathSegments().get(1);
-                System.out.println(id);
                 String mSelection = "movie_id=?";
                 String[] mSelectionArgs = new String[]{id};
 

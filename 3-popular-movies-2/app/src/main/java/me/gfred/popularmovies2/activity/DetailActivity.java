@@ -14,9 +14,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -230,6 +232,13 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
 
             //enable visibility of reviews label, and scale height of recyclerview to display items
             reviewsTitle.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams params = reviewRecyclerView.getLayoutParams();
+            int height = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
+
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = height;
+            reviewRecyclerView.setLayoutParams(params);
 
             //load reviews into recyclerview
             reviewsAdapter = new ReviewsAdapter(context, reviews);
