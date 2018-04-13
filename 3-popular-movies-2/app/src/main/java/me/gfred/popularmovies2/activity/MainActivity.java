@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onMovieClicked(Movie movie) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra("movie", movie);
-        startActivityForResult(intent, 2);
+        startActivity(intent);
     }
 
     @Override
