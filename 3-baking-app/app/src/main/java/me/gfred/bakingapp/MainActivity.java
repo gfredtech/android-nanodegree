@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(this);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager
-                (this, LinearLayoutManager.HORIZONTAL, false));
+                (this, LinearLayoutManager.VERTICAL, false));
         recipeRecyclerView.setAdapter(adapter);
     }
 }
