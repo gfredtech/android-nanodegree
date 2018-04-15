@@ -31,6 +31,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     @Override
     public void onRecipeClick(Recipe recipe) {
-        
+
     }
 }

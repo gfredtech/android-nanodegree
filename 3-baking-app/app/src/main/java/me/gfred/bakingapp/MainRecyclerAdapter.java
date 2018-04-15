@@ -64,8 +64,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onClick(View view) {
-            Recipe recipe = recipeArrayList.get(getAdapterPosition());
-            mRecipeClickListener.onRecipeClick(recipe);
+            //Recipe recipe = recipeArrayList.get(getAdapterPosition());
+          //  mRecipeClickListener.onRecipeClick(recipe);
 
         }
     }
