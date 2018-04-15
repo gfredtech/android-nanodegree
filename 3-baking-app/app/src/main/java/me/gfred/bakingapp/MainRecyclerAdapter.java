@@ -9,17 +9,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
     private Context mContext;
-    //private ArrayList<Recipe> recipeArrayList;
+    private ArrayList<Recipe> recipeArrayList;
 
-    public MainRecyclerAdapter(Context context) {
+    final private RecipeClickListener mRecipeClickListener;
+
+    public MainRecyclerAdapter(Context context, RecipeClickListener recipeClickListener) {
         this.mContext = context;
         //this.recipeArrayList = recipes;
+        this.mRecipeClickListener = recipeClickListener;
 
+    }
+
+    interface RecipeClickListener{
+        void onRecipeClick(Recipe recipe);
     }
 
     @NonNull
@@ -42,7 +51,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return 6;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.recipe_title)
         TextView recipeTitle;
@@ -50,6 +59,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Recipe recipe = recipeArrayList.get(getAdapterPosition());
+            mRecipeClickListener.onRecipeClick(recipe);
+
         }
     }
 }
