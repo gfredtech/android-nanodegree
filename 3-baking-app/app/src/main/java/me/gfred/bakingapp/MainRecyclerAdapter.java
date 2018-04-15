@@ -20,9 +20,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     final private RecipeClickListener mRecipeClickListener;
 
-    public MainRecyclerAdapter(Context context, RecipeClickListener recipeClickListener) {
+    public MainRecyclerAdapter(Context context, ArrayList<Recipe> recipes, RecipeClickListener recipeClickListener) {
         this.mContext = context;
-        //this.recipeArrayList = recipes;
+        this.recipeArrayList = recipes;
         this.mRecipeClickListener = recipeClickListener;
 
     }
