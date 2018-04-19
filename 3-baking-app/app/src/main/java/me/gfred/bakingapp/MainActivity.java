@@ -1,11 +1,11 @@
 package me.gfred.bakingapp;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
         @Override
-        public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+        public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
             recipeArrayList = response.body();
 
             MainRecyclerAdapter adapter = new MainRecyclerAdapter
@@ -64,11 +64,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
             recipeRecyclerView.setLayoutManager(new LinearLayoutManager
                     (MainActivity.this, LinearLayoutManager.VERTICAL, false));
             recipeRecyclerView.setAdapter(adapter);
-
         }
 
         @Override
-        public void onFailure(Call<List<Recipe>> call, Throwable t) {
+        public void onFailure(@NonNull Call<List<Recipe>> call, Throwable t) {
             t.printStackTrace();
         }
     };
