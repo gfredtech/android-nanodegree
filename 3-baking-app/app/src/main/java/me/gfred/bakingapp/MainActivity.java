@@ -1,10 +1,12 @@
 package me.gfred.bakingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -40,7 +42,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     @Override
     public void onRecipeClick(Recipe recipe) {
+        //TODO: start detailed activity
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra("recipe", recipe);
+        startActivity(intent);
 
+        //Toast.makeText(this, recipe.getName(), Toast.LENGTH_SHORT).show();
     }
 
     public void createRecipeApi() {
