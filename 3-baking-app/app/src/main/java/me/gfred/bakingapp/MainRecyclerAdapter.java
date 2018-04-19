@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,11 +18,11 @@ import me.gfred.bakingapp.model.Recipe;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
     private Context mContext;
-    private ArrayList<Recipe> recipeArrayList;
+    private List<Recipe> recipeArrayList;
 
     final private RecipeClickListener mRecipeClickListener;
 
-    public MainRecyclerAdapter(Context context, ArrayList<Recipe> recipes, RecipeClickListener recipeClickListener) {
+    public MainRecyclerAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
         this.mContext = context;
         this.recipeArrayList = recipes;
         this.mRecipeClickListener = recipeClickListener;
@@ -44,12 +45,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MainRecyclerAdapter.MyViewHolder holder, int position) {
-        holder.recipeTitle.setText(R.string.lasagna);
+        holder.recipeTitle.setText(recipeArrayList.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return 100;
+        return recipeArrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
