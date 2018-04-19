@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.bakingapp.model.Recipe;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
     private Context mContext;
@@ -43,12 +44,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MainRecyclerAdapter.MyViewHolder holder, int position) {
-        holder.recipeTitle.setText("Lasagna");
+        holder.recipeTitle.setText(R.string.lasagna);
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return 100;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

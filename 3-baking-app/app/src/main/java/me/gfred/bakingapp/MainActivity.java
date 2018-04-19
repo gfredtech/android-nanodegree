@@ -5,10 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.bakingapp.model.Recipe;
 
 public class MainActivity extends AppCompatActivity implements MainRecyclerAdapter.RecipeClickListener{
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager
                 (this, LinearLayoutManager.VERTICAL, false));
         recipeRecyclerView.setAdapter(adapter);
+
+        Gson gson = new Gson();
     }
 
     @Override
