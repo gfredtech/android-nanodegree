@@ -2,12 +2,14 @@ package me.gfred.bakingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,8 +37,37 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        createRecipeApi();
-        apiJson.getRecipes().enqueue(recipeCallback);
+        if(savedInstanceState == null) {
+            createRecipeApi();
+            apiJson.getRecipes().enqueue(recipeCallback);
+        }
+    }
+
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("recipes", (ArrayList<? extends Parcelable>) recipeArrayList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            recipeArrayList = savedInstanceState.getParcelableArrayList("recipes");
+
+
+            if (recipeArrayList != null) {
+                MainRecyclerAdapter adapter = new MainRecyclerAdapter
+                        (MainActivity.this, recipeArrayList, MainActivity.this);
+
+                recipeRecyclerView.setLayoutManager(new LinearLayoutManager
+                        (MainActivity.this, LinearLayoutManager.VERTICAL, false));
+                recipeRecyclerView.setAdapter(adapter);
+            }
+        }
 
     }
 
