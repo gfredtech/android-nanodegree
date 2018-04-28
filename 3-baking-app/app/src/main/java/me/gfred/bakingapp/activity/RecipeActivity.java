@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.adapter.RecipeRecyclerAdapter;
 import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
 
@@ -48,7 +49,8 @@ public class RecipeActivity extends AppCompatActivity {
         StringBuilder builder = new StringBuilder();
         int i = 1;
         for(Ingredient n: recipe.getIngredients()) {
-            builder.append(i).append(". ")
+            builder.append(i)
+                    .append(". ")
                     .append(n.getIngredient())
                     .append(" (")
                     .append(n.getQuantity())
@@ -61,5 +63,8 @@ public class RecipeActivity extends AppCompatActivity {
         if(builder.length() > 0) ingredientsTextView.setText(builder.toString());
         else ingredientsTextView.setVisibility(View.INVISIBLE);
 
+        RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(this, recipe.getSteps());
     }
+
+
 }
