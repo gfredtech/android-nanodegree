@@ -4,6 +4,7 @@ package me.gfred.bakingapp.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,11 +46,12 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
         ButterKnife.bind(this, rootView);
-        System.out.println("Somebro bost");
+
         if(recipe != null) {
+            getActivity().setTitle(recipe.getName());
 
             if (recipe.getImage() != null && recipe.getImage().length() > 0) {
                 recipeImage.setVisibility(View.VISIBLE);

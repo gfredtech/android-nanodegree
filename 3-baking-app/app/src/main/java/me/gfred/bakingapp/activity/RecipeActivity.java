@@ -20,21 +20,24 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         ButterKnife.bind(this);
         Intent intent = getIntent();
+
+        RecipeFragment recipeFragment = new RecipeFragment();
+        recipeFragment.setContext(this);
+        FragmentManager manager = getSupportFragmentManager();
+
         if(intent.hasExtra("recipe")) {
             recipe = intent.getParcelableExtra("recipe");
-            setTitle(recipe.getName());
-            RecipeFragment recipeFragment = new RecipeFragment();
-
             recipeFragment.setRecipe(recipe);
-            recipeFragment.setContext(this);
+            manager.beginTransaction()
+                    .replace(R.id.recipe_container, recipeFragment)
+                    .commit();
 
-            FragmentManager manager = getSupportFragmentManager();
-
+        } else if(savedInstanceState != null && savedInstanceState.getParcelable("recipe") != null) {
+            recipe = savedInstanceState.getParcelable("recipe");
+            recipeFragment.setRecipe(recipe);
             manager.beginTransaction()
                     .add(R.id.recipe_container, recipeFragment)
                     .commit();
-
-
         }
     }
 
