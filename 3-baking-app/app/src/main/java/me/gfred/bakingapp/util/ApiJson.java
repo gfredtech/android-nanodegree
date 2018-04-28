@@ -1,4 +1,4 @@
-package me.gfred.bakingapp.utils;
+package me.gfred.bakingapp.util;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import me.gfred.bakingapp.adapter.MainRecyclerAdapter;
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.model.Recipe;
-import me.gfred.bakingapp.utils.ApiJson;
+import me.gfred.bakingapp.util.ApiJson;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
