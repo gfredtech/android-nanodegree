@@ -75,8 +75,7 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
             }
 
             if (builder.length() > 0) ingredientsTextView.setText(builder.toString());
-            else ingredientsTextView.setVisibility(View.INVISIBLE);
-
+            
             RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(mContext, recipe.getSteps(), this);
             stepRecyclerView.setLayoutManager(new LinearLayoutManager
                     (mContext, LinearLayoutManager.VERTICAL, false));
