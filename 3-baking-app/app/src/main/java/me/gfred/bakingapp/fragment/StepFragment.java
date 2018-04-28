@@ -44,7 +44,7 @@ public class StepFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this, rootView);
 
-        description.setText(mSteps.get(index).getDescription());
+        setStuff(index);
         if(index == 0) {
             buttonPrevious.setClickable(false);
             buttonPrevious.setEnabled(false);
@@ -56,7 +56,8 @@ public class StepFragment extends Fragment {
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    description.setText(mSteps.get(++index).getDescription());
+                    setStuff(index);
+                    index++;
 
                     if(index + 1 >= mSteps.size()) {
                         buttonNext.setEnabled(false);
@@ -74,7 +75,8 @@ public class StepFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                description.setText(mSteps.get(--index).getDescription());
+                setStuff(index);
+                index--;
                 if(index - 1 < 0) {
                     buttonPrevious.setEnabled(false);
                     buttonPrevious.setClickable(false);
@@ -95,5 +97,9 @@ public class StepFragment extends Fragment {
         this.mContext = mContext;
     }
 
+    void setStuff(int index) {
+        description.setText(mSteps.get(index).getDescription());
+        //TODO: video player
+    }
 
 }
