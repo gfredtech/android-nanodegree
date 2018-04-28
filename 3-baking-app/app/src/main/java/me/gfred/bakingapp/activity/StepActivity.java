@@ -28,14 +28,14 @@ public class StepActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
 
         if(intent.hasExtra("steps") && intent.hasExtra("index")) {
-            step = intent.getParcelableArrayListExtra("step");
+            step = intent.getParcelableArrayListExtra("steps");
             index = intent.getIntExtra("index", 0);
             stepFragment.setArgs(index, step, this);
 
             manager.beginTransaction()
                     .add(R.id.step_container, stepFragment)
                     .commit();
-            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
         } else if(savedInstanceState != null) {
             step = savedInstanceState.getParcelable("step");
