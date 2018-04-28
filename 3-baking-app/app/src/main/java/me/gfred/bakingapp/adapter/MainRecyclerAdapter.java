@@ -1,4 +1,4 @@
-package me.gfred.bakingapp;
+package me.gfred.bakingapp.adapter;
 
 
 import android.content.Context;
@@ -13,6 +13,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.model.Recipe;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
@@ -21,14 +22,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     final private RecipeClickListener mRecipeClickListener;
 
-    MainRecyclerAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
+   public MainRecyclerAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
         this.mContext = context;
         this.recipeArrayList = recipes;
         this.mRecipeClickListener = recipeClickListener;
 
     }
 
-    interface RecipeClickListener{
+    public interface RecipeClickListener{
         void onRecipeClick(Recipe recipe);
     }
 

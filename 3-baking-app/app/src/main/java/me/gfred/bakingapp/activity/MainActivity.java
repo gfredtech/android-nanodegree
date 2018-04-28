@@ -1,4 +1,4 @@
-package me.gfred.bakingapp;
+package me.gfred.bakingapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,13 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.gfred.bakingapp.adapter.MainRecyclerAdapter;
+import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.utils.ApiJson;
 import retrofit2.Call;
@@ -60,12 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
 
             if (recipeArrayList != null) {
-                MainRecyclerAdapter adapter = new MainRecyclerAdapter
-                        (MainActivity.this, recipeArrayList, MainActivity.this);
-
-                recipeRecyclerView.setLayoutManager(new LinearLayoutManager
-                        (MainActivity.this, LinearLayoutManager.VERTICAL, false));
-                recipeRecyclerView.setAdapter(adapter);
+                inflateRecyclerView();
             }
         }
 
@@ -74,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @Override
     public void onRecipeClick(Recipe recipe) {
         //TODO: start detailed activity
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
         intent.putExtra("recipe", recipe);
         startActivity(intent);
 
@@ -95,13 +91,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         @Override
         public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
             recipeArrayList = response.body();
-
-            MainRecyclerAdapter adapter = new MainRecyclerAdapter
-                    (MainActivity.this, recipeArrayList, MainActivity.this);
-
-            recipeRecyclerView.setLayoutManager(new LinearLayoutManager
-                    (MainActivity.this, LinearLayoutManager.VERTICAL, false));
-            recipeRecyclerView.setAdapter(adapter);
+            inflateRecyclerView();
         }
 
         @Override
@@ -109,4 +99,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
             t.printStackTrace();
         }
     };
+
+    void inflateRecyclerView(){
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter
+                (MainActivity.this, recipeArrayList, MainActivity.this);
+
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager
+                (MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        recipeRecyclerView.setAdapter(adapter);
+    }
 }
