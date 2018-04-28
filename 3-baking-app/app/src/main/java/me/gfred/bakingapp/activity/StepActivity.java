@@ -2,22 +2,57 @@ package me.gfred.bakingapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.fragment.StepFragment;
 import me.gfred.bakingapp.model.Step;
 
 public class StepActivity extends AppCompatActivity {
+
+    ArrayList<Step> step;
+    int index;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         Intent intent = getIntent();
-        if(intent.hasExtra("step")) {
-            Step step = intent.getParcelableExtra("step");
-            Toast.makeText(this, step.getShortDescription(), Toast.LENGTH_SHORT).show();
+        StepFragment stepFragment = new StepFragment();
+        FragmentManager manager = getSupportFragmentManager();
+
+        if(intent.hasExtra("steps") && intent.hasExtra("index")) {
+            step = intent.getParcelableArrayListExtra("step");
+            index = intent.getIntExtra("index", 0);
+            stepFragment.setArgs(index, step, this);
+
+            manager.beginTransaction()
+                    .add(R.id.step_container, stepFragment)
+                    .commit();
+            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
+
+        } else if(savedInstanceState != null) {
+            step = savedInstanceState.getParcelable("step");
+            index = savedInstanceState.getInt("index");
+            if (step != null)  {
+                stepFragment.setArgs(index, step, this);
+                manager.beginTransaction()
+                        .replace(R.id.step_container, stepFragment)
+                        .commit();
+            }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("step", step);
+        outState.putInt("index", index);
     }
 }

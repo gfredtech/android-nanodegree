@@ -4,4 +4,6 @@
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
     <string name="recipe_image">Recipe Image</string>
+    <string name="ratio">Ratio</string>
+    <string name="previous">PREVIOUS</string>
 </resources>

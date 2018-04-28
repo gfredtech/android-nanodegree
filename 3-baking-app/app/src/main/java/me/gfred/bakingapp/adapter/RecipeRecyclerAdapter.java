@@ -28,7 +28,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
     }
 
     public interface OnStepClickListener {
-        void onStepClick(Step step);
+        void onStepClick(int index);
     }
     @NonNull
     @Override
@@ -63,8 +63,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
 
         @Override
         public void onClick(View view) {
-            Step step = mStepList.get(getAdapterPosition());
-            mClickListener.onStepClick(step);
+            mClickListener.onStepClick(getAdapterPosition());
 
         }
     }

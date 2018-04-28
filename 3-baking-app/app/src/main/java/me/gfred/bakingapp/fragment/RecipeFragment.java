@@ -4,6 +4,7 @@ package me.gfred.bakingapp.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +78,8 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
             }
 
             if (builder.length() > 0) ingredientsTextView.setText(builder.toString());
-            
+
+
             RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(mContext, recipe.getSteps(), this);
             stepRecyclerView.setLayoutManager(new LinearLayoutManager
                     (mContext, LinearLayoutManager.VERTICAL, false));
@@ -96,9 +100,10 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
     }
 
     @Override
-    public void onStepClick(Step step) {
+    public void onStepClick(int index) {
         Intent intent = new Intent(getActivity(), StepActivity.class);
-        intent.putExtra("step", step);
+        intent.putParcelableArrayListExtra("steps", new ArrayList<Parcelable>(recipe.getSteps()));
+        intent.putExtra("index", index);
         startActivity(intent);
     }
 
