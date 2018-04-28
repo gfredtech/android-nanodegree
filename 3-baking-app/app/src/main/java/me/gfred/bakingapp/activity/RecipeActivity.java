@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +26,10 @@ public class RecipeActivity extends AppCompatActivity {
 
     @BindView(R.id.ingredients_tv)
     TextView ingredientsTextView;
+
+    @BindView(R.id.step_recyclerview)
+    RecyclerView stepRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +70,10 @@ public class RecipeActivity extends AppCompatActivity {
         else ingredientsTextView.setVisibility(View.INVISIBLE);
 
         RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(this, recipe.getSteps());
+        stepRecyclerView.setLayoutManager(new LinearLayoutManager
+                (this, LinearLayoutManager.VERTICAL, false));
+
+        stepRecyclerView.setAdapter(adapter);
     }
 
 
