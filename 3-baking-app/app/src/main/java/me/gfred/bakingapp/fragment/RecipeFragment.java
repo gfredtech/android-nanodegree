@@ -52,7 +52,7 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         ButterKnife.bind(this, rootView);
 
         if(recipe != null) {
-            getActivity().setTitle(recipe.getName());
+            if(getActivity() != null) getActivity().setTitle(recipe.getName());
 
             if (recipe.getImage() != null && recipe.getImage().length() > 0) {
                 recipeImage.setVisibility(View.VISIBLE);
