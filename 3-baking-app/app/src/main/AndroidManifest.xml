@@ -19,10 +19,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.RecipeActivity">
+        <activity android:name=".activity.RecipeActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity"/>
+        </activity>
+
+        <activity android:name=".activity.StepActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.RecipeActivity"/>
         </activity>
     </application>
 

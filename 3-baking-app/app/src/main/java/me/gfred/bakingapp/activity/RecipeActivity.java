@@ -1,7 +1,6 @@
 package me.gfred.bakingapp.activity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,8 +17,9 @@ import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.adapter.RecipeRecyclerAdapter;
 import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
+import me.gfred.bakingapp.model.Step;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements RecipeRecyclerAdapter.OnStepClickListener {
 
     @BindView(R.id.recipe_image)
     ImageView recipeImage;
@@ -33,7 +33,7 @@ public class RecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_recipe);
         ButterKnife.bind(this);
         Intent intent = getIntent();
         if(intent.hasExtra("recipe")) {
@@ -69,7 +69,7 @@ public class RecipeActivity extends AppCompatActivity {
         if(builder.length() > 0) ingredientsTextView.setText(builder.toString());
         else ingredientsTextView.setVisibility(View.INVISIBLE);
 
-        RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(this, recipe.getSteps());
+        RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(this, recipe.getSteps(), this);
         stepRecyclerView.setLayoutManager(new LinearLayoutManager
                 (this, LinearLayoutManager.VERTICAL, false));
 
@@ -77,4 +77,11 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onStepClick(Step step) {
+        Intent intent = new Intent(RecipeActivity.this, StepActivity.class);
+        intent.putExtra("step", step);
+        startActivity(intent);
+
+    }
 }
