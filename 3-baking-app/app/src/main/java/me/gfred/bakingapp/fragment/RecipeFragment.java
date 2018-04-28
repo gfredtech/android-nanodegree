@@ -105,7 +105,7 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     void adjustRecyclerViewHeight() {
         ViewGroup.LayoutParams params = stepRecyclerView.getLayoutParams();
-        int dp = recipe.getSteps().size() * 115;
+        int dp = recipe.getSteps().size() * 114;
         int height = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
 
