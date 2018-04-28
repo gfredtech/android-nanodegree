@@ -36,14 +36,11 @@
         android:textStyle="bold"
         android:layout_marginBottom="5dp"/>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/step_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/step_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

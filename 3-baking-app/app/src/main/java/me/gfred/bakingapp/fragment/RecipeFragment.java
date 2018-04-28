@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,8 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
             RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(mContext, recipe.getSteps(), this);
             stepRecyclerView.setLayoutManager(new LinearLayoutManager
                     (mContext, LinearLayoutManager.VERTICAL, false));
-
+            stepRecyclerView.setNestedScrollingEnabled(false);
+            adjustRecyclerViewHeight();
             stepRecyclerView.setAdapter(adapter);
         }
 
@@ -99,5 +101,16 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         Intent intent = new Intent(getActivity(), StepActivity.class);
         intent.putExtra("step", step);
         startActivity(intent);
+    }
+
+    void adjustRecyclerViewHeight() {
+        ViewGroup.LayoutParams params = stepRecyclerView.getLayoutParams();
+        int dp = recipe.getSteps().size() * 115;
+        int height = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = height;
+        stepRecyclerView.setLayoutParams(params);
     }
 }
