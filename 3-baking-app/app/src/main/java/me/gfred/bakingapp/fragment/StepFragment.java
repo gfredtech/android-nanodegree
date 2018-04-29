@@ -25,6 +25,8 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,6 @@ public class StepFragment extends Fragment {
 
     private List<Step> mSteps;
     private int index;
-
 
     @BindView(R.id.description)
     TextView description;
@@ -101,9 +102,9 @@ public class StepFragment extends Fragment {
 
     void setStuff(int index) {
         description.setText(mSteps.get(index).getDescription());
-        //TODO: video player
         String x = mSteps.get(index).getVideoURL();
         if(x != null && x.length() > 0) initializePlayer(Uri.parse(x));
+        else player.clearVideoSurface();
     }
 
     @OnClick(R.id.button_next)
