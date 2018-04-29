@@ -26,8 +26,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,10 +114,8 @@ public class StepFragment extends Fragment {
 
         }
         else {
-            System.out.println("Suuka!");
             videoView.setVisibility(View.INVISIBLE);
             notAvailableImage.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -127,7 +123,6 @@ public class StepFragment extends Fragment {
     public void nextClick() {
         index++;
         setStuff(index);
-
 
         if(index + 1 == mSteps.size()) {
             buttonNext.setEnabled(false);

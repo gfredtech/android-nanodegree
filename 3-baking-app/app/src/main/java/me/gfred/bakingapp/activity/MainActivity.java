@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         @Override
         public void onFailure(@NonNull Call<List<Recipe>> call, Throwable t) {
             t.printStackTrace();
+            Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_LONG).show();
+            finish();
         }
     };
 
