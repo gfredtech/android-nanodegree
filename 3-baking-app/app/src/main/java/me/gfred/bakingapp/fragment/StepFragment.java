@@ -1,9 +1,7 @@
 package me.gfred.bakingapp.fragment;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -94,8 +92,6 @@ public class StepFragment extends Fragment {
         }});
 
         outState.putLong("position", player.getCurrentPosition());
-
-
     }
 
     public void setArgs(int index, List<Step> steps) {
@@ -149,22 +145,20 @@ public class StepFragment extends Fragment {
         TrackSelector trackSelector =
                 new DefaultTrackSelector(videoTrackSelectionFactory);
 
-// 2. Create the player
-        player =
-                ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+        player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
         videoView.setPlayer(player);
 
-        // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter bandMeter = new DefaultBandwidthMeter();
-// Produces DataSource instances through which media data is loaded.
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
-                Util.getUserAgent(getActivity(), "BakingApp"), bandMeter);
-// This is the MediaSource representing the media to be played.
-        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(uri);
-// Prepare the player with the source.
-        player.prepare(videoSource);
 
+        if(getActivity() != null) {
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
+                    Util.getUserAgent(getActivity(), "BakingApp"), bandMeter);
+
+            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(uri);
+
+            player.prepare(videoSource);
+        }
     }
 
 }
