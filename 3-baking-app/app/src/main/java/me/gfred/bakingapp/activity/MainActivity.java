@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         if(savedInstanceState != null) {
             recipeArrayList = savedInstanceState.getParcelableArrayList("recipes");
 
-
             if (recipeArrayList != null) {
                 inflateRecyclerView();
             }

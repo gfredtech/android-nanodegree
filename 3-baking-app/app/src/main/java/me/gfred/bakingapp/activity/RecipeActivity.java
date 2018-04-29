@@ -14,6 +14,9 @@ public class RecipeActivity extends AppCompatActivity {
 
     Recipe recipe;
 
+    RecipeFragment recipeFragment;
+    FragmentManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,23 +24,18 @@ public class RecipeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Intent intent = getIntent();
 
-        RecipeFragment recipeFragment = new RecipeFragment();
-        recipeFragment.setContext(this);
-        FragmentManager manager = getSupportFragmentManager();
+        if(savedInstanceState == null) {
+            recipeFragment = new RecipeFragment();
+            recipeFragment.setContext(this);
+            manager = getSupportFragmentManager();
 
-        if(intent.hasExtra("recipe")) {
-            recipe = intent.getParcelableExtra("recipe");
-            recipeFragment.setRecipe(recipe);
-            manager.beginTransaction()
-                    .replace(R.id.recipe_container, recipeFragment)
-                    .commit();
-
-        } else if(savedInstanceState != null && savedInstanceState.getParcelable("recipe") != null) {
-            recipe = savedInstanceState.getParcelable("recipe");
-            recipeFragment.setRecipe(recipe);
-            manager.beginTransaction()
-                    .add(R.id.recipe_container, recipeFragment)
-                    .commit();
+            if (intent.hasExtra("recipe")) {
+                recipe = intent.getParcelableExtra("recipe");
+                recipeFragment.setRecipe(recipe);
+                manager.beginTransaction()
+                        .add(R.id.recipe_container, recipeFragment)
+                        .commit();
+            }
         }
     }
 
@@ -45,5 +43,21 @@ public class RecipeActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("recipe", recipe);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if(savedInstanceState != null && savedInstanceState.getParcelable("recipe") != null) {
+            recipeFragment = new RecipeFragment();
+            recipeFragment.setContext(this);
+            manager = getSupportFragmentManager();
+            recipe = savedInstanceState.getParcelable("recipe");
+            recipeFragment.setRecipe(recipe);
+            manager.beginTransaction()
+                    .replace(R.id.recipe_container, recipeFragment)
+                    .commit();
+        }
     }
 }
