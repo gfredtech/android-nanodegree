@@ -27,25 +27,28 @@ public class StepActivity extends AppCompatActivity {
         StepFragment stepFragment = new StepFragment();
         FragmentManager manager = getSupportFragmentManager();
 
-        if(intent.hasExtra("steps") && intent.hasExtra("index")) {
+        if(savedInstanceState != null) {
+            step = savedInstanceState.getParcelable("step");
+            index = savedInstanceState.getInt("index");
+            if (step != null)  {
+                stepFragment.setArgs(index, step);
+
+                manager.beginTransaction()
+                        .replace(R.id.step_container, stepFragment)
+                        .commit();
+            }
+        }
+
+        else if(intent.hasExtra("steps") && intent.hasExtra("index")) {
             step = intent.getParcelableArrayListExtra("steps");
             index = intent.getIntExtra("index", 0);
-            stepFragment.setArgs(index, step, this);
+            stepFragment.setArgs(index, step);
 
             manager.beginTransaction()
                     .add(R.id.step_container, stepFragment)
                     .commit();
 //            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
-        } else if(savedInstanceState != null) {
-            step = savedInstanceState.getParcelable("step");
-            index = savedInstanceState.getInt("index");
-            if (step != null)  {
-                stepFragment.setArgs(index, step, this);
-                manager.beginTransaction()
-                        .replace(R.id.step_container, stepFragment)
-                        .commit();
-            }
         }
     }
 

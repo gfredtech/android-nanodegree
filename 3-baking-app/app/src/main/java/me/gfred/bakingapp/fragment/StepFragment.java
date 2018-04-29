@@ -41,7 +41,7 @@ public class StepFragment extends Fragment {
 
     private List<Step> mSteps;
     private int index;
-    private Context mContext;
+
 
     @BindView(R.id.description)
     TextView description;
@@ -68,7 +68,7 @@ public class StepFragment extends Fragment {
         if(savedInstanceState != null) {
             mSteps = savedInstanceState.getParcelableArrayList("steps");
             index = savedInstanceState.getInt("index");
-             currentPosition = savedInstanceState.getLong("position");
+            currentPosition = savedInstanceState.getLong("position");
         }
 
         setStuff(index);
@@ -89,18 +89,18 @@ public class StepFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("index", index);
-        outState.putParcelableArrayList("steps", new ArrayList<Parcelable>(){{
+        outState.putParcelableArrayList("steps", new ArrayList<Step>(){{
             addAll(mSteps);
         }});
+
         outState.putLong("position", player.getCurrentPosition());
 
 
     }
 
-    public void setArgs(int index, List<Step> steps, Context mContext) {
+    public void setArgs(int index, List<Step> steps) {
         this.index = index;
         this.mSteps = steps;
-        this.mContext = mContext;
     }
 
     void setStuff(int index) {
@@ -151,14 +151,14 @@ public class StepFragment extends Fragment {
 
 // 2. Create the player
         player =
-                ExoPlayerFactory.newSimpleInstance(mContext, trackSelector);
+                ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
         videoView.setPlayer(player);
 
         // Measures bandwidth during playback. Can be null if not required.
         DefaultBandwidthMeter bandMeter = new DefaultBandwidthMeter();
 // Produces DataSource instances through which media data is loaded.
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(mContext,
-                Util.getUserAgent(mContext, "BakingApp"), bandMeter);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
+                Util.getUserAgent(getActivity(), "BakingApp"), bandMeter);
 // This is the MediaSource representing the media to be played.
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(uri);

@@ -102,7 +102,6 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
     @Override
     public void onStepClick(int index) {
         Intent intent = new Intent(getActivity(), StepActivity.class);
-        System.out.println("yama " + recipe.getSteps().get(0).getDescription());
         intent.putParcelableArrayListExtra("steps", new ArrayList<Step>(){{
             addAll(recipe.getSteps());
         }});
