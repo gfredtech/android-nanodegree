@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -53,6 +54,9 @@ public class StepFragment extends Fragment {
 
     @BindView(R.id.button_next)
     Button buttonNext;
+
+    @BindView(R.id.not_available_iv)
+    ImageView notAvailableImage;
 
     SimpleExoPlayer player;
 
@@ -101,10 +105,22 @@ public class StepFragment extends Fragment {
     }
 
     void setStuff(int index) {
+        if(getActivity() != null) getActivity().setTitle(mSteps.get(index).getShortDescription());
+
         description.setText(mSteps.get(index).getDescription());
         String x = mSteps.get(index).getVideoURL();
-        if(x != null && x.length() > 0) initializePlayer(Uri.parse(x));
-        else player.clearVideoSurface();
+        if(x != null && x.length() > 0) {
+            videoView.setVisibility(View.VISIBLE);
+            notAvailableImage.setVisibility(View.INVISIBLE);
+            initializePlayer(Uri.parse(x));
+
+        }
+        else {
+            System.out.println("Suuka!");
+            videoView.setVisibility(View.INVISIBLE);
+            notAvailableImage.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @OnClick(R.id.button_next)

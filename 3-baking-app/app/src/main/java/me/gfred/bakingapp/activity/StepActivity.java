@@ -29,8 +29,8 @@ public class StepActivity extends AppCompatActivity {
             step = savedInstanceState.getParcelable("step");
             index = savedInstanceState.getInt("index");
             if (step != null)  {
-                stepFragment.setArgs(index, step);
 
+                stepFragment.setArgs(index, step);
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
