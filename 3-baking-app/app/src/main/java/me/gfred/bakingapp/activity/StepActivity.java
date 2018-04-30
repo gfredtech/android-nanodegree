@@ -26,7 +26,7 @@ public class StepActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
 
         if(savedInstanceState != null) {
-            step = savedInstanceState.getParcelable("step");
+            step = savedInstanceState.getParcelableArrayList("step");
             index = savedInstanceState.getInt("index");
             if (step != null)  {
 

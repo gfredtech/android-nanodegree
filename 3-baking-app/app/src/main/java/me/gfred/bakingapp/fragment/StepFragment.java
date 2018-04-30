@@ -68,7 +68,7 @@ public class StepFragment extends Fragment {
 
         if(savedInstanceState != null) {
             mSteps = savedInstanceState.getParcelableArrayList("steps");
-            index = savedInstanceState.getInt("index");
+            index = savedInstanceState.getInt("index", 0);
             if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
         }
 
@@ -106,7 +106,8 @@ public class StepFragment extends Fragment {
     }
 
     void setStuff(int index) {
-        if(getActivity() != null) getActivity().setTitle(mSteps.get(index).getShortDescription());
+        if(getActivity() != null && getActivity().findViewById(R.id.tablet_pane) == null)
+            getActivity().setTitle(mSteps.get(index).getShortDescription());
 
         description.setText(mSteps.get(index).getDescription());
         String x = mSteps.get(index).getVideoURL();

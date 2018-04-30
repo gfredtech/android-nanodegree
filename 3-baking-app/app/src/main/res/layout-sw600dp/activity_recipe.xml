@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:id="@+id/someshits"
+        android:id="@+id/tablet_pane"
         android:layout_width="400dp"
         android:layout_height="match_parent">
 
@@ -19,14 +19,17 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray" />
+
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:id="@+id/step_container"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+
 </LinearLayout>

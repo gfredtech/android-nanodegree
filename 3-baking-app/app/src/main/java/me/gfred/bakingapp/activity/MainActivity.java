@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         public void onFailure(@NonNull Call<List<Recipe>> call, Throwable t) {
             t.printStackTrace();
             Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_LONG).show();
-            finish();
+
         }
     };
 
