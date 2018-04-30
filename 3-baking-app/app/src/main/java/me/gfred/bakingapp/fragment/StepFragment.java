@@ -69,11 +69,14 @@ public class StepFragment extends Fragment {
         if(savedInstanceState != null) {
             mSteps = savedInstanceState.getParcelableArrayList("steps");
             index = savedInstanceState.getInt("index");
-            currentPosition = savedInstanceState.getLong("position");
+            if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
         }
 
         setStuff(index);
-        if(currentPosition != -1L) player.seekTo(currentPosition);
+
+        if(currentPosition != -1L && notAvailableImage.getVisibility() == View.INVISIBLE) {
+            player.seekTo(currentPosition);
+        }
 
             if (index == 0) {
                 buttonPrevious.setClickable(false);
@@ -94,7 +97,7 @@ public class StepFragment extends Fragment {
             addAll(mSteps);
         }});
 
-        outState.putLong("position", player.getCurrentPosition());
+       if(player != null) outState.putLong("position", player.getCurrentPosition());
     }
 
     public void setArgs(int index, List<Step> steps) {

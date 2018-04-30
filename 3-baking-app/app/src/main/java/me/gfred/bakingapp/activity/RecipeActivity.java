@@ -30,6 +30,7 @@ public class RecipeActivity extends AppCompatActivity {
             manager = getSupportFragmentManager();
 
             if (intent.hasExtra("recipe")) {
+                if()
                 recipe = intent.getParcelableExtra("recipe");
                 recipeFragment.setRecipe(recipe);
                 manager.beginTransaction()
