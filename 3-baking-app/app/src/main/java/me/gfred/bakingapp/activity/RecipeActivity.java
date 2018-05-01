@@ -16,8 +16,6 @@ import me.gfred.bakingapp.model.Step;
 
 public class RecipeActivity extends AppCompatActivity {
 
-
-
     Recipe recipe;
     Step step;
 
@@ -25,7 +23,7 @@ public class RecipeActivity extends AppCompatActivity {
     StepFragment stepFragment;
     FragmentManager manager;
 
-    boolean mTwoPane = false;
+    static boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +32,7 @@ public class RecipeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Intent intent = getIntent();
 
-        if(findViewById(R.id.tablet_pane) != null) {
-            mTwoPane = true;
-        }
+         mTwoPane = findViewById(R.id.tablet_pane) != null;
 
         if(savedInstanceState == null) {
             recipeFragment = new RecipeFragment();
@@ -66,6 +62,7 @@ public class RecipeActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelable("recipe", recipe);
         outState.putParcelable("step", step);
+        outState.putBoolean("twoPane", mTwoPane);
     }
 
     @Override
@@ -82,6 +79,9 @@ public class RecipeActivity extends AppCompatActivity {
             manager.beginTransaction()
                     .replace(R.id.recipe_container, recipeFragment)
                     .commit();
+
+            mTwoPane = savedInstanceState.getBoolean("twoPane");
+
             if(mTwoPane) {
                 step = savedInstanceState.getParcelable("step");
                 stepFragment = new StepFragment();
