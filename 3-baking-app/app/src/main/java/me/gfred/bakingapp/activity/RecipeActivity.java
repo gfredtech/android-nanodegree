@@ -65,6 +65,8 @@ public class RecipeActivity extends AppCompatActivity {
         outState.putBoolean("twoPane", mTwoPane);
     }
 
+
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);

@@ -2,6 +2,7 @@ package me.gfred.bakingapp.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -67,10 +68,13 @@ public class StepFragment extends Fragment {
         long currentPosition = -1L;
 
         if(savedInstanceState != null) {
+            System.out.println("nmop " + index);
             mSteps = savedInstanceState.getParcelableArrayList("steps");
             index = savedInstanceState.getInt("index", 0);
             if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
         }
+
+        System.out.println("nmop..." + index);
 
         setStuff(index);
 
@@ -93,9 +97,7 @@ public class StepFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("index", index);
-        outState.putParcelableArrayList("steps", new ArrayList<Step>(){{
-            addAll(mSteps);
-        }});
+        outState.putParcelableArrayList("steps", (ArrayList<? extends Parcelable>) mSteps);
 
        if(player != null) outState.putLong("position", player.getCurrentPosition());
     }
@@ -106,6 +108,7 @@ public class StepFragment extends Fragment {
     }
 
     void setStuff(int index) {
+        index = index < 0 ? 0 : index;
         if(getActivity() != null && getActivity().findViewById(R.id.tablet_pane) == null)
             getActivity().setTitle(mSteps.get(index).getShortDescription());
 
