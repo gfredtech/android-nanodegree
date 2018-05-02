@@ -1,5 +1,6 @@
 package me.gfred.bakingapp.fragment;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -108,9 +109,6 @@ public class StepFragment extends Fragment {
     }
 
     void setStuff(int index) {
-        index = index < 0 ? 0 : index;
-        if(getActivity() != null && getActivity().findViewById(R.id.tablet_pane) == null)
-            getActivity().setTitle(mSteps.get(index).getShortDescription());
 
         description.setText(mSteps.get(index).getDescription());
         String x = mSteps.get(index).getVideoURL();
@@ -180,4 +178,8 @@ public class StepFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
 }
