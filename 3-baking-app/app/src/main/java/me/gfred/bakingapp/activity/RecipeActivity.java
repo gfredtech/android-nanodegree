@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.bakingapp.R;
@@ -14,10 +16,10 @@ import me.gfred.bakingapp.fragment.StepFragment;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.model.Step;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickedListener {
 
     Recipe recipe;
-    Step step;
+    int stepIndex;
 
     RecipeFragment recipeFragment;
     StepFragment stepFragment;
@@ -31,28 +33,72 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         ButterKnife.bind(this);
         Intent intent = getIntent();
+        manager = getSupportFragmentManager();
 
-         mTwoPane = findViewById(R.id.tablet_pane) != null;
+        if(findViewById(R.id.tablet_pane) != null) {
+            mTwoPane = true;
 
-        if(savedInstanceState == null) {
-            recipeFragment = new RecipeFragment();
-            recipeFragment.setContext(this);
-            manager = getSupportFragmentManager();
+            if(savedInstanceState == null && intent.hasExtra("recipe")) {
+                    recipe = intent.getParcelableExtra("recipe");
+                    recipeFragment = new RecipeFragment();
+                    recipeFragment.setRecipe(recipe);
+                    manager.beginTransaction()
+                            .add(R.id.recipe_container, recipeFragment)
+                            .commit();
 
-            if (intent.hasExtra("recipe")) {
-                recipe = intent.getParcelableExtra("recipe");
+                    stepFragment = new StepFragment();
+                    stepIndex = 0;
+                    stepFragment.setArgs(stepIndex, recipe.getSteps());
+                    manager.beginTransaction()
+                            .add(R.id.step_container, stepFragment)
+                            .commit();
+
+
+            } else if(savedInstanceState != null &&
+                     savedInstanceState.getParcelable("recipe") != null) {
+
+                recipe = savedInstanceState.getParcelable("recipe");
+                stepIndex = savedInstanceState.getInt("stepIndex");
+
+                recipeFragment = new RecipeFragment();
                 recipeFragment.setRecipe(recipe);
+                manager.beginTransaction()
+                        .replace(R.id.recipe_container, recipeFragment)
+                        .commit();
+
+                stepFragment = new StepFragment();
+                stepFragment.setArgs(stepIndex, recipe.getSteps());
+                manager.beginTransaction()
+                        .replace(R.id.step_container, stepFragment)
+                        .commit();
+            }
+
+
+        } else {
+            //TODO: we're loading for phone only... handle case
+            mTwoPane = false;
+
+            if(savedInstanceState == null && intent.hasExtra("recipe")) {
+                recipe = intent.getParcelableExtra("recipe");
+                recipeFragment = new RecipeFragment();
+                recipeFragment.setRecipe(recipe);
+
                 manager.beginTransaction()
                         .add(R.id.recipe_container, recipeFragment)
                         .commit();
 
-                if(mTwoPane) {
-                    stepFragment = new StepFragment();
-                    stepFragment.setArgs(0, recipe.getSteps());
-                    manager.beginTransaction()
-                            .add(R.id.step_container, stepFragment)
-                            .commit();
-                }
+            } else if(savedInstanceState != null &&
+                    savedInstanceState.getParcelable("recipe") != null) {
+
+                recipe = savedInstanceState.getParcelable("recipe");
+                stepIndex = savedInstanceState.getInt("stepIndex");
+
+                recipeFragment = new RecipeFragment();
+                recipeFragment.setRecipe(recipe);
+                manager.beginTransaction()
+                        .replace(R.id.recipe_container, recipeFragment)
+                        .commit();
+
             }
         }
     }
@@ -61,37 +107,27 @@ public class RecipeActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("recipe", recipe);
-        outState.putParcelable("step", step);
-        outState.putBoolean("twoPane", mTwoPane);
+        outState.putInt("stepIndex", stepIndex);
     }
 
-
-
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    public void onStepClicked(int index) {
 
-        if(savedInstanceState != null && savedInstanceState.getParcelable("recipe") != null) {
-            recipeFragment = new RecipeFragment();
-            recipeFragment.setContext(this);
-            manager = getSupportFragmentManager();
-            recipe = savedInstanceState.getParcelable("recipe");
-            recipeFragment.setRecipe(recipe);
+        if(mTwoPane) {
+            StepFragment stepFragment = new StepFragment();
+            stepFragment.setArgs(index, recipe.getSteps());
 
-            manager.beginTransaction()
-                    .replace(R.id.recipe_container, recipeFragment)
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.step_container, stepFragment)
                     .commit();
+        } else {
 
-            mTwoPane = savedInstanceState.getBoolean("twoPane");
-
-            if(mTwoPane) {
-                step = savedInstanceState.getParcelable("step");
-                stepFragment = new StepFragment();
-                stepFragment.setArgs(recipe.getSteps().indexOf(step), recipe.getSteps());
-                manager.beginTransaction()
-                        .replace(R.id.step_container, stepFragment)
-                        .commit();
-            }
+            Intent intent = new Intent(RecipeActivity.this, StepActivity.class);
+            intent.putParcelableArrayListExtra("steps", new ArrayList<Step>(){{
+                addAll(recipe.getSteps());
+            }});
+            intent.putExtra("index", index);
+            startActivity(intent);
         }
     }
 }

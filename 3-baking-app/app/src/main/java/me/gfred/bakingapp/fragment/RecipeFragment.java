@@ -41,10 +41,15 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
     RecyclerView stepRecyclerView;
 
     private Recipe recipe;
-    private Context mContext;
+
+    private OnStepClickedListener mCallback;
 
     public RecipeFragment() {
 
+    }
+
+    public interface OnStepClickedListener {
+        void onStepClicked(int index);
     }
 
     @Nullable
@@ -79,9 +84,9 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
             if (builder.length() > 0) ingredientsTextView.setText(builder.toString());
 
 
-            RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(mContext, recipe.getSteps(), this);
+            RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(getContext(), recipe.getSteps(), this);
             stepRecyclerView.setLayoutManager(new LinearLayoutManager
-                    (mContext, LinearLayoutManager.VERTICAL, false));
+                    (getContext(), LinearLayoutManager.VERTICAL, false));
             stepRecyclerView.setNestedScrollingEnabled(false);
             adjustRecyclerViewHeight();
             stepRecyclerView.setAdapter(adapter);
@@ -94,18 +99,25 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         this.recipe = recipe;
     }
 
-    public void setContext(Context context) {
-        this.mContext = context;
-    }
 
     @Override
     public void onStepClick(int index) {
-        Intent intent = new Intent(getActivity(), StepActivity.class);
-        intent.putParcelableArrayListExtra("steps", new ArrayList<Step>(){{
-            addAll(recipe.getSteps());
-        }});
-        intent.putExtra("index", index);
-        startActivity(intent);
+        mCallback.onStepClicked(index);
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mCallback = (OnStepClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnStepClickedListener");
+        }
     }
 
     void adjustRecyclerViewHeight() {
