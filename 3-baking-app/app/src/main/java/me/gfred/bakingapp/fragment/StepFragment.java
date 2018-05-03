@@ -111,7 +111,7 @@ public class StepFragment extends Fragment {
 
     void setStuff(int index) {
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            //Do some stuff
+            
             description.setText(mSteps.get(index).getDescription());
         }
         String x = mSteps.get(index).getVideoURL();
