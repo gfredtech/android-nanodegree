@@ -1,6 +1,7 @@
 package me.gfred.bakingapp.fragment;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -109,8 +110,10 @@ public class StepFragment extends Fragment {
     }
 
     void setStuff(int index) {
-
-        description.setText(mSteps.get(index).getDescription());
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            //Do some stuff
+            description.setText(mSteps.get(index).getDescription());
+        }
         String x = mSteps.get(index).getVideoURL();
         if(x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
