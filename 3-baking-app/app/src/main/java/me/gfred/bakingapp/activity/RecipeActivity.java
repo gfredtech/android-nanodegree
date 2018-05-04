@@ -50,7 +50,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
                     stepFragment = new StepFragment();
                     stepIndex = 0;
-                    stepFragment.setStepAndIndex(stepIndex, recipe.getSteps());
+                    stepFragment.setStep(recipe.getSteps().get(stepIndex));
                     manager.beginTransaction()
                             .add(R.id.step_container, stepFragment)
                             .commit();
@@ -70,7 +70,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                         .commit();
 
                 stepFragment = new StepFragment();
-                stepFragment.setStepAndIndex(stepIndex, recipe.getSteps());
+                stepFragment.setStep(recipe.getSteps().get(stepIndex));
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
@@ -117,7 +117,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
         if(mTwoPane) {
             StepFragment stepFragment = new StepFragment();
-            stepFragment.setStepAndIndex(index, recipe.getSteps());
+            stepFragment.setStep(recipe.getSteps().get(index));
             stepIndex = index;
 
             getSupportFragmentManager().beginTransaction()
@@ -146,7 +146,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     private void nextClick() {
         stepIndex++;
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStepAndIndex(stepIndex, recipe.getSteps());
+        stepFragment.setStep(recipe.getSteps().get(stepIndex));
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
@@ -157,7 +157,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
         stepIndex--;
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStepAndIndex(stepIndex, recipe.getSteps());
+        stepFragment.setStep(recipe.getSteps().get(stepIndex));
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)

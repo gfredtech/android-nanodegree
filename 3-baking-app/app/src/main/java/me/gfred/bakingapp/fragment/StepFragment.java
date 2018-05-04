@@ -43,8 +43,8 @@ import me.gfred.bakingapp.model.Step;
 
 public class StepFragment extends Fragment {
 
-    private List<Step> mSteps;
-    private int index;
+    private Step mSteps;
+
 
     @BindView(R.id.description)
     TextView description;
@@ -75,8 +75,7 @@ public class StepFragment extends Fragment {
 
         if(savedInstanceState != null) {
 
-            mSteps = savedInstanceState.getParcelableArrayList("steps");
-            index = savedInstanceState.getInt("index", 0);
+            mSteps = savedInstanceState.getParcelable("steps");
             if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
         }
 
@@ -86,36 +85,25 @@ public class StepFragment extends Fragment {
             player.seekTo(currentPosition);
         }
 
-            if (index == 0) {
-                buttonPrevious.setClickable(false);
-                buttonPrevious.setEnabled(false);
-            } else if (index == mSteps.size() - 1) {
-                buttonNext.setClickable(false);
-                buttonNext.setEnabled(false);
-            }
-
         return rootView;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelable("steps", mSteps);
 
-        outState.putInt("index", index);
-        outState.putParcelableArrayList("steps",
-                (ArrayList<? extends Parcelable>) mSteps);
-
-       if(player != null) outState.putLong("position", player.getCurrentPosition());
+       if(player != null)
+           outState.putLong("position", player.getCurrentPosition());
     }
 
-    public void setStepAndIndex(int index, List<Step> steps) {
-        this.index = index;
+    public void setStep(Step steps) {
         this.mSteps = steps;
     }
 
     void setViewElements() {
-        description.setText(mSteps.get(index).getDescription());
-        String x = mSteps.get(index).getVideoURL();
+        description.setText(mSteps.getDescription());
+        String x = mSteps.getVideoURL();
 
         if(x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
@@ -139,6 +127,20 @@ public class StepFragment extends Fragment {
         mCallback.onNavigationClicked(false);
     }
 
+    public void setButtonsVisibility(int index, int stepSize) {
+
+    }
+
+    public void enablePreviousButton(boolean enable) {
+        buttonPrevious.setClickable(enable);
+        buttonPrevious.setEnabled(enable);
+    }
+
+    public void enableNextButton(boolean enable) {
+        buttonNext.setClickable(enable);
+        buttonNext.setEnabled(enable);
+    }
+
     void initializePlayer(Uri uri) {
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -160,6 +162,7 @@ public class StepFragment extends Fragment {
                     .createMediaSource(uri);
 
             player.prepare(videoSource);
+            player.setPlayWhenReady(true);
         }
     }
 
@@ -182,10 +185,11 @@ public class StepFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("savage");
-        player.stop();
-        player.release();
-        player = null;
+        if(player != null) {
+            player.stop();
+            player.release();
+            player = null;
 
+        }
     }
 }

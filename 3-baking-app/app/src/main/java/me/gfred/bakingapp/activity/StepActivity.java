@@ -31,7 +31,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 StepFragment fragment = new StepFragment();
                 setTitle(step.get(index).getShortDescription());
 
-                fragment.setStepAndIndex(index, step);
+                fragment.setStep(step.get(index));
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.step_container, fragment)
@@ -46,7 +46,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 step = intent.getParcelableArrayListExtra("steps");
                 index = intent.getIntExtra("index", 0);
 
-                stepFragment.setStepAndIndex(index, step);
+                stepFragment.setStep(step.get(index));
                 setTitle(step.get(index).getShortDescription());
 
                 manager.beginTransaction()
@@ -55,6 +55,8 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
 //            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
             }
+
+
     }
 
     @Override
@@ -76,8 +78,10 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
 
     private void nextClick() {
         index++;
+        if(index == step.size()) index = 0;
+
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStepAndIndex(index, step);
+        stepFragment.setStep(step.get(index));
         setTitle(step.get(index).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
@@ -86,15 +90,15 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
     }
 
     private void previousClick() {
-
         index--;
+        if(index == -1) index = step.size() - 1;
+
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStepAndIndex(index, step);
+        stepFragment.setStep(step.get(index));
         setTitle(step.get(index).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
-
     }
 }
