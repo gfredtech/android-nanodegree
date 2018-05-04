@@ -11,7 +11,7 @@ import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.fragment.StepFragment;
 import me.gfred.bakingapp.model.Step;
 
-public class StepActivity extends AppCompatActivity {
+public class StepActivity extends AppCompatActivity implements StepFragment.OnNavigationClickListener {
 
     ArrayList<Step> step;
     int index;
@@ -55,5 +55,36 @@ public class StepActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("step", step);
         outState.putInt("index", index);
+    }
+
+    @Override
+    public void onNavigationClicked(boolean next) {
+        if (next) {
+            nextClick();
+        } else {
+            previousClick();
+        }
+    }
+
+    private void nextClick() {
+        index++;
+        StepFragment stepFragment = new StepFragment();
+        stepFragment.setStepAndIndex(index, step);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.step_container, stepFragment)
+                .commit();
+    }
+
+    private void previousClick() {
+
+        index--;
+        StepFragment stepFragment = new StepFragment();
+        stepFragment.setStepAndIndex(index, step);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.step_container, stepFragment)
+                .commit();
+
     }
 }

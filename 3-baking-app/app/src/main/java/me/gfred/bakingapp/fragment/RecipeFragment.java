@@ -2,7 +2,6 @@ package me.gfred.bakingapp.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,16 +17,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.bakingapp.R;
-import me.gfred.bakingapp.activity.StepActivity;
 import me.gfred.bakingapp.adapter.RecipeRecyclerAdapter;
 import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
-import me.gfred.bakingapp.model.Step;
 
 public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.OnStepClickListener{
 

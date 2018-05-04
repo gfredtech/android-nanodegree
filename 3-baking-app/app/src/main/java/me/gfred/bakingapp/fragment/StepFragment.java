@@ -1,6 +1,7 @@
 package me.gfred.bakingapp.fragment;
 
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +63,8 @@ public class StepFragment extends Fragment {
 
     SimpleExoPlayer player;
 
+    public OnNavigationClickListener mCallback;
+
 
     @Nullable
     @Override
@@ -96,8 +100,10 @@ public class StepFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putInt("index", index);
-        outState.putParcelableArrayList("steps", (ArrayList<? extends Parcelable>) mSteps);
+        outState.putParcelableArrayList("steps",
+                (ArrayList<? extends Parcelable>) mSteps);
 
        if(player != null) outState.putLong("position", player.getCurrentPosition());
     }
@@ -108,13 +114,8 @@ public class StepFragment extends Fragment {
     }
 
     void setViewElements() {
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-
-            description.setText(mSteps.get(index).getDescription());
-            description.setVisibility(View.VISIBLE);
-        } else {
-            description.setVisibility(View.INVISIBLE);
-        }
+        description.setText(mSteps.get(index).getDescription());
+        description.setVisibility(View.VISIBLE);
         String x = mSteps.get(index).getVideoURL();
         if(x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
@@ -130,32 +131,12 @@ public class StepFragment extends Fragment {
 
     @OnClick(R.id.button_next)
     public void nextClick() {
-        index++;
-        setViewElements();
-
-        if(index == mSteps.size() - 1) {
-            buttonNext.setEnabled(false);
-            buttonNext.setClickable(false);
-        }
-
-        if(!buttonPrevious.isEnabled()) {
-            buttonPrevious.setEnabled(true);
-            buttonPrevious.setClickable(true);
-        }
+       mCallback.onNavigationClicked(true);
     }
 
     @OnClick(R.id.button_previous)
     public void previousClick() {
-        index--;
-        setViewElements();
-        if(index == 0) {
-            buttonPrevious.setEnabled(false);
-            buttonPrevious.setClickable(false);
-        }
-        if(!buttonNext.isEnabled()) {
-            buttonNext.setClickable(true);
-            buttonNext.setEnabled(true);
-        }
+        mCallback.onNavigationClicked(false);
     }
 
     void initializePlayer(Uri uri) {
@@ -179,6 +160,22 @@ public class StepFragment extends Fragment {
                     .createMediaSource(uri);
 
             player.prepare(videoSource);
+        }
+    }
+
+    public interface OnNavigationClickListener {
+        void onNavigationClicked(boolean next);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnNavigationClickListener) context;
+        }catch (ClassCastException e) {
+            e.printStackTrace();
+            Log.e("StepFragment", "Class must implement OnNavigationClickListener interface");
         }
     }
 }
