@@ -115,8 +115,8 @@ public class StepFragment extends Fragment {
 
     void setViewElements() {
         description.setText(mSteps.get(index).getDescription());
-        description.setVisibility(View.VISIBLE);
         String x = mSteps.get(index).getVideoURL();
+
         if(x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
             notAvailableImage.setVisibility(View.INVISIBLE);
@@ -177,5 +177,15 @@ public class StepFragment extends Fragment {
             e.printStackTrace();
             Log.e("StepFragment", "Class must implement OnNavigationClickListener interface");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("savage");
+        player.stop();
+        player.release();
+        player = null;
+
     }
 }

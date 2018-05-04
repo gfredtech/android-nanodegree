@@ -61,7 +61,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
                 recipe = savedInstanceState.getParcelable("recipe");
                 stepIndex = savedInstanceState.getInt("stepIndex");
-                System.out.println(stepIndex);
+
 
                 recipeFragment = new RecipeFragment();
                 recipeFragment.setRecipe(recipe);

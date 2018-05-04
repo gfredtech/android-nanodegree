@@ -22,32 +22,39 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         Intent intent = getIntent();
-        StepFragment stepFragment = new StepFragment();
-        FragmentManager manager = getSupportFragmentManager();
-
         if(savedInstanceState != null) {
+
             step = savedInstanceState.getParcelableArrayList("step");
             index = savedInstanceState.getInt("index");
-            if (step != null)  {
 
-                stepFragment.setStepAndIndex(index, step);
-                manager.beginTransaction()
-                        .replace(R.id.step_container, stepFragment)
+            if (step != null) {
+                StepFragment fragment = new StepFragment();
+                setTitle(step.get(index).getShortDescription());
+
+                fragment.setStepAndIndex(index, step);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.step_container, fragment)
                         .commit();
             }
         }
+        else if (intent.hasExtra("steps") && intent.hasExtra("index")) {
 
-        else if(intent.hasExtra("steps") && intent.hasExtra("index")) {
-            step = intent.getParcelableArrayListExtra("steps");
-            index = intent.getIntExtra("index", 0);
-            stepFragment.setStepAndIndex(index, step);
+                StepFragment stepFragment = new StepFragment();
+                FragmentManager manager = getSupportFragmentManager();
 
-            manager.beginTransaction()
-                    .add(R.id.step_container, stepFragment)
-                    .commit();
+                step = intent.getParcelableArrayListExtra("steps");
+                index = intent.getIntExtra("index", 0);
+
+                stepFragment.setStepAndIndex(index, step);
+                setTitle(step.get(index).getShortDescription());
+
+                manager.beginTransaction()
+                        .add(R.id.step_container, stepFragment)
+                        .commit();
 //            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
-        }
+            }
     }
 
     @Override
@@ -55,6 +62,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("step", step);
         outState.putInt("index", index);
+
     }
 
     @Override
@@ -70,6 +78,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         index++;
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStepAndIndex(index, step);
+        setTitle(step.get(index).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
@@ -81,6 +90,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         index--;
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStepAndIndex(index, step);
+        setTitle(step.get(index).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
