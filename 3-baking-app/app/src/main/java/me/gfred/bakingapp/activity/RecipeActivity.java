@@ -145,6 +145,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
     private void nextClick() {
         stepIndex++;
+        if(stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStep(recipe.getSteps().get(stepIndex));
 
@@ -156,6 +157,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     private void previousClick() {
 
         stepIndex--;
+        if(stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStep(recipe.getSteps().get(stepIndex));
 
