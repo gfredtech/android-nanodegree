@@ -1,6 +1,6 @@
 package me.gfred.bakingapp.fragment;
 
-import android.content.Context;
+
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -70,15 +70,13 @@ public class StepFragment extends Fragment {
         long currentPosition = -1L;
 
         if(savedInstanceState != null) {
-            System.out.println("nmop " + index);
+
             mSteps = savedInstanceState.getParcelableArrayList("steps");
             index = savedInstanceState.getInt("index", 0);
             if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
         }
 
-        System.out.println("nmop..." + index);
-
-        setStuff(index);
+        setViewElements();
 
         if(currentPosition != -1L && notAvailableImage.getVisibility() == View.INVISIBLE) {
             player.seekTo(currentPosition);
@@ -87,7 +85,7 @@ public class StepFragment extends Fragment {
             if (index == 0) {
                 buttonPrevious.setClickable(false);
                 buttonPrevious.setEnabled(false);
-            } else if (index + 1 == mSteps.size()) {
+            } else if (index == mSteps.size() - 1) {
                 buttonNext.setClickable(false);
                 buttonNext.setEnabled(false);
             }
@@ -104,15 +102,18 @@ public class StepFragment extends Fragment {
        if(player != null) outState.putLong("position", player.getCurrentPosition());
     }
 
-    public void setArgs(int index, List<Step> steps) {
+    public void setStepAndIndex(int index, List<Step> steps) {
         this.index = index;
         this.mSteps = steps;
     }
 
-    void setStuff(int index) {
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            
+    void setViewElements() {
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+
             description.setText(mSteps.get(index).getDescription());
+            description.setVisibility(View.VISIBLE);
+        } else {
+            description.setVisibility(View.INVISIBLE);
         }
         String x = mSteps.get(index).getVideoURL();
         if(x != null && x.length() > 0) {
@@ -130,9 +131,9 @@ public class StepFragment extends Fragment {
     @OnClick(R.id.button_next)
     public void nextClick() {
         index++;
-        setStuff(index);
+        setViewElements();
 
-        if(index + 1 == mSteps.size()) {
+        if(index == mSteps.size() - 1) {
             buttonNext.setEnabled(false);
             buttonNext.setClickable(false);
         }
@@ -146,8 +147,8 @@ public class StepFragment extends Fragment {
     @OnClick(R.id.button_previous)
     public void previousClick() {
         index--;
-        setStuff(index);
-        if(index - 1 < 0) {
+        setViewElements();
+        if(index == 0) {
             buttonPrevious.setEnabled(false);
             buttonPrevious.setClickable(false);
         }
@@ -179,10 +180,5 @@ public class StepFragment extends Fragment {
 
             player.prepare(videoSource);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 }

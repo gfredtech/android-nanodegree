@@ -30,7 +30,7 @@ public class StepActivity extends AppCompatActivity {
             index = savedInstanceState.getInt("index");
             if (step != null)  {
 
-                stepFragment.setArgs(index, step);
+                stepFragment.setStepAndIndex(index, step);
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
@@ -40,7 +40,7 @@ public class StepActivity extends AppCompatActivity {
         else if(intent.hasExtra("steps") && intent.hasExtra("index")) {
             step = intent.getParcelableArrayListExtra("steps");
             index = intent.getIntExtra("index", 0);
-            stepFragment.setArgs(index, step);
+            stepFragment.setStepAndIndex(index, step);
 
             manager.beginTransaction()
                     .add(R.id.step_container, stepFragment)

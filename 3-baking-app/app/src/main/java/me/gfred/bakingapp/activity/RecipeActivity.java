@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.fragment.RecipeFragment;
@@ -48,7 +46,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
                     stepFragment = new StepFragment();
                     stepIndex = 0;
-                    stepFragment.setArgs(stepIndex, recipe.getSteps());
+                    stepFragment.setStepAndIndex(stepIndex, recipe.getSteps());
                     manager.beginTransaction()
                             .add(R.id.step_container, stepFragment)
                             .commit();
@@ -67,7 +65,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                         .commit();
 
                 stepFragment = new StepFragment();
-                stepFragment.setArgs(stepIndex, recipe.getSteps());
+                stepFragment.setStepAndIndex(stepIndex, recipe.getSteps());
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
@@ -75,7 +73,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
 
         } else {
-            //TODO: we're loading for phone only... handle case
+
             mTwoPane = false;
 
             if(savedInstanceState == null && intent.hasExtra("recipe")) {
@@ -98,7 +96,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                 manager.beginTransaction()
                         .replace(R.id.recipe_container, recipeFragment)
                         .commit();
-
             }
         }
     }
@@ -115,7 +112,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
         if(mTwoPane) {
             StepFragment stepFragment = new StepFragment();
-            stepFragment.setArgs(index, recipe.getSteps());
+            stepFragment.setStepAndIndex(index, recipe.getSteps());
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_container, stepFragment)
