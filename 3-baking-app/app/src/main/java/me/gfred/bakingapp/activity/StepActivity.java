@@ -31,13 +31,13 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 StepFragment fragment = new StepFragment();
                 setTitle(step.get(index).getShortDescription());
 
-                fragment.setStep(step.get(index));
+                fragment.setStep(step.get(index), index, step.size());
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.step_container, fragment)
                         .commit();
 
-                fragment.setButtonsVisibility(index, step.size());
+
             }
         }
         else if (intent.hasExtra("steps") && intent.hasExtra("index")) {
@@ -48,14 +48,14 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 step = intent.getParcelableArrayListExtra("steps");
                 index = intent.getIntExtra("index", 0);
 
-                stepFragment.setStep(step.get(index));
+                stepFragment.setStep(step.get(index), index, step.size());
                 setTitle(step.get(index).getShortDescription());
 
                 manager.beginTransaction()
                         .add(R.id.step_container, stepFragment)
                         .commit();
 
-            stepFragment.setButtonsVisibility(index, step.size());
+
 //            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
             }
@@ -85,13 +85,13 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         if(index == step.size()) index = 0;
 
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(step.get(index));
+        stepFragment.setStep(step.get(index), index, step.size());
         setTitle(step.get(index).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
-        stepFragment.setButtonsVisibility(index, step.size());
+
     }
 
     private void previousClick() {
@@ -99,12 +99,12 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         if(index == -1) index = step.size() - 1;
 
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(step.get(index));
+        stepFragment.setStep(step.get(index), index, step.size());
         setTitle(step.get(index).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
-        stepFragment.setButtonsVisibility(index, step.size());
+
     }
 }

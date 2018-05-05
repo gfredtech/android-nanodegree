@@ -2,10 +2,8 @@ package me.gfred.bakingapp.fragment;
 
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,9 +30,6 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,7 +38,7 @@ import me.gfred.bakingapp.model.Step;
 
 public class StepFragment extends Fragment {
 
-    private Step mSteps;
+    private Step mStep;
 
 
     @BindView(R.id.description)
@@ -64,6 +59,8 @@ public class StepFragment extends Fragment {
     SimpleExoPlayer player;
 
     public OnNavigationClickListener mCallback;
+    private int mSize;
+    private int mIndex;
 
 
     @Nullable
@@ -75,13 +72,17 @@ public class StepFragment extends Fragment {
 
         if(savedInstanceState != null) {
 
-            mSteps = savedInstanceState.getParcelable("steps");
+            mStep = savedInstanceState.getParcelable("step");
+            mSize = savedInstanceState.getInt("size");
+            mIndex = savedInstanceState.getInt("index");
+
             if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
         }
 
+        setButtonsVisibility(mIndex, mSize);
         setViewElements();
 
-        if(currentPosition != -1L && notAvailableImage.getVisibility() == View.INVISIBLE) {
+        if(currentPosition != -1L && videoView.getVisibility() == View.VISIBLE) {
             player.seekTo(currentPosition);
         }
 
@@ -91,18 +92,22 @@ public class StepFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("steps", mSteps);
+        outState.putParcelable("step", mStep);
+        outState.putInt("index", mIndex);
+        outState.putInt("size", mSize);
 
         outState.putLong("position", player == null ? 0 : player.getCurrentPosition());
     }
 
-    public void setStep(Step steps) {
-        this.mSteps = steps;
+    public void setStep(Step step, int index, int size) {
+        this.mStep = step;
+        this.mIndex = index;
+        this.mSize = size;
     }
 
     void setViewElements() {
-        description.setText(mSteps.getDescription());
-        String x = mSteps.getVideoURL();
+        description.setText(mStep.getDescription());
+        String x = mStep.getVideoURL();
 
         if(x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);

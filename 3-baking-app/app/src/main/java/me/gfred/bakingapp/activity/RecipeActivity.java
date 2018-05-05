@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.fragment.RecipeFragment;
 import me.gfred.bakingapp.fragment.StepFragment;
@@ -50,7 +47,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
                     stepFragment = new StepFragment();
                     stepIndex = 0;
-                    stepFragment.setStep(recipe.getSteps().get(stepIndex));
+                    stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
                     manager.beginTransaction()
                             .add(R.id.step_container, stepFragment)
                             .commit();
@@ -70,11 +67,11 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                         .commit();
 
                 stepFragment = new StepFragment();
-                stepFragment.setStep(recipe.getSteps().get(stepIndex));
+                stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
-                stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
+
             }
 
 
@@ -118,13 +115,13 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
         if(mTwoPane) {
             StepFragment stepFragment = new StepFragment();
-            stepFragment.setStep(recipe.getSteps().get(index));
+            stepFragment.setStep(recipe.getSteps().get(index), index, recipe.getSteps().size());
             stepIndex = index;
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_container, stepFragment)
                     .commit();
-            stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
+
         } else {
 
             Intent intent = new Intent(RecipeActivity.this, StepActivity.class);
@@ -149,12 +146,12 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         stepIndex++;
         if(stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(recipe.getSteps().get(stepIndex));
+        stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
-        stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
+
     }
 
     private void previousClick() {
@@ -162,12 +159,12 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         stepIndex--;
         if(stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
         StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(recipe.getSteps().get(stepIndex));
+        stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
-        stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
+
 
     }
 }
