@@ -62,7 +62,7 @@ public class StepFragment extends Fragment {
     private int mSize;
     private int mIndex;
 
-    private static long currentPosition = -1L;
+    private long currentPosition = -1L;
 
 
     @Nullable
