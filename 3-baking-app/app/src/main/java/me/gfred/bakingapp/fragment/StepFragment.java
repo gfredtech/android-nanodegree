@@ -93,8 +93,7 @@ public class StepFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelable("steps", mSteps);
 
-       if(player != null)
-           outState.putLong("position", player.getCurrentPosition());
+        outState.putLong("position", player == null ? 0 : player.getCurrentPosition());
     }
 
     public void setStep(Step steps) {
@@ -128,15 +127,24 @@ public class StepFragment extends Fragment {
     }
 
     public void setButtonsVisibility(int index, int stepSize) {
+        if(index == stepSize - 1) {
+            enableNextButton(false);
+        }
+        else if(index == 0) {
+            enablePreviousButton(false);
+        } else {
+            enableNextButton(true);
+            enablePreviousButton(true);
+        }
 
     }
 
-    public void enablePreviousButton(boolean enable) {
+    private void enablePreviousButton(boolean enable) {
         buttonPrevious.setClickable(enable);
         buttonPrevious.setEnabled(enable);
     }
 
-    public void enableNextButton(boolean enable) {
+    private void enableNextButton(boolean enable) {
         buttonNext.setClickable(enable);
         buttonNext.setEnabled(enable);
     }

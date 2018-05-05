@@ -36,6 +36,8 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.step_container, fragment)
                         .commit();
+
+                fragment.setButtonsVisibility(index, step.size());
             }
         }
         else if (intent.hasExtra("steps") && intent.hasExtra("index")) {
@@ -52,6 +54,8 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 manager.beginTransaction()
                         .add(R.id.step_container, stepFragment)
                         .commit();
+
+            stepFragment.setButtonsVisibility(index, step.size());
 //            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
             }
@@ -87,6 +91,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
+        stepFragment.setButtonsVisibility(index, step.size());
     }
 
     private void previousClick() {
@@ -100,5 +105,6 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
+        stepFragment.setButtonsVisibility(index, step.size());
     }
 }

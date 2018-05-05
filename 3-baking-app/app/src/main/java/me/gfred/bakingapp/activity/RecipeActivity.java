@@ -74,6 +74,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
+                stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
             }
 
 
@@ -123,6 +124,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_container, stepFragment)
                     .commit();
+            stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
         } else {
 
             Intent intent = new Intent(RecipeActivity.this, StepActivity.class);
@@ -152,6 +154,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
+        stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
     }
 
     private void previousClick() {
@@ -164,6 +167,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
+        stepFragment.setButtonsVisibility(stepIndex, recipe.getSteps().size());
 
     }
 }
