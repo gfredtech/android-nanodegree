@@ -71,7 +71,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
+        android:background="@android:color/transparent"
         app:layout_constraintLeft_toLeftOf="@id/button_next"
         app:layout_constraintRight_toRightOf="@id/button_previous"
         app:layout_constraintBottom_toTopOf="@id/button_next" />

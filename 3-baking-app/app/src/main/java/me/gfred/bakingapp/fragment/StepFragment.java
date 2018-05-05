@@ -62,13 +62,15 @@ public class StepFragment extends Fragment {
     private int mSize;
     private int mIndex;
 
+    private static long currentPosition = -1L;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this, rootView);
-        long currentPosition = -1L;
+
 
         if(savedInstanceState != null) {
 
@@ -76,15 +78,14 @@ public class StepFragment extends Fragment {
             mSize = savedInstanceState.getInt("size");
             mIndex = savedInstanceState.getInt("index");
 
-            if(savedInstanceState.getLong("position") != 0) currentPosition = savedInstanceState.getLong("position");
+            if(savedInstanceState.getLong("position") != 0) {
+                currentPosition = savedInstanceState.getLong("position");
+                System.out.println("hackz " + currentPosition);
+            }
         }
 
         setButtonsVisibility(mIndex, mSize);
-        setViewElements();
-
-        if(currentPosition != -1L && videoView.getVisibility() == View.VISIBLE) {
-            player.seekTo(currentPosition);
-        }
+        setViewElements(currentPosition);
 
         return rootView;
     }
@@ -96,7 +97,9 @@ public class StepFragment extends Fragment {
         outState.putInt("index", mIndex);
         outState.putInt("size", mSize);
 
-        outState.putLong("position", player == null ? 0 : player.getCurrentPosition());
+        if(player != null) currentPosition = player.getCurrentPosition();
+
+        outState.putLong("position", currentPosition == -1L ? 0 : currentPosition);
     }
 
     public void setStep(Step step, int index, int size) {
@@ -105,14 +108,14 @@ public class StepFragment extends Fragment {
         this.mSize = size;
     }
 
-    void setViewElements() {
+    void setViewElements(long currentPosition) {
         description.setText(mStep.getDescription());
         String x = mStep.getVideoURL();
 
         if(x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
             notAvailableImage.setVisibility(View.INVISIBLE);
-            initializePlayer(Uri.parse(x));
+            initializePlayer(currentPosition, Uri.parse(x));
 
         }
         else {
@@ -157,7 +160,7 @@ public class StepFragment extends Fragment {
         buttonNext.setEnabled(enable);
     }
 
-    void initializePlayer(Uri uri) {
+    void initializePlayer(long currentPosition, Uri uri) {
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
@@ -179,6 +182,9 @@ public class StepFragment extends Fragment {
 
             player.prepare(videoSource);
             player.setPlayWhenReady(true);
+            if (currentPosition != -1L) {
+                player.seekTo(currentPosition);
+            }
         }
     }
 
@@ -202,6 +208,7 @@ public class StepFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if(player != null) {
+            currentPosition = player.getCurrentPosition();
             player.stop();
             player.release();
             player = null;
