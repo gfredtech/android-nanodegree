@@ -72,13 +72,13 @@ public class StepFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
 
             mStep = savedInstanceState.getParcelable("step");
             mSize = savedInstanceState.getInt("size");
             mIndex = savedInstanceState.getInt("index");
 
-            if(savedInstanceState.getLong("position") != 0) {
+            if (savedInstanceState.getLong("position") != 0) {
                 currentPosition = savedInstanceState.getLong("position");
                 System.out.println("hackz " + currentPosition);
             }
@@ -97,7 +97,7 @@ public class StepFragment extends Fragment {
         outState.putInt("index", mIndex);
         outState.putInt("size", mSize);
 
-        if(player != null) currentPosition = player.getCurrentPosition();
+        if (player != null) currentPosition = player.getCurrentPosition();
 
         outState.putLong("position", currentPosition == -1L ? 0 : currentPosition);
     }
@@ -112,13 +112,12 @@ public class StepFragment extends Fragment {
         description.setText(mStep.getDescription());
         String x = mStep.getVideoURL();
 
-        if(x != null && x.length() > 0) {
+        if (x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
             notAvailableImage.setVisibility(View.INVISIBLE);
             initializePlayer(currentPosition, Uri.parse(x));
 
-        }
-        else {
+        } else {
             videoView.setVisibility(View.INVISIBLE);
             notAvailableImage.setVisibility(View.VISIBLE);
         }
@@ -126,7 +125,7 @@ public class StepFragment extends Fragment {
 
     @OnClick(R.id.button_next)
     public void nextClick() {
-       mCallback.onNavigationClicked(true);
+        mCallback.onNavigationClicked(true);
     }
 
     @OnClick(R.id.button_previous)
@@ -135,12 +134,12 @@ public class StepFragment extends Fragment {
     }
 
     public void setButtonsVisibility(int index, int stepSize) {
-        if(index == stepSize - 1) {
+        if (index == stepSize - 1) {
             enableNextButton(false);
             enablePreviousButton(true);
             return;
         }
-         if(index == 0) {
+        if (index == 0) {
             enablePreviousButton(false);
             enableNextButton(true);
         } else {
@@ -173,7 +172,7 @@ public class StepFragment extends Fragment {
 
         DefaultBandwidthMeter bandMeter = new DefaultBandwidthMeter();
 
-        if(getActivity() != null) {
+        if (getActivity() != null) {
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
                     Util.getUserAgent(getActivity(), "BakingApp"), bandMeter);
 
@@ -198,7 +197,7 @@ public class StepFragment extends Fragment {
 
         try {
             mCallback = (OnNavigationClickListener) context;
-        }catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             e.printStackTrace();
             Log.e("StepFragment", "Class must implement OnNavigationClickListener interface");
         }
@@ -207,7 +206,7 @@ public class StepFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(player != null) {
+        if (player != null) {
             currentPosition = player.getCurrentPosition();
             player.stop();
             player.release();

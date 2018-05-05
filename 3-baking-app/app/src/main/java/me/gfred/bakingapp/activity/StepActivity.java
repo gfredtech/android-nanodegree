@@ -22,7 +22,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         Intent intent = getIntent();
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
 
             step = savedInstanceState.getParcelableArrayList("step");
             index = savedInstanceState.getInt("index");
@@ -39,26 +39,25 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
 
 
             }
-        }
-        else if (intent.hasExtra("steps") && intent.hasExtra("index")) {
+        } else if (intent.hasExtra("steps") && intent.hasExtra("index")) {
 
-                StepFragment stepFragment = new StepFragment();
-                FragmentManager manager = getSupportFragmentManager();
+            StepFragment stepFragment = new StepFragment();
+            FragmentManager manager = getSupportFragmentManager();
 
-                step = intent.getParcelableArrayListExtra("steps");
-                index = intent.getIntExtra("index", 0);
+            step = intent.getParcelableArrayListExtra("steps");
+            index = intent.getIntExtra("index", 0);
 
-                stepFragment.setStep(step.get(index), index, step.size());
-                setTitle(step.get(index).getShortDescription());
+            stepFragment.setStep(step.get(index), index, step.size());
+            setTitle(step.get(index).getShortDescription());
 
-                manager.beginTransaction()
-                        .add(R.id.step_container, stepFragment)
-                        .commit();
+            manager.beginTransaction()
+                    .add(R.id.step_container, stepFragment)
+                    .commit();
 
 
 //            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
 
-            }
+        }
 
 
     }
@@ -82,7 +81,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
 
     private void nextClick() {
         index++;
-        if(index == step.size()) index = 0;
+        if (index == step.size()) index = 0;
 
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStep(step.get(index), index, step.size());
@@ -96,7 +95,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
 
     private void previousClick() {
         index--;
-        if(index == -1) index = step.size() - 1;
+        if (index == -1) index = step.size() - 1;
 
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStep(step.get(index), index, step.size());

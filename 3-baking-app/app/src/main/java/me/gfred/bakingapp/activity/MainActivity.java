@@ -39,12 +39,11 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             createRecipeApi();
             apiJson.getRecipes().enqueue(recipeCallback);
         }
     }
-
 
 
     @Override
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             recipeArrayList = savedInstanceState.getParcelableArrayList("recipes");
 
             if (recipeArrayList != null) {
@@ -86,8 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     }
 
 
-
-        Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
+    Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
         @Override
         public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
             recipeArrayList = response.body();
@@ -102,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         }
     };
 
-    void inflateRecyclerView(){
+    void inflateRecyclerView() {
         MainRecyclerAdapter adapter = new MainRecyclerAdapter
                 (MainActivity.this, recipeArrayList, MainActivity.this);
 

@@ -24,7 +24,7 @@ import me.gfred.bakingapp.adapter.RecipeRecyclerAdapter;
 import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
 
-public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.OnStepClickListener{
+public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.OnStepClickListener {
 
     @BindView(R.id.recipe_image)
     ImageView recipeImage;
@@ -53,8 +53,8 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
         ButterKnife.bind(this, rootView);
 
-        if(recipe != null) {
-            if(getActivity() != null) getActivity().setTitle(recipe.getName());
+        if (recipe != null) {
+            if (getActivity() != null) getActivity().setTitle(recipe.getName());
 
             if (recipe.getImage() != null && recipe.getImage().length() > 0) {
                 recipeImage.setVisibility(View.VISIBLE);

@@ -15,7 +15,7 @@ import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.model.Step;
 
 public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickedListener,
-   StepFragment.OnNavigationClickListener{
+        StepFragment.OnNavigationClickListener {
 
     Recipe recipe;
     int stepIndex;
@@ -34,27 +34,27 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         Intent intent = getIntent();
         manager = getSupportFragmentManager();
 
-        if(findViewById(R.id.tablet_pane) != null) {
+        if (findViewById(R.id.tablet_pane) != null) {
             mTwoPane = true;
 
-            if(savedInstanceState == null && intent.hasExtra("recipe")) {
-                    recipe = intent.getParcelableExtra("recipe");
-                    recipeFragment = new RecipeFragment();
-                    recipeFragment.setRecipe(recipe);
-                    manager.beginTransaction()
-                            .add(R.id.recipe_container, recipeFragment)
-                            .commit();
+            if (savedInstanceState == null && intent.hasExtra("recipe")) {
+                recipe = intent.getParcelableExtra("recipe");
+                recipeFragment = new RecipeFragment();
+                recipeFragment.setRecipe(recipe);
+                manager.beginTransaction()
+                        .add(R.id.recipe_container, recipeFragment)
+                        .commit();
 
-                    stepFragment = new StepFragment();
-                    stepIndex = 0;
-                    stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
-                    manager.beginTransaction()
-                            .add(R.id.step_container, stepFragment)
-                            .commit();
+                stepFragment = new StepFragment();
+                stepIndex = 0;
+                stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
+                manager.beginTransaction()
+                        .add(R.id.step_container, stepFragment)
+                        .commit();
 
 
-            } else if(savedInstanceState != null &&
-                     savedInstanceState.getParcelable("recipe") != null) {
+            } else if (savedInstanceState != null &&
+                    savedInstanceState.getParcelable("recipe") != null) {
 
                 recipe = savedInstanceState.getParcelable("recipe");
                 stepIndex = savedInstanceState.getInt("stepIndex");
@@ -79,7 +79,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
             mTwoPane = false;
 
-            if(savedInstanceState == null && intent.hasExtra("recipe")) {
+            if (savedInstanceState == null && intent.hasExtra("recipe")) {
                 recipe = intent.getParcelableExtra("recipe");
                 recipeFragment = new RecipeFragment();
                 recipeFragment.setRecipe(recipe);
@@ -88,7 +88,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                         .add(R.id.recipe_container, recipeFragment)
                         .commit();
 
-            } else if(savedInstanceState != null &&
+            } else if (savedInstanceState != null &&
                     savedInstanceState.getParcelable("recipe") != null) {
 
                 recipe = savedInstanceState.getParcelable("recipe");
@@ -113,7 +113,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     @Override
     public void onStepClicked(int index) {
 
-        if(mTwoPane) {
+        if (mTwoPane) {
             StepFragment stepFragment = new StepFragment();
             stepFragment.setStep(recipe.getSteps().get(index), index, recipe.getSteps().size());
             stepIndex = index;
@@ -125,7 +125,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         } else {
 
             Intent intent = new Intent(RecipeActivity.this, StepActivity.class);
-            intent.putParcelableArrayListExtra("steps", new ArrayList<Step>(){{
+            intent.putParcelableArrayListExtra("steps", new ArrayList<Step>() {{
                 addAll(recipe.getSteps());
             }});
             intent.putExtra("index", index);
@@ -144,7 +144,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
     private void nextClick() {
         stepIndex++;
-        if(stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
+        if (stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
 
@@ -157,7 +157,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     private void previousClick() {
 
         stepIndex--;
-        if(stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
+        if (stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
         StepFragment stepFragment = new StepFragment();
         stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
 

@@ -22,14 +22,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     final private RecipeClickListener mRecipeClickListener;
 
-   public MainRecyclerAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
+    public MainRecyclerAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
         this.mContext = context;
         this.recipeArrayList = recipes;
         this.mRecipeClickListener = recipeClickListener;
 
     }
 
-    public interface RecipeClickListener{
+    public interface RecipeClickListener {
         void onRecipeClick(Recipe recipe);
     }
 
@@ -53,7 +53,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return recipeArrayList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.recipe_title)
         TextView recipeTitle;
