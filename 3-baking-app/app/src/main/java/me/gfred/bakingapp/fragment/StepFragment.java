@@ -129,9 +129,12 @@ public class StepFragment extends Fragment {
     public void setButtonsVisibility(int index, int stepSize) {
         if(index == stepSize - 1) {
             enableNextButton(false);
+            enablePreviousButton(true);
+            return;
         }
-        else if(index == 0) {
+         if(index == 0) {
             enablePreviousButton(false);
+            enableNextButton(true);
         } else {
             enableNextButton(true);
             enablePreviousButton(true);
