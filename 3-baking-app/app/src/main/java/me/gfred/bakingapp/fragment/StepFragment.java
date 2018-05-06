@@ -38,28 +38,22 @@ import me.gfred.bakingapp.model.Step;
 
 public class StepFragment extends Fragment {
 
+    static long currentPosition = 0;
     public OnNavigationClickListener mCallback;
     @BindView(R.id.description)
     TextView description;
-
     @BindView(R.id.video_view)
     PlayerView videoView;
-
     @BindView(R.id.button_previous)
     Button buttonPrevious;
-
     @BindView(R.id.button_next)
     Button buttonNext;
-
     @BindView(R.id.not_available_iv)
     ImageView notAvailableImage;
-
     SimpleExoPlayer player;
-
     private Step mStep;
     private int mSize;
     private int mStepIndex;
-    static long currentPosition = 0;
     private boolean reset;
 
 
@@ -217,11 +211,11 @@ public class StepFragment extends Fragment {
         }
     }
 
-    public interface OnNavigationClickListener {
-        void onNavigationClicked(boolean next);
-    }
-
     public void resetPosition() {
         this.reset = true;
+    }
+
+    public interface OnNavigationClickListener {
+        void onNavigationClicked(boolean next);
     }
 }
