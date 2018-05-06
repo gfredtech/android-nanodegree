@@ -8,6 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,7 +33,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     @BindView(R.id.recipe_rv)
     RecyclerView recipeRecyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     List<Recipe> recipeArrayList;
+    static Menu myMenu;
     Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
         @Override
         public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
@@ -40,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         @Override
         public void onFailure(@NonNull Call<List<Recipe>> call, Throwable t) {
             t.printStackTrace();
+            progressBar.setVisibility(View.INVISIBLE);
+            myMenu.getItem(0).setVisible(true);
             Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_LONG).show();
 
         }
@@ -111,6 +120,28 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         recipeRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,
                 calculateNoOfColumns(MainActivity.this)));
+        progressBar.setVisibility(View.INVISIBLE);
+        recipeRecyclerView.setVisibility(View.VISIBLE);
+        myMenu.getItem(0).setVisible(false);
         recipeRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.getItem(0).setVisible(false);
+        myMenu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.retry) {
+            createRecipeApi();
+            apiJson.getRecipes().enqueue(recipeCallback);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        return true;
     }
 }
