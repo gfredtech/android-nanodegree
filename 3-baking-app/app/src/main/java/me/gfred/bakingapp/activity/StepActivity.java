@@ -79,6 +79,7 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         fragment = new StepFragment();
         fragment.setStep(steps.get(stepIndex), stepIndex, steps.size());
         setTitle(steps.get(stepIndex).getShortDescription());
+        fragment.resetPosition();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, fragment)
@@ -91,10 +92,13 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         fragment = new StepFragment();
         fragment.setStep(steps.get(stepIndex), stepIndex, steps.size());
         setTitle(steps.get(stepIndex).getShortDescription());
+        fragment.resetPosition();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, fragment)
                 .commit();
 
     }
+
+
 }

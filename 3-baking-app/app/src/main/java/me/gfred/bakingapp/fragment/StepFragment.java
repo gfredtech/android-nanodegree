@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,12 @@ public class StepFragment extends Fragment {
     ImageView notAvailableImage;
 
     SimpleExoPlayer player;
+
     private Step mStep;
     private int mSize;
-
-    private long currentPosition = -1L;
     private int mStepIndex;
+    static long currentPosition = 0;
+    private boolean reset;
 
 
     @Nullable
@@ -67,35 +69,33 @@ public class StepFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this, rootView);
 
-
         if (savedInstanceState != null) {
-
-            mStep = savedInstanceState.getParcelable("step");
             mSize = savedInstanceState.getInt("size");
+            mStep = savedInstanceState.getParcelable("step");
             mStepIndex = savedInstanceState.getInt("stepIndex");
-
-            if (savedInstanceState.getLong("position") != 0) {
-                currentPosition = savedInstanceState.getLong("position");
-
-            }
+            currentPosition = savedInstanceState.getLong("position");
         }
 
         setButtonsVisibility(mStepIndex, mSize);
-        setViewElements(currentPosition);
-
+        Log.i("StepFragment", "onCreateView: " + currentPosition);
+        setViewElements();
         return rootView;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("size", mSize);
         outState.putParcelable("step", mStep);
         outState.putInt("stepIndex", mStepIndex);
-        outState.putInt("size", mSize);
 
-        if (player != null) currentPosition = player.getCurrentPosition();
+        if (player != null) {
+            currentPosition = player.getCurrentPosition();
+            outState.putLong("position",
+                    currentPosition);
+            Log.i("StepFragment", "onSaveInstanceState: " + currentPosition);
+        }
 
-        outState.putLong("position", currentPosition == -1L ? 0 : currentPosition);
     }
 
     public void setStep(Step step, int stepIndex, int size) {
@@ -104,14 +104,14 @@ public class StepFragment extends Fragment {
         this.mSize = size;
     }
 
-    void setViewElements(long currentPosition) {
+    void setViewElements() {
         description.setText(mStep.getDescription());
         String x = mStep.getVideoURL();
 
         if (x != null && x.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
             notAvailableImage.setVisibility(View.INVISIBLE);
-            initializePlayer(currentPosition, Uri.parse(x));
+            initializePlayer(Uri.parse(x));
 
         } else {
             videoView.setVisibility(View.INVISIBLE);
@@ -155,7 +155,8 @@ public class StepFragment extends Fragment {
         buttonNext.setEnabled(enable);
     }
 
-    void initializePlayer(long currentPosition, Uri uri) {
+    void initializePlayer(Uri uri) {
+        System.out.println("initializePlayer: " + currentPosition);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
@@ -176,8 +177,8 @@ public class StepFragment extends Fragment {
                     .createMediaSource(uri);
 
             player.prepare(videoSource);
-            player.setPlayWhenReady(true);
-            if (currentPosition != -1L) {
+            Log.i("StepFragment", "initializePlayer: " + currentPosition);
+            if (!reset) {
                 player.seekTo(currentPosition);
             }
         }
@@ -186,7 +187,6 @@ public class StepFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
             mCallback = (OnNavigationClickListener) context;
         } catch (ClassCastException e) {
@@ -200,6 +200,7 @@ public class StepFragment extends Fragment {
         super.onDestroy();
         if (player != null) {
             currentPosition = player.getCurrentPosition();
+            Log.i("StepFragment", "onDestroy: " + currentPosition);
             player.stop();
             player.release();
             player = null;
@@ -207,7 +208,20 @@ public class StepFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (player != null) {
+            currentPosition = player.getCurrentPosition();
+            Log.i("StepFragment", "onDestroyView: " + currentPosition);
+        }
+    }
+
     public interface OnNavigationClickListener {
         void onNavigationClicked(boolean next);
+    }
+
+    public void resetPosition() {
+        this.reset = true;
     }
 }

@@ -154,6 +154,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         int size = recipe.getSteps().size();
         Step step = recipe.getSteps().get(stepIndex);
         stepFragment.setStep(step, stepIndex, size);
+        stepFragment.resetPosition();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
@@ -167,9 +168,11 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         int size = recipe.getSteps().size();
         Step step = recipe.getSteps().get(stepIndex);
         stepFragment.setStep(step, stepIndex, size);
+        stepFragment.resetPosition();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
+
     }
 }
