@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_marginTop="4dp"
     android:layout_height="match_parent"
+    android:layout_marginTop="4dp"
+    android:orientation="vertical"
     tools:context=".activity.MainActivity">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipe_rv"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
     </android.support.v7.widget.RecyclerView>
 

@@ -1,12 +1,14 @@
 package me.gfred.bakingapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,8 +16,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.gfred.bakingapp.adapter.MainRecyclerAdapter;
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.adapter.MainRecyclerAdapter;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.util.ApiJson;
 import retrofit2.Call;
@@ -29,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @BindView(R.id.recipe_rv)
     RecyclerView recipeRecyclerView;
     List<Recipe> recipeArrayList;
-
     private ApiJson apiJson;
 
 
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         intent.putExtra("recipe", recipe);
         startActivity(intent);
 
-        //Toast.makeText(this, recipe.getName(), Toast.LENGTH_SHORT).show();
     }
 
     public void createRecipeApi() {
@@ -104,8 +104,18 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         MainRecyclerAdapter adapter = new MainRecyclerAdapter
                 (MainActivity.this, recipeArrayList, MainActivity.this);
 
-        recipeRecyclerView.setLayoutManager(new LinearLayoutManager
-                (MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        recipeRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,
+                calculateNoOfColumns(MainActivity.this)));
         recipeRecyclerView.setAdapter(adapter);
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if (noOfColumns < 2)
+            noOfColumns = 1;
+        return noOfColumns;
     }
 }
