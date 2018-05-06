@@ -9,6 +9,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Step implements Parcelable {
 
+    public static final Creator<Step> CREATOR = new Creator<Step>() {
+        @Override
+        public Step createFromParcel(Parcel in) {
+            return new Step(in);
+        }
+
+        @Override
+        public Step[] newArray(int size) {
+            return new Step[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -24,6 +35,14 @@ public class Step implements Parcelable {
     @SerializedName("thumbnailURL")
     @Expose
     private String thumbnailURL;
+
+    private Step(Parcel in) {
+        id = in.readInt();
+        shortDescription = in.readString();
+        description = in.readString();
+        videoURL = in.readString();
+        thumbnailURL = in.readString();
+    }
 
     public Integer getId() {
         return id;
@@ -70,24 +89,4 @@ public class Step implements Parcelable {
         parcel.writeString(videoURL);
         parcel.writeString(thumbnailURL);
     }
-
-    private Step(Parcel in) {
-        id = in.readInt();
-        shortDescription = in.readString();
-        description = in.readString();
-        videoURL = in.readString();
-        thumbnailURL = in.readString();
-    }
-
-    public static final Creator<Step> CREATOR = new Creator<Step>() {
-        @Override
-        public Step createFromParcel(Parcel in) {
-            return new Step(in);
-        }
-
-        @Override
-        public Step[] newArray(int size) {
-            return new Step[size];
-        }
-    };
 }

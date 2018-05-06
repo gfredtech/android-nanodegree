@@ -17,10 +17,9 @@ import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.model.Recipe;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
+    final private RecipeClickListener mRecipeClickListener;
     private Context mContext;
     private List<Recipe> recipeArrayList;
-
-    final private RecipeClickListener mRecipeClickListener;
 
     public MainRecyclerAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
         this.mContext = context;
@@ -29,16 +28,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     }
 
-    public interface RecipeClickListener {
-        void onRecipeClick(Recipe recipe);
-    }
-
     @NonNull
     @Override
     public MainRecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
+
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        view = inflater.inflate(R.layout.cardview_recipe, parent, false);
+        View view = inflater.inflate(R.layout.cardview_recipe, parent, false);
 
         return new MyViewHolder(view);
     }
@@ -51,6 +46,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public int getItemCount() {
         return recipeArrayList.size();
+    }
+
+    public interface RecipeClickListener {
+        void onRecipeClick(Recipe recipe);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

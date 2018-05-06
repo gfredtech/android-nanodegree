@@ -38,9 +38,7 @@ import me.gfred.bakingapp.model.Step;
 
 public class StepFragment extends Fragment {
 
-    private Step mStep;
-
-
+    public OnNavigationClickListener mCallback;
     @BindView(R.id.description)
     TextView description;
 
@@ -57,12 +55,11 @@ public class StepFragment extends Fragment {
     ImageView notAvailableImage;
 
     SimpleExoPlayer player;
-
-    public OnNavigationClickListener mCallback;
+    private Step mStep;
     private int mSize;
-    private int mIndex;
 
     private long currentPosition = -1L;
+    private int mStepIndex;
 
 
     @Nullable
@@ -76,15 +73,15 @@ public class StepFragment extends Fragment {
 
             mStep = savedInstanceState.getParcelable("step");
             mSize = savedInstanceState.getInt("size");
-            mIndex = savedInstanceState.getInt("index");
+            mStepIndex = savedInstanceState.getInt("stepIndex");
 
             if (savedInstanceState.getLong("position") != 0) {
                 currentPosition = savedInstanceState.getLong("position");
-                System.out.println("hackz " + currentPosition);
+
             }
         }
 
-        setButtonsVisibility(mIndex, mSize);
+        setButtonsVisibility(mStepIndex, mSize);
         setViewElements(currentPosition);
 
         return rootView;
@@ -94,7 +91,7 @@ public class StepFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("step", mStep);
-        outState.putInt("index", mIndex);
+        outState.putInt("stepIndex", mStepIndex);
         outState.putInt("size", mSize);
 
         if (player != null) currentPosition = player.getCurrentPosition();
@@ -102,9 +99,9 @@ public class StepFragment extends Fragment {
         outState.putLong("position", currentPosition == -1L ? 0 : currentPosition);
     }
 
-    public void setStep(Step step, int index, int size) {
+    public void setStep(Step step, int stepIndex, int size) {
         this.mStep = step;
-        this.mIndex = index;
+        this.mStepIndex = stepIndex;
         this.mSize = size;
     }
 
@@ -133,13 +130,13 @@ public class StepFragment extends Fragment {
         mCallback.onNavigationClicked(false);
     }
 
-    public void setButtonsVisibility(int index, int stepSize) {
-        if (index == stepSize - 1) {
+    public void setButtonsVisibility(int stepIndex, int stepSize) {
+        if (stepIndex == stepSize - 1) {
             enableNextButton(false);
             enablePreviousButton(true);
             return;
         }
-        if (index == 0) {
+        if (stepIndex == 0) {
             enablePreviousButton(false);
             enableNextButton(true);
         } else {
@@ -187,10 +184,6 @@ public class StepFragment extends Fragment {
         }
     }
 
-    public interface OnNavigationClickListener {
-        void onNavigationClicked(boolean next);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -213,5 +206,9 @@ public class StepFragment extends Fragment {
             player = null;
 
         }
+    }
+
+    public interface OnNavigationClickListener {
+        void onNavigationClicked(boolean next);
     }
 }

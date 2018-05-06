@@ -31,60 +31,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     @BindView(R.id.recipe_rv)
     RecyclerView recipeRecyclerView;
     List<Recipe> recipeArrayList;
-    private ApiJson apiJson;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-
-        if (savedInstanceState == null) {
-            createRecipeApi();
-            apiJson.getRecipes().enqueue(recipeCallback);
-        }
-    }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("recipes", (ArrayList<? extends Parcelable>) recipeArrayList);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            recipeArrayList = savedInstanceState.getParcelableArrayList("recipes");
-
-            if (recipeArrayList != null) {
-                inflateRecyclerView();
-            }
-        }
-
-    }
-
-    @Override
-    public void onRecipeClick(Recipe recipe) {
-        //TODO: start detailed activity
-        Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
-        intent.putExtra("recipe", recipe);
-        startActivity(intent);
-
-    }
-
-    public void createRecipeApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiJson.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-        apiJson = retrofit.create(ApiJson.class);
-    }
-
-
     Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
         @Override
         public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
@@ -99,6 +45,66 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         }
     };
+    private ApiJson apiJson;
+
+    static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if (noOfColumns < 2)
+            noOfColumns = 1;
+        return noOfColumns;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        if (savedInstanceState == null) {
+            createRecipeApi();
+            apiJson.getRecipes().enqueue(recipeCallback);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeArrayList;
+        outState.putParcelableArrayList("recipes", recipes);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            recipeArrayList = savedInstanceState.getParcelableArrayList("recipes");
+
+            if (recipeArrayList != null) {
+                inflateRecyclerView();
+            }
+        }
+    }
+
+    @Override
+    public void onRecipeClick(Recipe recipe) {
+        //TODO: start detailed activity
+        Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
+        intent.putExtra("recipe", recipe);
+        startActivity(intent);
+
+    }
+
+    public void createRecipeApi() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiJson.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiJson = retrofit.create(ApiJson.class);
+    }
 
     void inflateRecyclerView() {
         MainRecyclerAdapter adapter = new MainRecyclerAdapter
@@ -107,15 +113,5 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         recipeRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this,
                 calculateNoOfColumns(MainActivity.this)));
         recipeRecyclerView.setAdapter(adapter);
-    }
-
-    public static int calculateNoOfColumns(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int scalingFactor = 200;
-        int noOfColumns = (int) (dpWidth / scalingFactor);
-        if (noOfColumns < 2)
-            noOfColumns = 1;
-        return noOfColumns;
     }
 }

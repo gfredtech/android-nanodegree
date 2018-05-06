@@ -17,14 +17,12 @@ import me.gfred.bakingapp.model.Step;
 public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickedListener,
         StepFragment.OnNavigationClickListener {
 
+    static boolean mTwoPane;
     Recipe recipe;
     int stepIndex;
-
     RecipeFragment recipeFragment;
     StepFragment stepFragment;
     FragmentManager manager;
-
-    static boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,10 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
                 stepFragment = new StepFragment();
                 stepIndex = 0;
-                stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
+                int size = recipe.getSteps().size();
+                Step step = recipe.getSteps().get(stepIndex);
+                stepFragment.setStep(step, stepIndex, size);
+
                 manager.beginTransaction()
                         .add(R.id.step_container, stepFragment)
                         .commit();
@@ -67,7 +68,10 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                         .commit();
 
                 stepFragment = new StepFragment();
-                stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
+                int size = recipe.getSteps().size();
+                Step step = recipe.getSteps().get(stepIndex);
+                stepFragment.setStep(step, stepIndex, size);
+
                 manager.beginTransaction()
                         .replace(R.id.step_container, stepFragment)
                         .commit();
@@ -111,12 +115,14 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     }
 
     @Override
-    public void onStepClicked(int index) {
+    public void onStepClicked(int stepIndex) {
 
         if (mTwoPane) {
-            StepFragment stepFragment = new StepFragment();
-            stepFragment.setStep(recipe.getSteps().get(index), index, recipe.getSteps().size());
-            stepIndex = index;
+            stepFragment = new StepFragment();
+            int size = recipe.getSteps().size();
+            Step step = recipe.getSteps().get(stepIndex);
+            stepFragment.setStep(step, stepIndex, size);
+            this.stepIndex = stepIndex;
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_container, stepFragment)
@@ -128,7 +134,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             intent.putParcelableArrayListExtra("steps", new ArrayList<Step>() {{
                 addAll(recipe.getSteps());
             }});
-            intent.putExtra("index", index);
+            intent.putExtra("stepIndex", stepIndex);
             startActivity(intent);
         }
     }
@@ -144,9 +150,10 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
     private void nextClick() {
         stepIndex++;
-        if (stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
-        StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
+        stepFragment = new StepFragment();
+        int size = recipe.getSteps().size();
+        Step step = recipe.getSteps().get(stepIndex);
+        stepFragment.setStep(step, stepIndex, size);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
@@ -155,16 +162,14 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     }
 
     private void previousClick() {
-
         stepIndex--;
-        if (stepIndex == -1) stepIndex = recipe.getSteps().size() - 1;
-        StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(recipe.getSteps().get(stepIndex), stepIndex, recipe.getSteps().size());
+        stepFragment = new StepFragment();
+        int size = recipe.getSteps().size();
+        Step step = recipe.getSteps().get(stepIndex);
+        stepFragment.setStep(step, stepIndex, size);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_container, stepFragment)
                 .commit();
-
-
     }
 }

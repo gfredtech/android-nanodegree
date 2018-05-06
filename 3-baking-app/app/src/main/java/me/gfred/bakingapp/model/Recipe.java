@@ -11,6 +11,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Recipe implements Parcelable {
 
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -29,6 +40,17 @@ public class Recipe implements Parcelable {
     @SerializedName("image")
     @Expose
     private String image;
+
+    private Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        ingredients = new ArrayList<>();
+        in.readList(ingredients, getClass().getClassLoader());
+        steps = new ArrayList<>();
+        in.readList(steps, getClass().getClassLoader());
+        servings = in.readInt();
+        image = in.readString();
+    }
 
     public Integer getId() {
         return id;
@@ -78,7 +100,6 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
-
     @Override
     public int describeContents() {
         return hashCode();
@@ -93,27 +114,4 @@ public class Recipe implements Parcelable {
         parcel.writeInt(servings);
         parcel.writeString(image);
     }
-
-    private Recipe(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        ingredients = new ArrayList<>();
-        in.readList(ingredients, getClass().getClassLoader());
-        steps = new ArrayList<>();
-        in.readList(steps, getClass().getClassLoader());
-        servings = in.readInt();
-        image = in.readString();
-    }
-
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
 }

@@ -27,10 +27,6 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
         mClickListener = listener;
     }
 
-    public interface OnStepClickListener {
-        void onStepClick(int index);
-    }
-
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,6 +45,10 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
     @Override
     public int getItemCount() {
         return mStepList.size();
+    }
+
+    public interface OnStepClickListener {
+        void onStepClick(int stepIndex);
     }
 
     class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

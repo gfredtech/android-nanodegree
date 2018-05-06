@@ -43,10 +43,6 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     }
 
-    public interface OnStepClickedListener {
-        void onStepClicked(int index);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -94,10 +90,9 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         this.recipe = recipe;
     }
 
-
     @Override
-    public void onStepClick(int index) {
-        mCallback.onStepClicked(index);
+    public void onStepClick(int stepIndex) {
+        mCallback.onStepClicked(stepIndex);
 
     }
 
@@ -124,5 +119,9 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = height;
         stepRecyclerView.setLayoutParams(params);
+    }
+
+    public interface OnStepClickedListener {
+        void onStepClicked(int stepIndex);
     }
 }

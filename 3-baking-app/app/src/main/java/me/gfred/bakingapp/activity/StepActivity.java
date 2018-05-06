@@ -13,8 +13,10 @@ import me.gfred.bakingapp.model.Step;
 
 public class StepActivity extends AppCompatActivity implements StepFragment.OnNavigationClickListener {
 
-    ArrayList<Step> step;
-    int index;
+    ArrayList<Step> steps;
+    int stepIndex;
+
+    StepFragment fragment;
 
 
     @Override
@@ -24,49 +26,42 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
         Intent intent = getIntent();
         if (savedInstanceState != null) {
 
-            step = savedInstanceState.getParcelableArrayList("step");
-            index = savedInstanceState.getInt("index");
+            steps = savedInstanceState.getParcelableArrayList("steps");
+            stepIndex = savedInstanceState.getInt("stepIndex");
 
-            if (step != null) {
-                StepFragment fragment = new StepFragment();
-                setTitle(step.get(index).getShortDescription());
-
-                fragment.setStep(step.get(index), index, step.size());
+            if (steps != null) {
+                fragment = new StepFragment();
+                setTitle(steps.get(stepIndex).getShortDescription());
+                fragment.setStep(steps.get(stepIndex), stepIndex, steps.size());
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.step_container, fragment)
                         .commit();
 
-
             }
-        } else if (intent.hasExtra("steps") && intent.hasExtra("index")) {
 
-            StepFragment stepFragment = new StepFragment();
+        } else if (intent.hasExtra("steps") && intent.hasExtra("stepIndex")) {
+
+            fragment = new StepFragment();
             FragmentManager manager = getSupportFragmentManager();
 
-            step = intent.getParcelableArrayListExtra("steps");
-            index = intent.getIntExtra("index", 0);
+            steps = intent.getParcelableArrayListExtra("steps");
+            stepIndex = intent.getIntExtra("stepIndex", 0);
 
-            stepFragment.setStep(step.get(index), index, step.size());
-            setTitle(step.get(index).getShortDescription());
+            fragment.setStep(steps.get(stepIndex), stepIndex, steps.size());
+            setTitle(steps.get(stepIndex).getShortDescription());
 
             manager.beginTransaction()
-                    .add(R.id.step_container, stepFragment)
+                    .add(R.id.step_container, fragment)
                     .commit();
-
-
-//            Toast.makeText(this, step.get(index).getShortDescription(), Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("step", step);
-        outState.putInt("index", index);
+        outState.putParcelableArrayList("steps", steps);
+        outState.putInt("stepIndex", stepIndex);
 
     }
 
@@ -80,29 +75,25 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
     }
 
     private void nextClick() {
-        index++;
-        if (index == step.size()) index = 0;
-
-        StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(step.get(index), index, step.size());
-        setTitle(step.get(index).getShortDescription());
+        stepIndex++;
+        fragment = new StepFragment();
+        fragment.setStep(steps.get(stepIndex), stepIndex, steps.size());
+        setTitle(steps.get(stepIndex).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.step_container, stepFragment)
+                .replace(R.id.step_container, fragment)
                 .commit();
 
     }
 
     private void previousClick() {
-        index--;
-        if (index == -1) index = step.size() - 1;
-
-        StepFragment stepFragment = new StepFragment();
-        stepFragment.setStep(step.get(index), index, step.size());
-        setTitle(step.get(index).getShortDescription());
+        stepIndex--;
+        fragment = new StepFragment();
+        fragment.setStep(steps.get(stepIndex), stepIndex, steps.size());
+        setTitle(steps.get(stepIndex).getShortDescription());
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.step_container, stepFragment)
+                .replace(R.id.step_container, fragment)
                 .commit();
 
     }
