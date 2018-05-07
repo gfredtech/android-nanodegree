@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     @Override
     public void onRecipeClick(Recipe recipe) {
-        //TODO: start detailed activity
         Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
         intent.putExtra("recipe", recipe);
         startActivity(intent);
