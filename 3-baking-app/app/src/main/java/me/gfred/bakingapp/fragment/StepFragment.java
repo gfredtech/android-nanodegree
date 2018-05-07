@@ -86,7 +86,7 @@ public class StepFragment extends Fragment {
             currentPosition = player.getCurrentPosition();
             outState.putLong("position",
                     currentPosition);
-            
+
         }
 
     }
@@ -171,7 +171,6 @@ public class StepFragment extends Fragment {
 
             player.prepare(videoSource);
             player.setPlayWhenReady(true);
-            Log.i("StepFragment", "initializePlayer: " + currentPosition);
             if (!reset) {
                 player.seekTo(currentPosition);
             }
@@ -194,7 +193,6 @@ public class StepFragment extends Fragment {
         super.onDestroy();
         if (player != null) {
             currentPosition = player.getCurrentPosition();
-            Log.i("StepFragment", "onDestroy: " + currentPosition);
             player.stop();
             player.release();
             player = null;
@@ -202,14 +200,6 @@ public class StepFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (player != null) {
-            currentPosition = player.getCurrentPosition();
-            Log.i("StepFragment", "onDestroyView: " + currentPosition);
-        }
-    }
 
     public void resetPosition() {
         this.reset = true;
