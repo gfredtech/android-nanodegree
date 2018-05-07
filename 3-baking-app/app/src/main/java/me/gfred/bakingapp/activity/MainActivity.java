@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.adapter.MainRecyclerAdapter;
 import me.gfred.bakingapp.model.Recipe;
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
             if (recipeArrayList != null) {
                 inflateRecyclerView();
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+                retryButton.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
             t.printStackTrace();
             progressBar.setVisibility(View.INVISIBLE);
             retryButton.setVisibility(View.VISIBLE);
-            Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_SHORT).show();
 
         }
     };
@@ -130,5 +134,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         recipeRecyclerView.setVisibility(View.VISIBLE);
         retryButton.setVisibility(View.INVISIBLE);
         recipeRecyclerView.setAdapter(adapter);
+    }
+
+    @OnClick(R.id.retry_button)
+    void retryClick() {
+        createRecipeApi();
+        apiJson.getRecipes().enqueue(recipeCallback);
+        retryButton.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 }
