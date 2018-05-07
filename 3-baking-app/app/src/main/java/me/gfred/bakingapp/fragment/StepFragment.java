@@ -200,7 +200,6 @@ public class StepFragment extends Fragment {
         }
     }
 
-
     public void resetPosition() {
         this.reset = true;
     }

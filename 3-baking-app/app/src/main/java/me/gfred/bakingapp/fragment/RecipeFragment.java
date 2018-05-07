@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.bakingapp.R;
@@ -50,40 +52,52 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         ButterKnife.bind(this, rootView);
 
         if (recipe != null) {
-            if (getActivity() != null) getActivity().setTitle(recipe.getName());
-
-            if (recipe.getImage() != null && recipe.getImage().length() > 0) {
-                recipeImage.setVisibility(View.VISIBLE);
-                Picasso.get().load(recipe.getImage())
-                        .into(recipeImage);
-            }
-
-            StringBuilder builder = new StringBuilder();
-            int i = 1;
-            for (Ingredient n : recipe.getIngredients()) {
-                builder.append(i)
-                        .append(". ")
-                        .append(n.getIngredient())
-                        .append(" (")
-                        .append(n.getQuantity())
-                        .append(" ")
-                        .append(n.getMeasure())
-                        .append(" )\n");
-                i += 1;
-            }
-
-            if (builder.length() > 0) ingredientsTextView.setText(builder.toString());
-
-
-            RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(getContext(), recipe.getSteps(), this);
-            stepRecyclerView.setLayoutManager(new LinearLayoutManager
-                    (getContext(), LinearLayoutManager.VERTICAL, false));
-            stepRecyclerView.setNestedScrollingEnabled(false);
-            adjustRecyclerViewHeight();
-            stepRecyclerView.setAdapter(adapter);
+            setViewElements();
         }
 
         return rootView;
+    }
+
+    void setViewElements() {
+        if (getActivity() != null) getActivity().setTitle(recipe.getName());
+
+        if (recipe.getImage() != null && recipe.getImage().length() > 0) {
+            recipeImage.setVisibility(View.VISIBLE);
+            Picasso.get().load(recipe.getImage())
+                    .into(recipeImage);
+        }
+
+        String ingredients = stringifyIngredients(recipe.getIngredients());
+        if (ingredients.length() > 0) ingredientsTextView.setText(ingredients);
+
+        inflateRecyclerView();
+    }
+
+    String stringifyIngredients(List<Ingredient> ingredients) {
+        StringBuilder builder = new StringBuilder();
+        int i = 1;
+        for (Ingredient n : ingredients) {
+            builder.append(i)
+                    .append(". ")
+                    .append(n.getIngredient())
+                    .append(" (")
+                    .append(n.getQuantity())
+                    .append(" ")
+                    .append(n.getMeasure())
+                    .append(" )\n");
+            i += 1;
+        }
+
+        return builder.toString();
+    }
+
+    void inflateRecyclerView() {
+        RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(getContext(), recipe.getSteps(), this);
+        stepRecyclerView.setLayoutManager(new LinearLayoutManager
+                (getContext(), LinearLayoutManager.VERTICAL, false));
+        stepRecyclerView.setNestedScrollingEnabled(false);
+        adjustRecyclerViewHeight();
+        stepRecyclerView.setAdapter(adapter);
     }
 
     public void setRecipe(Recipe recipe) {
