@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,37 +34,15 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     @BindView(R.id.recipe_rv)
     RecyclerView recipeRecyclerView;
+
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+
+    @BindView(R.id.retry_button)
+    Button retryButton;
+
     List<Recipe> recipeArrayList;
-    static Menu myMenu;
-    Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
-        @Override
-        public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
-            recipeArrayList = response.body();
-            inflateRecyclerView();
-        }
 
-        @Override
-        public void onFailure(@NonNull Call<List<Recipe>> call, Throwable t) {
-            t.printStackTrace();
-            progressBar.setVisibility(View.INVISIBLE);
-            myMenu.getItem(0).setVisible(true);
-            Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_LONG).show();
-
-        }
-    };
-    private ApiJson apiJson;
-
-    static int calculateNoOfColumns(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int scalingFactor = 200;
-        int noOfColumns = (int) (dpWidth / scalingFactor);
-        if (noOfColumns < 2)
-            noOfColumns = 1;
-        return noOfColumns;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +84,34 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
     }
 
+    Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
+        @Override
+        public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
+            recipeArrayList = response.body();
+            inflateRecyclerView();
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<List<Recipe>> call, Throwable t) {
+            t.printStackTrace();
+            progressBar.setVisibility(View.INVISIBLE);
+            retryButton.setVisibility(View.VISIBLE);
+            Toast.makeText(MainActivity.this, "Error loading recipes...", Toast.LENGTH_LONG).show();
+
+        }
+    };
+    private ApiJson apiJson;
+
+    static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if (noOfColumns < 2)
+            noOfColumns = 1;
+        return noOfColumns;
+    }
+
     public void createRecipeApi() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiJson.BASE_URL)
@@ -121,26 +128,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 calculateNoOfColumns(MainActivity.this)));
         progressBar.setVisibility(View.INVISIBLE);
         recipeRecyclerView.setVisibility(View.VISIBLE);
-        myMenu.getItem(0).setVisible(false);
+        retryButton.setVisibility(View.INVISIBLE);
         recipeRecyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.getItem(0).setVisible(false);
-        myMenu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.retry) {
-            createRecipeApi();
-            apiJson.getRecipes().enqueue(recipeCallback);
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        return true;
     }
 }

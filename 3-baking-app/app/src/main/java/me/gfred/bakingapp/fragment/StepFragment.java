@@ -71,7 +71,6 @@ public class StepFragment extends Fragment {
         }
 
         setButtonsVisibility(mStepIndex, mSize);
-        Log.i("StepFragment", "onCreateView: " + currentPosition);
         setViewElements();
         return rootView;
     }
@@ -87,7 +86,7 @@ public class StepFragment extends Fragment {
             currentPosition = player.getCurrentPosition();
             outState.putLong("position",
                     currentPosition);
-            Log.i("StepFragment", "onSaveInstanceState: " + currentPosition);
+            
         }
 
     }

@@ -23,7 +23,17 @@
         android:visibility="visible"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="240dp"
+        android:layout_marginTop="200dp"
         android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/retry_button"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:background="@android:color/transparent"
+        android:text="@string/retry" />
 
 </LinearLayout>
