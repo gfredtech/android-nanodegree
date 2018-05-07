@@ -171,6 +171,7 @@ public class StepFragment extends Fragment {
                     .createMediaSource(uri);
 
             player.prepare(videoSource);
+            player.setPlayWhenReady(true);
             Log.i("StepFragment", "initializePlayer: " + currentPosition);
             if (!reset) {
                 player.seekTo(currentPosition);
