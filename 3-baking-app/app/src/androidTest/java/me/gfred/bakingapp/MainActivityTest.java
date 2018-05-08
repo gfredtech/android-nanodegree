@@ -1,4 +1,4 @@
-package me.gfred.bakingapp.activity;
+package me.gfred.bakingapp;
 
 import org.junit.Test;
 
