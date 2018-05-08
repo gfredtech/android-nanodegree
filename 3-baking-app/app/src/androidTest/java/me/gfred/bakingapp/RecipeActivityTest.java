@@ -19,17 +19,5 @@ public class RecipeActivityTest {
 
     //TODO: Some reasonable tests here
 
-    @Test
-    public void test1() {
-
-    }
-
-    @Test public void test2() {
-
-    }
-
-    @Test public void test3() {
-
-    }
 
 }
