@@ -3,9 +3,21 @@ package me.gfred.bakingapp.activity;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
+import java.util.List;
+
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.model.Recipe;
+import me.gfred.bakingapp.util.ApiJson;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,7 +30,11 @@ public class IngredientWidget extends AppWidgetProvider {
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.getInt("ingredients", 0);
+
+        createRecipeApi();
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -41,5 +57,28 @@ public class IngredientWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
+    public static void createRecipeApi() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiJson.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiJson = retrofit.create(ApiJson.class);
+    }
+
+    Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
+
+        @Override
+        public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
+
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<List<Recipe>> call, @NonNull Throwable t) {
+
+        }
+    };
+
+    private static ApiJson apiJson;
 }
 

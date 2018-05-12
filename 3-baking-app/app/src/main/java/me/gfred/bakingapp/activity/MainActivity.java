@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -81,6 +82,33 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.settings_menu) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            if (recipeArrayList != null) {
+                ArrayList<String> entriesName = new ArrayList<>();
+                for (Recipe recipe : recipeArrayList) {
+                    entriesName.add(recipe.getName());
+                }
+                intent.putExtra("entries", entriesName);
+                startActivity(intent);
+                return true;
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onRecipeClick(Recipe recipe) {
         Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
         intent.putExtra("recipe", recipe);
@@ -109,11 +137,11 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
     static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int scalingFactor = 200;
+        int scalingFactor = 270;
         int noOfColumns = (int) (dpWidth / scalingFactor);
         if (noOfColumns < 2)
             noOfColumns = 1;
-        return noOfColumns;
+        return (int) Math.floor(noOfColumns);
     }
 
     public void createRecipeApi() {
