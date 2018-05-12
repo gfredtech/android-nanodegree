@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="ingredient"
+        android:title="Recipe Ingredient"
+        android:summary="The Recipe ingredient you want to display in Widget"></ListPreference>
+</PreferenceScreen>
