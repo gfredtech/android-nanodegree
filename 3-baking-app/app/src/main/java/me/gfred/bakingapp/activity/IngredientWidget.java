@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -36,13 +37,15 @@ public class IngredientWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        someString = preferences.getString("ingredients", "None");
+        someString = preferences.getString("ingredient", "None");
+        System.out.println(someString + "nimietski");
 
         createRecipeApi();
         apiJson.getRecipes().enqueue(recipeCallback);
         System.out.println("sheisse");
 
         if (currentRecipe != null) {
+            Toast.makeText(context, "GfredTech", Toast.LENGTH_LONG).show();
             views.setTextViewText(R.id.widget_recipe_name, currentRecipe.getName());
             views.setTextViewText(R.id.widget_recipe_ingredients, stringifyIngredients(currentRecipe.getIngredients()));
         }
@@ -99,10 +102,15 @@ public class IngredientWidget extends AppWidgetProvider {
 
         @Override
         public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
-            for (Recipe recipe : response.body()) {
-                if (recipe.getName() == someString) {
-                    currentRecipe = recipe;
-                    break;
+            List<Recipe> responses = response.body();
+            System.out.println("Somebro bost");
+            if (responses != null) {
+                for (Recipe recipe : responses) {
+                    if (recipe.getId().equals(Integer.valueOf(someString))) {
+                        currentRecipe = recipe;
+                        System.out.println(currentRecipe.getName());
+                        break;
+                    }
                 }
             }
         }
