@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import java.util.List;
 
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.util.ApiJson;
 import retrofit2.Call;
@@ -24,17 +25,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class IngredientWidget extends AppWidgetProvider {
 
+    static Recipe currentRecipe;
+    static String someString;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.getInt("ingredients", 0);
+        someString = preferences.getString("ingredients", "None");
 
         createRecipeApi();
+        apiJson.getRecipes().enqueue(recipeCallback);
+        System.out.println("sheisse");
+
+        if (currentRecipe != null) {
+            views.setTextViewText(R.id.widget_recipe_name, currentRecipe.getName());
+            views.setTextViewText(R.id.widget_recipe_ingredients, stringifyIngredients(currentRecipe.getIngredients()));
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -58,6 +69,24 @@ public class IngredientWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
+    public static String stringifyIngredients(List<Ingredient> ingredients) {
+        StringBuilder builder = new StringBuilder();
+        int i = 1;
+        for (Ingredient n : ingredients) {
+            builder.append(i)
+                    .append(". ")
+                    .append(n.getIngredient())
+                    .append(" (")
+                    .append(n.getQuantity())
+                    .append(" ")
+                    .append(n.getMeasure())
+                    .append(" )\n");
+            i += 1;
+        }
+
+        return builder.toString();
+    }
+
     public static void createRecipeApi() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiJson.BASE_URL)
@@ -66,11 +95,16 @@ public class IngredientWidget extends AppWidgetProvider {
         apiJson = retrofit.create(ApiJson.class);
     }
 
-    Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
+    static Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
 
         @Override
         public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
-
+            for (Recipe recipe : response.body()) {
+                if (recipe.getName() == someString) {
+                    currentRecipe = recipe;
+                    break;
+                }
+            }
         }
 
         @Override

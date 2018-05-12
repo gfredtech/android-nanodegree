@@ -3,13 +3,10 @@ package me.gfred.bakingapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import me.gfred.bakingapp.R;
-import me.gfred.bakingapp.fragment.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
