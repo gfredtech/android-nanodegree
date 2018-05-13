@@ -3,5 +3,5 @@
     <ListPreference
         android:key="ingredient"
         android:title="Recipe Ingredient"
-        android:summary="The Recipe ingredient you want to display in Widget"></ListPreference>
+        android:summary="The Recipe ingredient you want to display in Widget" />
 </PreferenceScreen>
