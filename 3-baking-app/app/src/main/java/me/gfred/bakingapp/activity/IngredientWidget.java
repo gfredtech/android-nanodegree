@@ -1,5 +1,6 @@
 package me.gfred.bakingapp.activity;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -30,6 +31,11 @@ public class IngredientWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
 
+        Intent intent = new Intent(context, SettingsActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.widget_recipe_ingredients, pendingIntent);
+
+
         if (recipeArrayList != null) {
             Recipe currentRecipe = currentRecipeInPreference(context);
             Toast.makeText(context, "GfredTech", Toast.LENGTH_LONG).show();
@@ -48,6 +54,7 @@ public class IngredientWidget extends AppWidgetProvider {
         if (intent.hasExtra("recipes")) {
             if (recipeArrayList == null)
                 recipeArrayList = intent.getParcelableArrayListExtra("recipes");
+
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
             ComponentName thisWidget = new ComponentName(context.getApplicationContext(), IngredientWidget.class);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
