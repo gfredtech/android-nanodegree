@@ -4,15 +4,17 @@ import android.os.Bundle;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.model.Recipe;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_settings);
-
         ListPreference preference = (ListPreference) findPreference("ingredient");
         setEntries(preference);
     }

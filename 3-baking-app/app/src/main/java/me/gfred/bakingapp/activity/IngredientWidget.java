@@ -2,56 +2,58 @@ package me.gfred.bakingapp.activity;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
-import me.gfred.bakingapp.util.ApiJson;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class IngredientWidget extends AppWidgetProvider {
 
-    static Recipe currentRecipe;
-    static String someString;
+    static ArrayList<Recipe> recipeArrayList;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        someString = preferences.getString("ingredient", "None");
-        System.out.println(someString + "nimietski");
-
-        createRecipeApi();
-        apiJson.getRecipes().enqueue(recipeCallback);
-        System.out.println("sheisse");
-
-        if (currentRecipe != null) {
+        if (recipeArrayList != null) {
+            Recipe currentRecipe = someChangeOccurs(context);
             Toast.makeText(context, "GfredTech", Toast.LENGTH_LONG).show();
-            views.setTextViewText(R.id.widget_recipe_name, currentRecipe.getName());
-            views.setTextViewText(R.id.widget_recipe_ingredients, stringifyIngredients(currentRecipe.getIngredients()));
+            if (currentRecipe != null) {
+                views.setTextViewText(R.id.widget_recipe_name, currentRecipe.getName());
+                views.setTextViewText(R.id.widget_recipe_ingredients, stringifyIngredients(currentRecipe.getIngredients()));
+            }
         }
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (intent.hasExtra("recipes")) {
+            recipeArrayList = intent.getParcelableExtra("recipes");
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
+            ComponentName thisWidget = new ComponentName(context.getApplicationContext(), IngredientWidget.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+            if (appWidgetIds != null && appWidgetIds.length > 0) {
+                onUpdate(context, appWidgetManager, appWidgetIds);
+            }
+        }
     }
 
     @Override
@@ -72,7 +74,7 @@ public class IngredientWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    public static String stringifyIngredients(List<Ingredient> ingredients) {
+    static String stringifyIngredients(List<Ingredient> ingredients) {
         StringBuilder builder = new StringBuilder();
         int i = 1;
         for (Ingredient n : ingredients) {
@@ -90,37 +92,19 @@ public class IngredientWidget extends AppWidgetProvider {
         return builder.toString();
     }
 
-    public static void createRecipeApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiJson.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        apiJson = retrofit.create(ApiJson.class);
-    }
 
-    static Callback<List<Recipe>> recipeCallback = new Callback<List<Recipe>>() {
-
-        @Override
-        public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
-            List<Recipe> responses = response.body();
-            System.out.println("Somebro bost");
-            if (responses != null) {
-                for (Recipe recipe : responses) {
-                    if (recipe.getId().equals(Integer.valueOf(someString))) {
-                        currentRecipe = recipe;
-                        System.out.println(currentRecipe.getName());
-                        break;
-                    }
-                }
+    static Recipe someChangeOccurs(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String type = preferences.getString("ingredient", "None");
+        for (Recipe recipe : recipeArrayList) {
+            if (recipe.getId().equals(Integer.valueOf(type))) {
+                return recipe;
             }
         }
 
-        @Override
-        public void onFailure(@NonNull Call<List<Recipe>> call, @NonNull Throwable t) {
+        return null;
+    }
 
-        }
-    };
 
-    private static ApiJson apiJson;
 }
 

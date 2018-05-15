@@ -73,7 +73,7 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         inflateRecyclerView();
     }
 
-    String stringifyIngredients(List<Ingredient> ingredients) {
+    static String stringifyIngredients(List<Ingredient> ingredients) {
         StringBuilder builder = new StringBuilder();
         int i = 1;
         for (Ingredient n : ingredients) {

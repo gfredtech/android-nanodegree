@@ -2,14 +2,15 @@ package me.gfred.bakingapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
                 startActivity(intent);
                 return true;
             }
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
             recipeArrayList = response.body();
             inflateRecyclerView();
+            propagateBroadcast((ArrayList<Recipe>) recipeArrayList);
         }
 
         @Override
@@ -162,6 +163,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         recipeRecyclerView.setVisibility(View.VISIBLE);
         retryButton.setVisibility(View.INVISIBLE);
         recipeRecyclerView.setAdapter(adapter);
+    }
+
+    void propagateBroadcast(ArrayList<Recipe> recipes) {
+        Intent intent = new Intent();
+        intent.setAction("me.gfred.bakingapp.CUSTOM_INTENT");
+        intent.putParcelableArrayListExtra("recipes", recipes);
+        sendBroadcast(intent);
     }
 
     @OnClick(R.id.retry_button)
