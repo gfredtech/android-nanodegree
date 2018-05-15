@@ -31,7 +31,7 @@ public class IngredientWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
 
         if (recipeArrayList != null) {
-            Recipe currentRecipe = someChangeOccurs(context);
+            Recipe currentRecipe = currentRecipeInPreference(context);
             Toast.makeText(context, "GfredTech", Toast.LENGTH_LONG).show();
             if (currentRecipe != null) {
                 views.setTextViewText(R.id.widget_recipe_name, currentRecipe.getName());
@@ -46,7 +46,8 @@ public class IngredientWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if (intent.hasExtra("recipes")) {
-            recipeArrayList = intent.getParcelableExtra("recipes");
+            if (recipeArrayList == null)
+                recipeArrayList = intent.getParcelableArrayListExtra("recipes");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
             ComponentName thisWidget = new ComponentName(context.getApplicationContext(), IngredientWidget.class);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
@@ -93,7 +94,7 @@ public class IngredientWidget extends AppWidgetProvider {
     }
 
 
-    static Recipe someChangeOccurs(Context context) {
+    static Recipe currentRecipeInPreference(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String type = preferences.getString("ingredient", "None");
         for (Recipe recipe : recipeArrayList) {

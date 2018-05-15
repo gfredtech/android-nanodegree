@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
-import java.util.ArrayList;
-
 import me.gfred.bakingapp.R;
-import me.gfred.bakingapp.model.Recipe;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -25,4 +22,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         listPreference.setEntries(entries);
         listPreference.setEntryValues(entryValues);
     }
+
 }
