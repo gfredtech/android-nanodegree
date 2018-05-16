@@ -112,7 +112,7 @@ public class StepFragment extends Fragment {
 
             if (thumbnailURL != null && thumbnailURL.length() > 0) {
                 Picasso.get().
-                        load(thumbnailURL).
+                        load(thumbnailURL).error(R.drawable.not_available).
                         into(thumbnailImage);
             } else
                 Picasso.get().

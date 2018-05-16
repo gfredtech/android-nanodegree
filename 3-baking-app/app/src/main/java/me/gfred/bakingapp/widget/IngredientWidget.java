@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -34,10 +33,8 @@ public class IngredientWidget extends AppWidgetProvider {
 
 
         if (recipe != null) {
-            Toast.makeText(context, "GfredTech", Toast.LENGTH_LONG).show();
             views.setTextViewText(R.id.widget_recipe_name, recipe.getName());
             views.setTextViewText(R.id.widget_recipe_ingredients, stringifyIngredients(recipe.getIngredients()));
-
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -52,7 +49,7 @@ public class IngredientWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        // Start Update Ingredients Service
         IngredientIntentService.startActionUpdateIngredients(context);
 
     }
@@ -60,13 +57,6 @@ public class IngredientWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
-
-        Intent intent = new Intent(context, SettingsActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        views.setOnClickPendingIntent(R.id.widget_recipe_ingredients, pendingIntent);
-
     }
 
     @Override
@@ -91,7 +81,4 @@ public class IngredientWidget extends AppWidgetProvider {
 
         return builder.toString();
     }
-
-
 }
-
