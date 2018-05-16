@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.model.Recipe;
+import me.gfred.bakingapp.service.IngredientIntentService;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -27,17 +28,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         System.out.println("somethingz");
-        Intent intent = getIntent();
-        if (intent != null && intent.getParcelableArrayListExtra("entries") != null) {
-            propagateBroadcast(intent.<Recipe>getParcelableArrayListExtra("entries"));
-        }
-    }
-
-
-    void propagateBroadcast(ArrayList<Recipe> recipes) {
-        Intent intent = new Intent();
-        intent.setAction("me.gfred.bakingapp.CUSTOM_INTENT");
-        intent.putParcelableArrayListExtra("recipes", recipes);
-        sendBroadcast(intent);
+        IngredientIntentService.startActionUpdateIngredients(this);
     }
 }

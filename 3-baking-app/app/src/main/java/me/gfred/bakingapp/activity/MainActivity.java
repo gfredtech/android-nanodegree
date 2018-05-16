@@ -24,6 +24,7 @@ import butterknife.OnClick;
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.adapter.MainRecyclerAdapter;
 import me.gfred.bakingapp.model.Recipe;
+import me.gfred.bakingapp.service.IngredientIntentService;
 import me.gfred.bakingapp.util.ApiJson;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         public void onResponse(@NonNull Call<List<Recipe>> call, Response<List<Recipe>> response) {
             recipeArrayList = response.body();
             inflateRecyclerView();
-            propagateBroadcast((ArrayList<Recipe>) recipeArrayList);
+            IngredientIntentService.startActionUpdateIngredients(MainActivity.this);
         }
 
         @Override
@@ -161,13 +162,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         recipeRecyclerView.setVisibility(View.VISIBLE);
         retryButton.setVisibility(View.INVISIBLE);
         recipeRecyclerView.setAdapter(adapter);
-    }
-
-    void propagateBroadcast(ArrayList<Recipe> recipes) {
-        Intent intent = new Intent();
-        intent.setAction("me.gfred.bakingapp.CUSTOM_INTENT");
-        intent.putParcelableArrayListExtra("recipes", recipes);
-        sendBroadcast(intent);
     }
 
     @OnClick(R.id.retry_button)
