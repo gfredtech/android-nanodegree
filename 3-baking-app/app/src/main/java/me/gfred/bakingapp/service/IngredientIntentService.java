@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IngredientIntentService extends IntentService {
 
-    public static final String ACTION_INGREDIENT_UPDATE = "me.gfred.bakingapp.CUSTOM_INTENT";
+    public static final String ACTION_INGREDIENT_UPDATE = "me.gfred.bakingapp.ACTION_INGREDIENT_UPDATE";
 
     public IngredientIntentService() {
         super("IngredientIntentService");
