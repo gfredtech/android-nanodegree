@@ -15,7 +15,6 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
 
     ArrayList<Step> steps;
     int stepIndex;
-
     StepFragment fragment;
 
 
@@ -99,6 +98,4 @@ public class StepActivity extends AppCompatActivity implements StepFragment.OnNa
                 .commit();
 
     }
-
-
 }

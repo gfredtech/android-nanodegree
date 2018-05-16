@@ -33,6 +33,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         manager = getSupportFragmentManager();
 
         if (findViewById(R.id.tablet_pane) != null) {
+            // handle's two-pane UI
             mTwoPane = true;
 
             if (savedInstanceState == null && intent.hasExtra("recipe")) {
@@ -60,7 +61,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
                 recipe = savedInstanceState.getParcelable("recipe");
                 stepIndex = savedInstanceState.getInt("stepIndex");
 
-
                 recipeFragment = new RecipeFragment();
                 recipeFragment.setRecipe(recipe);
                 manager.beginTransaction()
@@ -80,7 +80,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
 
         } else {
-
+            //phome, so we inflate only recipe fragment
             mTwoPane = false;
 
             if (savedInstanceState == null && intent.hasExtra("recipe")) {

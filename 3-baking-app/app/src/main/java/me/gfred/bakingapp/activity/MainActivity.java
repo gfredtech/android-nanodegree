@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiJson.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build(); // set up recipe and gson converter using retrofit
         apiJson = retrofit.create(ApiJson.class);
     }
 

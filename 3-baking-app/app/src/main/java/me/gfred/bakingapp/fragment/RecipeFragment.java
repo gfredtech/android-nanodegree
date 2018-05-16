@@ -124,6 +124,7 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         }
     }
 
+    // utility method to adjust height of recyclerview for steps
     void adjustRecyclerViewHeight() {
         ViewGroup.LayoutParams params = stepRecyclerView.getLayoutParams();
         int dp = recipe.getSteps().size() * 84;
