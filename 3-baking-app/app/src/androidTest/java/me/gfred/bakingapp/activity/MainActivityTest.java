@@ -37,7 +37,7 @@ public class MainActivityTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void mainActivityTest() {
+    public void test1() {
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.recipe_rv),
                         childAtPosition(
@@ -56,6 +56,7 @@ public class MainActivityTest {
         textView.check(matches(withText("Recipe Introduction")));
 
     }
+
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
