@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-import me.gfred.bakingapp.activity.SettingsActivity;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.util.ApiJson;
 import me.gfred.bakingapp.widget.IngredientWidget;
@@ -85,12 +84,7 @@ public class IngredientIntentService extends IntentService {
     Recipe currentRecipeInPreference(List<Recipe> recipeArrayList, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String type = preferences.getString("ingredient", "None");
-        if (type.equals("None")) {
-            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            return null;
-        }
+        if (type.equals("None")) return null;
         for (Recipe recipe : recipeArrayList) {
             if (recipe.getId().equals(Integer.valueOf(type))) {
                 return recipe;
