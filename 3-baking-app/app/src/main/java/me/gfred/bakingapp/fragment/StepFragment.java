@@ -109,7 +109,7 @@ public class StepFragment extends Fragment {
         } else {
             videoView.setVisibility(View.INVISIBLE);
             String thumbnailURL = mStep.getThumbnailURL();
-            
+
             if (thumbnailURL != null && thumbnailURL.length() > 0) {
                 Picasso.get().
                         load(thumbnailURL).

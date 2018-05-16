@@ -1,4 +1,4 @@
-package me.gfred.bakingapp.activity;
+package me.gfred.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import me.gfred.bakingapp.R;
+import me.gfred.bakingapp.activity.SettingsActivity;
 import me.gfred.bakingapp.model.Ingredient;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.service.IngredientIntentService;

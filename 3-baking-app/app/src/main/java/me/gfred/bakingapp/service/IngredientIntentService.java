@@ -12,9 +12,9 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-import me.gfred.bakingapp.activity.IngredientWidget;
 import me.gfred.bakingapp.model.Recipe;
 import me.gfred.bakingapp.util.ApiJson;
+import me.gfred.bakingapp.widget.IngredientWidget;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

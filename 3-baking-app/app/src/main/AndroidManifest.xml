@@ -43,7 +43,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
 
-        <receiver android:name=".activity.IngredientWidget">
+        <receiver android:name=".widget.IngredientWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
