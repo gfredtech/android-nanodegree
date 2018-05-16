@@ -93,16 +93,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerAdapt
 
         if (id == R.id.settings_menu) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            if (recipeArrayList != null) {
-                ArrayList<String> entriesName = new ArrayList<>();
-                for (Recipe recipe : recipeArrayList) {
-                    entriesName.add(recipe.getName());
-                }
-                intent.putExtra("entries", entriesName);
                 startActivity(intent);
                 return true;
             }
-        }
 
         return super.onOptionsItemSelected(item);
     }

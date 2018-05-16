@@ -28,6 +28,10 @@
                 android:value=".activity.MainActivity" />
         </activity>
         <activity android:name=".activity.StepActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.RecipeActivity" />
@@ -42,7 +46,6 @@
         <receiver android:name=".activity.IngredientWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.gfred.bakingapp.CUSTOM_INTENT" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
