@@ -19,10 +19,10 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:id="@+id/not_available_iv"
+            android:id="@+id/thumbnail_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/video_not_available"
+            android:contentDescription="@string/thumbnail_text"
             android:scaleType="centerCrop"
             android:src="@drawable/not_available"
             android:visibility="invisible"

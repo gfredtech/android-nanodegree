@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +48,8 @@ public class StepFragment extends Fragment {
     Button buttonPrevious;
     @BindView(R.id.button_next)
     Button buttonNext;
-    @BindView(R.id.not_available_iv)
-    ImageView notAvailableImage;
+    @BindView(R.id.thumbnail_image)
+    ImageView thumbnailImage;
     SimpleExoPlayer player;
     private Step mStep;
     private int mSize;
@@ -98,16 +99,28 @@ public class StepFragment extends Fragment {
 
     void setViewElements() {
         description.setText(mStep.getDescription());
-        String x = mStep.getVideoURL();
+        String videoURL = mStep.getVideoURL();
 
-        if (x != null && x.length() > 0) {
+        if (videoURL != null && videoURL.length() > 0) {
             videoView.setVisibility(View.VISIBLE);
-            notAvailableImage.setVisibility(View.INVISIBLE);
-            initializePlayer(Uri.parse(x));
+            thumbnailImage.setVisibility(View.INVISIBLE);
+            initializePlayer(Uri.parse(videoURL));
 
         } else {
             videoView.setVisibility(View.INVISIBLE);
-            notAvailableImage.setVisibility(View.VISIBLE);
+            String thumbnailURL = mStep.getThumbnailURL();
+            
+            if (thumbnailURL != null && thumbnailURL.length() > 0) {
+                Picasso.get().
+                        load(thumbnailURL).
+                        into(thumbnailImage);
+            } else
+                Picasso.get().
+                        load(R.drawable.not_available).
+                        into(thumbnailImage);
+
+
+            thumbnailImage.setVisibility(View.VISIBLE);
         }
     }
 
