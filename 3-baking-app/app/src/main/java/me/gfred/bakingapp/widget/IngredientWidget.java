@@ -60,6 +60,13 @@ public class IngredientWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
+
+        Intent intent = new Intent(context, SettingsActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.widget_recipe_ingredients, pendingIntent);
+
     }
 
     @Override

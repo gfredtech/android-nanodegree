@@ -84,6 +84,7 @@ public class IngredientIntentService extends IntentService {
     static Recipe currentRecipeInPreference(List<Recipe> recipeArrayList, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String type = preferences.getString("ingredient", "None");
+        if (type.equals("None")) return null;
         for (Recipe recipe : recipeArrayList) {
             if (recipe.getId().equals(Integer.valueOf(type))) {
                 return recipe;
