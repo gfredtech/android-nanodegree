@@ -141,7 +141,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             if (position != null)
                 mScrollView.post(new Runnable() {
                     public void run() {
-                        mScrollView.scrollTo(position[0], position[1] + getScreenWidth() / 4);
+                        mScrollView.scrollTo(position[0], position[1] + getScreenWidth() / 3);
                     }
                 });
         }
