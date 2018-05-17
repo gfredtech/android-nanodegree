@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,13 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         ButterKnife.bind(this);
         Intent intent = getIntent();
         manager = getSupportFragmentManager();
+
+        if (savedInstanceState == null) {
+            System.out.println("jackz");
+            LinearLayout ll = findViewById(R.id.recipe_container);
+            ll.setFocusableInTouchMode(true);
+        }
+
 
         if (findViewById(R.id.tablet_pane) != null) {
             // handle's two-pane UI

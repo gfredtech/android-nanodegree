@@ -3,6 +3,7 @@ package me.gfred.bakingapp.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,10 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     private Recipe recipe;
 
+    static LinearLayoutManager layoutManager;
+
+    static Bundle state;
+
     private OnStepClickedListener mCallback;
 
     public RecipeFragment() {
@@ -51,11 +56,22 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
         ButterKnife.bind(this, rootView);
 
+        layoutManager = new LinearLayoutManager
+                (getContext(), LinearLayoutManager.VERTICAL, false);
+
         if (recipe != null) {
             setViewElements();
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        state = new Bundle();
+        state.putParcelable("scroll", layoutManager.onSaveInstanceState());
     }
 
     void setViewElements() {
@@ -93,8 +109,11 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     void inflateRecyclerView() {
         RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(getContext(), recipe.getSteps(), this);
-        stepRecyclerView.setLayoutManager(new LinearLayoutManager
-                (getContext(), LinearLayoutManager.VERTICAL, false));
+        if (state != null) {
+            Parcelable restoreState = state.getParcelable("scroll");
+            layoutManager.onRestoreInstanceState(restoreState);
+        }
+        stepRecyclerView.setLayoutManager(layoutManager);
         stepRecyclerView.setNestedScrollingEnabled(false);
         adjustRecyclerViewHeight();
         stepRecyclerView.setAdapter(adapter);
@@ -109,6 +128,7 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         mCallback.onStepClicked(stepIndex);
 
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -139,4 +159,6 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
     public interface OnStepClickedListener {
         void onStepClicked(int stepIndex);
     }
+
+
 }

@@ -39,6 +39,7 @@ import me.gfred.bakingapp.model.Step;
 public class StepFragment extends Fragment {
 
     static long currentPosition = 0;
+    static boolean setPlayWhenReady;
     public OnNavigationClickListener mCallback;
     @BindView(R.id.description)
     TextView description;
@@ -68,6 +69,7 @@ public class StepFragment extends Fragment {
             mStep = savedInstanceState.getParcelable("step");
             mStepIndex = savedInstanceState.getInt("stepIndex");
             currentPosition = savedInstanceState.getLong("position");
+            setPlayWhenReady = savedInstanceState.getBoolean("setPlayWhenReady");
         }
 
         setButtonsVisibility(mStepIndex, mSize);
@@ -84,9 +86,10 @@ public class StepFragment extends Fragment {
 
         if (player != null) {
             currentPosition = player.getCurrentPosition();
+
             outState.putLong("position",
                     currentPosition);
-
+            outState.putBoolean("setPlayWhenReady", player.getPlayWhenReady());
         }
 
     }
@@ -182,9 +185,9 @@ public class StepFragment extends Fragment {
                     .createMediaSource(uri);
 
             player.prepare(videoSource);
-            player.setPlayWhenReady(true);
             if (!reset) {
                 player.seekTo(currentPosition);
+                player.setPlayWhenReady(setPlayWhenReady);
             }
         }
     }
@@ -201,6 +204,16 @@ public class StepFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (player != null) {
+            currentPosition = player.getCurrentPosition();
+            player.stop();
+            player.release();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (player != null) {
@@ -208,7 +221,6 @@ public class StepFragment extends Fragment {
             player.stop();
             player.release();
             player = null;
-
         }
     }
 
