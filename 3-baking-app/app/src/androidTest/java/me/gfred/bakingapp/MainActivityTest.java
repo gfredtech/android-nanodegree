@@ -48,11 +48,6 @@ public class MainActivityTest {
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.step_description), withText("Recipe Introduction"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.step_recyclerview),
-                                        0),
-                                0),
                         isDisplayed()));
         textView.check(matches(withText("Recipe Introduction")));
 
