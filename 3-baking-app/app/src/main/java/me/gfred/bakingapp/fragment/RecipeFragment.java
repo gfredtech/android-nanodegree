@@ -3,7 +3,6 @@ package me.gfred.bakingapp.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,8 +41,6 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     static LinearLayoutManager layoutManager;
 
-    static Bundle state;
-
     private OnStepClickedListener mCallback;
 
     public RecipeFragment() {
@@ -64,14 +61,6 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
         }
 
         return rootView;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        state = new Bundle();
-        state.putParcelable("scroll", layoutManager.onSaveInstanceState());
     }
 
     void setViewElements() {
@@ -109,10 +98,6 @@ public class RecipeFragment extends Fragment implements RecipeRecyclerAdapter.On
 
     void inflateRecyclerView() {
         RecipeRecyclerAdapter adapter = new RecipeRecyclerAdapter(getContext(), recipe.getSteps(), this);
-        if (state != null) {
-            Parcelable restoreState = state.getParcelable("scroll");
-            layoutManager.onRestoreInstanceState(restoreState);
-        }
         stepRecyclerView.setLayoutManager(layoutManager);
         stepRecyclerView.setNestedScrollingEnabled(false);
         adjustRecyclerViewHeight();

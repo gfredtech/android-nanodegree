@@ -2,12 +2,16 @@ package me.gfred.bakingapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.bakingapp.R;
 import me.gfred.bakingapp.fragment.RecipeFragment;
@@ -24,6 +28,9 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     RecipeFragment recipeFragment;
     StepFragment stepFragment;
     FragmentManager manager;
+
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +127,32 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         super.onSaveInstanceState(outState);
         outState.putParcelable("recipe", recipe);
         outState.putInt("stepIndex", stepIndex);
+        outState.putIntArray("ARTICLE_SCROLL_POSITION",
+                new int[]{mScrollView.getScrollX(), mScrollView.getScrollY()});
+    }
+
+    @Override
+    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        final int[] position;
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+
+            if (position != null)
+                mScrollView.post(new Runnable() {
+                    public void run() {
+                        mScrollView.scrollTo(position[0], position[1] + getScreenWidth() / 4);
+                    }
+                });
+        }
+    }
+
+    private int getScreenWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager()
+                .getDefaultDisplay()
+                .getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 
     @Override
