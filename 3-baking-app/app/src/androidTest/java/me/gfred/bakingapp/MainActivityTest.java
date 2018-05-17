@@ -24,6 +24,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -54,6 +55,29 @@ public class MainActivityTest {
                                 0),
                         isDisplayed()));
         textView.check(matches(withText("Recipe Introduction")));
+
+    }
+
+    @Test
+    public void test2() {
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.recipe_rv),
+                        childAtPosition(
+                                withClassName(is("android.support.constraint.ConstraintLayout")),
+                                0)));
+        recyclerView.perform(actionOnItemAtPosition(2, click()));
+
+        ViewInteraction recyclerView2 = onView(
+                allOf(withId(R.id.step_recyclerview),
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                4)));
+        recyclerView2.perform(actionOnItemAtPosition(1, click()));
+
+        ViewInteraction imageView = onView(
+                allOf(withId(R.id.thumbnail_image), withContentDescription("Thumbnail Image"),
+                        isDisplayed()));
+        imageView.check(matches(isDisplayed()));
 
     }
 
