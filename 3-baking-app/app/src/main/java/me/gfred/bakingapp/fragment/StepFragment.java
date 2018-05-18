@@ -209,13 +209,15 @@ public class StepFragment extends Fragment {
             currentPosition = player.getCurrentPosition();
             player.stop();
             player.release();
+            player = null;
+
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (player != null && !TextUtils.isEmpty(mStep.getVideoURL())) {
+        if (player == null && !TextUtils.isEmpty(mStep.getVideoURL())) {
             initializePlayer(Uri.parse(mStep.getVideoURL()));
         }
     }
@@ -228,6 +230,7 @@ public class StepFragment extends Fragment {
             player.stop();
             player.release();
             player = null;
+
         }
     }
 
