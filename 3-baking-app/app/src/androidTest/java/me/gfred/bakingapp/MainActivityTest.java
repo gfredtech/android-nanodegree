@@ -38,7 +38,8 @@ public class MainActivityTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void test1() {
+    public void test1() throws InterruptedException {
+        Thread.sleep(2000);
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.recipe_rv),
                         childAtPosition(
@@ -54,7 +55,8 @@ public class MainActivityTest {
     }
 
     @Test
-    public void test2() {
+    public void test2() throws InterruptedException {
+        Thread.sleep(2000);
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.recipe_rv),
                         childAtPosition(
