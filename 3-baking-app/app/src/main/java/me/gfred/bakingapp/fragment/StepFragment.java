@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,8 +165,6 @@ public class StepFragment extends Fragment {
     }
 
     void initializePlayer(Uri uri) {
-        System.out.println("initializePlayer: " + currentPosition);
-
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -210,6 +209,14 @@ public class StepFragment extends Fragment {
             currentPosition = player.getCurrentPosition();
             player.stop();
             player.release();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (player != null && !TextUtils.isEmpty(mStep.getVideoURL())) {
+            initializePlayer(Uri.parse(mStep.getVideoURL()));
         }
     }
 
