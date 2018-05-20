@@ -6,8 +6,10 @@
     android:orientation="vertical"
     tools:context=".JokeActivity">
     <TextView
+        android:id="@+id/joke_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        tools:text="Example"
         android:textSize="30sp"/>
 
 </LinearLayout>

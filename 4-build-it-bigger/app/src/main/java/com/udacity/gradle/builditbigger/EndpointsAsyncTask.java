@@ -1,5 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -10,12 +11,21 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
-class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     private static MyApi myApiService = null;
+    private OnJokeFinishLoading jokeFinishLoading;
+
+    interface OnJokeFinishLoading {
+        void onJokeFinishLoading(String joke);
+    }
+
+    void setCallback(OnJokeFinishLoading jokeFinishLoading) {
+        this.jokeFinishLoading = jokeFinishLoading;
+    }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected String doInBackground(Context... params) {
         if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -45,5 +55,8 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         //TODO: launch activity in Android Library
+        if(result != null) {
+            jokeFinishLoading.onJokeFinishLoading(result);
+        }
     }
 }
