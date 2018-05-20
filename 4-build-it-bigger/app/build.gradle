@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.1'
 
     api project(":jokes4j")
-    api project(path: ':jokes4android')
+    api project(':jokes4android')
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

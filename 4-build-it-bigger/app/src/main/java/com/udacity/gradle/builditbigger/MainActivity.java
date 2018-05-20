@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         EndpointsAsyncTask task = new EndpointsAsyncTask();
-        task.setCallback(new EndpointsAsyncTask.OnJokeFinishLoading() {
+        task.setCallback(new EndpointsAsyncTask.JokeCallback() {
             @Override
-            public void onJokeFinishLoading(String joke) {
+            public void onLoadJoke(String joke) {
                 Intent intent = new Intent(MainActivity.this, JokeActivity.class);
                 intent.putExtra("joke", joke);
                 startActivity(intent);
@@ -53,6 +53,4 @@ public class MainActivity extends AppCompatActivity {
         });
         task.execute();
     }
-
-
 }
