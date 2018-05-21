@@ -19,14 +19,11 @@ public class EndpointsAsyncTaskTest {
             ExecutionException, InterruptedException {
 
         EndpointsAsyncTask task = new EndpointsAsyncTask();
-
         task.execute();
 
         String joke = task.get();
         assertNotNull(joke);
         assertNotEquals("", joke);
-
-
     }
 
 }
