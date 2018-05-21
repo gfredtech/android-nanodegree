@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 public class EndpointsAsyncTaskTest {
 
     @Test
-    public void asyncTaskDoesNotReturnEmptyString() throws
+    public void asyncTaskReturnsNonEmptyString() throws
             ExecutionException, InterruptedException {
 
         EndpointsAsyncTask task = new EndpointsAsyncTask();
