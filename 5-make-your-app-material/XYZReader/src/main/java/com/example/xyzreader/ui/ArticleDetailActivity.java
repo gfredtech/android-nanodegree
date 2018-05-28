@@ -37,12 +37,12 @@ public class ArticleDetailActivity extends AppCompatActivity
     private int mTopInset;
 
     @BindView(R.id.pager)
-    private ViewPager mPager;
+    ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     @BindView(R.id.up_container)
-    private View mUpButtonContainer;
+    View mUpButtonContainer;
     @BindView(R.id.action_up)
-    private View mUpButton;
+    View mUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
