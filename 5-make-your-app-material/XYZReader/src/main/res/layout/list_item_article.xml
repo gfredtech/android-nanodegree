@@ -43,6 +43,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="16dp"
             android:textColor="#6000"
+            android:textStyle="bold"
             android:maxLines="2"
             android:ellipsize="end" />
     </LinearLayout>
