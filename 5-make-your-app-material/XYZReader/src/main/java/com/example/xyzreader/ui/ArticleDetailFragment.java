@@ -157,7 +157,7 @@ public class ArticleDetailFragment extends Fragment implements
                 mCursor.getString(ArticleLoader.Query.BODY);
         startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                 .setType("text/plain")
-                .setText(text == null ? "Some Sample text" : text)
+                .setText(text == null ? "N/A" : text)
                 .getIntent(), getString(R.string.action_share)));
     }
 
