@@ -62,6 +62,7 @@ public class ArticleDetailFragment extends Fragment implements
     private ColorDrawable mStatusBarColorDrawable;
 
     private int mTopInset;
+    @BindView(R.id.photo_container)
     private View mPhotoContainerView;
     @BindView(R.id.photo)
     ImageView mPhotoView;
@@ -141,8 +142,6 @@ public class ArticleDetailFragment extends Fragment implements
                 updateStatusBar();
             }
         });
-
-        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 

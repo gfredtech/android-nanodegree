@@ -20,8 +20,9 @@
                 <!--suppress AndroidLintContentDescription -->
                 <ImageView
                     android:id="@+id/photo"
-                    android:layout_width="360dp"
-                    android:layout_height="360dp" />
+                    android:layout_width="350dp"
+                    android:layout_height="350dp"
+                    android:contentDescription="@string/todo" />
 
                 <View
                     android:layout_width="match_parent"
