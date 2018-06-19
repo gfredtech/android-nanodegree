@@ -63,7 +63,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     private int mTopInset;
     @BindView(R.id.photo_container)
-    private View mPhotoContainerView;
+    View mPhotoContainerView;
     @BindView(R.id.photo)
     ImageView mPhotoView;
     private int mScrollY;
