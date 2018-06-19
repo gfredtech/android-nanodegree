@@ -17,6 +17,7 @@ import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies2.model.Movie;
+import me.gfred.popularmovies2.model.Results;
 
 /**
  * Created by Gfred on 2/27/2018.
@@ -25,29 +26,32 @@ import me.gfred.popularmovies2.model.Movie;
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
     private static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
     private Context mContext;
-    private ArrayList<Movie> movies;
+    private Results movies;
 
     private Cursor mCursor;
 
     final private MovieClickListener mclickListener;
 
-    public MainRecyclerAdapter(Context mContext, ArrayList<Movie> movies, MovieClickListener clickListener) {
-        this.movies = movies;
-        this.mContext = mContext;
-        this.mCursor = null;
-        this.mclickListener = clickListener;
-    }
-
-    public MainRecyclerAdapter(Context mContext, Cursor cursor, MovieClickListener clickListener) {
+    public void setDataSource(Cursor cursor) {
         this.mCursor = cursor;
         this.movies = null;
+        new FavoriteMoviesDBHelper(mContext).getReadableDatabase();
+    }
+
+    public void setDataSource(Results movies) {
+        this.movies = movies;
+        this.mCursor = null;
+    }
+
+
+    public MainRecyclerAdapter(Context mContext, MovieClickListener clickListener) {
         this.mContext = mContext;
         this.mclickListener = clickListener;
-        new FavoriteMoviesDBHelper(mContext).getReadableDatabase();
     }
 
     public interface MovieClickListener {
         void onMovieClicked(Movie movie);
+
         void onMovieLongClicked(Movie movie);
     }
 
@@ -62,17 +66,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        if(movies != null) {
+        if (movies != null) {
 
-            holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
-            String image = IMAGE_PARAM + movies.get(position).getPosterPath();
+            holder.mMovieTitle.setText(movies.getResults().get(position).getOriginalTitle());
+            String image = IMAGE_PARAM + movies.getResults().get(position).getPosterPath();
             Picasso.with(mContext)
                     .load(image)
                     .into(holder.mMovieImage);
 
-        } else if(mCursor != null) {
+        } else if (mCursor != null) {
 
-            if(!mCursor.moveToPosition(position)) return;
+            if (!mCursor.moveToPosition(position)) return;
 
             String name = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE));
             holder.mMovieTitle.setText(name);
@@ -87,21 +91,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
 
-
     @Override
     public int getItemCount() {
-        if(movies != null) return movies.size();
-        else if(mCursor!= null) return mCursor.getCount();
+        if (movies != null) return movies.getResults().size();
+        else if (mCursor != null) return mCursor.getCount();
         return -1;
     }
 
     public void swapCursor(Cursor cursor) {
 
-        if(mCursor != null) mCursor.close();
+        if (mCursor != null) mCursor.close();
 
         mCursor = cursor;
 
-        if(cursor != null) this.notifyDataSetChanged();
+        if (cursor != null) this.notifyDataSetChanged();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -122,11 +125,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public void onClick(View v) {
             Movie movie;
-           if(movies!= null) movie = movies.get(getAdapterPosition());
-           else {
-               mCursor.moveToPosition(getAdapterPosition());
-               movie = cursorClick();
-           }
+            if (movies != null) {
+                movie = movies.getResults().get(getAdapterPosition());
+            } else {
+                mCursor.moveToPosition(getAdapterPosition());
+                movie = cursorClick();
+            }
 
             mclickListener.onMovieClicked(movie);
         }
@@ -134,8 +138,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public boolean onLongClick(View v) {
             Movie movie;
-            if(movies!= null) movie = movies.get(getAdapterPosition());
-            else {
+            if (movies != null) {
+                movie = movies.getResults().get(getAdapterPosition());
+            } else {
                 mCursor.moveToPosition(getAdapterPosition());
                 movie = cursorClick();
             }

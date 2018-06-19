@@ -19,30 +19,34 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.MainRecyclerAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.model.Movie;
+import me.gfred.popularmovies2.model.Results;
+import me.gfred.popularmovies2.utils.ApiInterface;
 import me.gfred.popularmovies2.utils.DBUtils;
-import me.gfred.popularmovies2.utils.JsonUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static me.gfred.popularmovies2.utils.ApiKey.API_KEY;
+import static me.gfred.popularmovies2.utils.ApiKey.createRetrofitApi;
 
 public class MainActivity extends AppCompatActivity implements
-        MainRecyclerAdapter.MovieClickListener, LoaderManager.LoaderCallbacks<Cursor>{
+        MainRecyclerAdapter.MovieClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+
     private static final int FAVORITE_LOADER_ID = 0;
-    static ArrayList<Movie> popularMovies;
-    static ArrayList<Movie> topRatedMovies;
-    static String json[];
-    static String currentState;
-    Cursor cursor;
-    private MainRecyclerAdapter popularAdapter;
-    private MainRecyclerAdapter topRatedAdapter;
-    MainRecyclerAdapter cursorAdapter;
+    private static String type = "POPULAR";
+
+    static Results popularMovies;
+    static Results topRatedMovies;
+    Cursor favoriteMovies;
+
+    MainRecyclerAdapter adapter;
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
@@ -52,40 +56,38 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Intent intent = getIntent();
-        if(intent.hasExtra("movies_data")) {
-            json = intent.getExtras().getStringArray("movies_data");
-            if(json != null && json.length != 0) {
-                jsonParser(json);
+
+        recyclerView = new RecyclerView(this);
+        adapter = new MainRecyclerAdapter(MainActivity.this,
+                MainActivity.this);
+
+        if(savedInstanceState == null) {
+            ApiInterface apiInterface = createRetrofitApi();
+            apiInterface.getPopularMovies(API_KEY).enqueue(popularMoviesCallback);
+        } else {
+            type = savedInstanceState.getString("state", "POPULAR");
+            popularMovies = savedInstanceState.getParcelable("popular_movies");
+            topRatedMovies = savedInstanceState.getParcelable("toprated_movies");
+            favoriteMovies = savedInstanceState.getParcelable("favorite_movies");
+
+            switch (type) {
+                case "POPULAR":
+                    inflateView(popularMovies);
+                    setTitle(R.string.popular_menu);
+                    break;
+
+                case "TOP_RATED":
+                    inflateView(topRatedMovies);
+                    setTitle(R.string.toprated_menu);
+                    break;
+
+                case "FAVORITE":
+                    inflateView(favoriteMovies);
+                    setTitle(R.string.favorites);
+                    break;
             }
+
         }
-
-
-        cursorAdapter = new MainRecyclerAdapter(this, cursor, this);
-        popularAdapter = new MainRecyclerAdapter(this, popularMovies, this);
-        topRatedAdapter = new MainRecyclerAdapter(this, topRatedMovies, this);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-
-        String s = "POPULAR";
-        if(savedInstanceState != null)
-         s = savedInstanceState.getString("state", "POPULAR");
-
-        switch (s) {
-            case "POPULAR":
-                recyclerView.setAdapter(popularAdapter);
-                setTitle(R.string.popular_menu);
-                break;
-            case "TOP_RATED":
-                recyclerView.setAdapter(topRatedAdapter);
-                setTitle(R.string.toprated_menu);
-                break;
-            case "FAVORITE":
-                recyclerView.setAdapter(cursorAdapter);
-                setTitle(R.string.favorites);
-                break;
-        }
-
-        currentState = s;
 
         getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, this);
     }
@@ -93,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("state", currentState);
+        outState.putString("state", type);
+        outState.putParcelable("popular_movies", popularMovies);
+        outState.putParcelable("toprated_movies", topRatedMovies);
     }
 
     @Override
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMovieLongClicked(Movie movie) {
-      AlertDialog dialog = getDialog(movie);
+        AlertDialog dialog = getDialog(movie);
         dialog.show();
     }
 
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        switch (currentState) {
+        switch (type) {
             case "POPULAR":
                 menu.getItem(0).setTitle(R.string.toprated_menu);
                 break;
@@ -136,26 +140,30 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.top_rated) {
-            if(item.getTitle().equals("Top Rated")) {
-                recyclerView.setAdapter(topRatedAdapter);
+        if (id == R.id.top_rated) {
+            if (item.getTitle().equals("Top Rated")) {
+                inflateView(topRatedMovies);
                 item.setTitle(R.string.popular_menu);
                 setTitle(getString(R.string.toprated_menu));
-                currentState = "TOP_RATED";
+                type = "TOP_RATED";
 
             } else {
-                recyclerView.setAdapter(popularAdapter);
+                inflateView(popularMovies);
                 item.setTitle(R.string.toprated_menu);
                 setTitle(getString(R.string.popular_menu));
-                currentState = "POPULAR";
+                type = "POPULAR";
 
             }
-        } else if(id == R.id.favorite) {
-            recyclerView.setAdapter(cursorAdapter);
+
+            return true;
+
+        } else if (id == R.id.favorite) {
+            inflateView(favoriteMovies);
             if (recyclerView.getLayoutManager().getItemCount() == 0)
                 Toast.makeText(this, "You have no favorite movies yet.", Toast.LENGTH_SHORT).show();
             setTitle(R.string.favorites);
-            currentState = "FAVORITE";
+            type = "FAVORITE";
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -172,19 +180,18 @@ public class MainActivity extends AppCompatActivity implements
         final boolean isFavorite = cursor != null && cursor.getCount() == 1;
 
 
-
         String message = isFavorite ? "Remove from Favorites?" : "Add to Favorites?";
         builder.setMessage(message);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                if(isFavorite) {
+                if (isFavorite) {
                     cursor.close();
 
                     getContentResolver().delete(DBUtils.deleteFavorite(movie.getId()), null, null);
                     getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, MainActivity.this);
-                        Toast.makeText(builder.getContext(), "Removed from favorites",
-                                Toast.LENGTH_SHORT).show();
+                    Toast.makeText(builder.getContext(), "Removed from favorites",
+                            Toast.LENGTH_SHORT).show();
 
 
                     dialog.dismiss();
@@ -208,17 +215,9 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-       return builder.create();
+        return builder.create();
     }
 
-    void jsonParser(String[] jsonData) {
-        try {
-            popularMovies = JsonUtils.parseListMovies(jsonData[0]);
-            topRatedMovies = JsonUtils.parseListMovies(jsonData[1]);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -269,11 +268,56 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(data);
+       adapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+        adapter.swapCursor(null);
+    }
+
+    Callback<Results> popularMoviesCallback = new Callback<Results>() {
+        @Override
+        public void onResponse(Call<Results> call, Response<Results> response) {
+            popularMovies = response.body();
+            Log.d("MainActivity", "Phase 1");
+            ApiInterface apiInterface = createRetrofitApi();
+            apiInterface.getTopRatedMovies(API_KEY).enqueue(topRatedMoviesCallback);
+
+        }
+
+        @Override
+        public void onFailure(Call<Results> call, Throwable t) {
+            t.printStackTrace();
+        }
+    };
+
+
+    Callback<Results> topRatedMoviesCallback = new Callback<Results>() {
+        @Override
+        public void onResponse(Call<Results> call, Response<Results> response) {
+            Log.d("MainActivity", "Phase 2");
+            topRatedMovies = response.body();
+            inflateView(type.equals("POPULAR") ? popularMovies : topRatedMovies);
+
+        }
+
+        @Override
+        public void onFailure(Call<Results> call, Throwable t) {
+            t.printStackTrace();
+        }
+    };
+
+    void inflateView(Results results) {
+        Log.d("MainActivity", "Phase 1");
+        adapter.setDataSource(results);
+        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+        recyclerView.setAdapter(adapter);
+    }
+
+    void inflateView(Cursor results) {
+        adapter.setDataSource(results);
+        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+        recyclerView.setAdapter(adapter);
     }
 }

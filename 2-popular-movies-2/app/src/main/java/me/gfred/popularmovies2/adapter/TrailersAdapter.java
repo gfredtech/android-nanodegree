@@ -14,13 +14,14 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import me.gfred.popularmovies2.R;
+import me.gfred.popularmovies2.model.Trailers;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyViewHolder> {
     private static final String YOUTUBE_THUMBNAIL_BASE_URL= "http://img.youtube.com/vi/";
     private static final String YOUTUBE_THUMBNAIL_PARAM = "/0.jpg";
 
     private Context mContext;
-    private List<Pair<String, String>> mTrailers;
+    private List<Trailers> mTrailers;
 
     final private TrailerClickListener mTrailerClickListener;
 
@@ -29,7 +30,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
         this.mTrailerClickListener = mTrailerClickListener;
     }
 
-    public void setTrailers(List<Pair<String, String>> trailers) {
+    public void setTrailers(List<Trailers> trailers) {
         this.mTrailers = trailers;
     }
 
@@ -49,8 +50,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        String title = mTrailers.get(position).first;
-        String imageURL = YOUTUBE_THUMBNAIL_BASE_URL + mTrailers.get(position).second + YOUTUBE_THUMBNAIL_PARAM;
+        String title = mTrailers.get(position).getName();
+        String imageURL = YOUTUBE_THUMBNAIL_BASE_URL + mTrailers.get(position).getKey() + YOUTUBE_THUMBNAIL_PARAM;
         holder.trailerTextView.setText(title);
         Picasso.with(mContext)
                 .load(imageURL)
@@ -76,7 +77,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
 
         @Override
         public void onClick(View v) {
-           String url =  mTrailers.get(getAdapterPosition()).second;
+           String url =  mTrailers.get(getAdapterPosition()).getKey();
 
            mTrailerClickListener.onTrailerClicked(url);
         }

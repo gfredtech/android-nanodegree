@@ -12,15 +12,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.gfred.popularmovies2.R;
+import me.gfred.popularmovies2.model.Reviews;
 
 
 //adapter for movie reviews
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Pair<String, String>> reviews;
+    private List<Reviews> reviews;
 
-    public ReviewsAdapter(Context context, List<Pair<String, String>> reviews) {
+    public ReviewsAdapter(Context context, List<Reviews> reviews) {
         this.mContext = context;
         this.reviews = reviews;
     }
@@ -36,9 +37,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.review.setText(reviews.get(position).first);
+        holder.review.setText(reviews.get(position).getContent());
         holder.review.setMovementMethod(new ScrollingMovementMethod());
-        holder.author.setText(reviews.get(position).second);
+        holder.author.setText(reviews.get(position).getAuthor());
 
     }
 

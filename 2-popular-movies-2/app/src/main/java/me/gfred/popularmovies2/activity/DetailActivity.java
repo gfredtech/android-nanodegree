@@ -1,14 +1,11 @@
 package me.gfred.popularmovies2.activity;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,9 +22,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,11 +31,17 @@ import me.gfred.popularmovies2.adapter.ReviewsAdapter;
 import me.gfred.popularmovies2.adapter.TrailersAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.model.Movie;
+import me.gfred.popularmovies2.model.Reviews;
+import me.gfred.popularmovies2.model.Trailers;
+import me.gfred.popularmovies2.utils.ApiInterface;
 import me.gfred.popularmovies2.utils.DBUtils;
-import me.gfred.popularmovies2.utils.JsonUtils;
-import me.gfred.popularmovies2.utils.NetworkUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static me.gfred.popularmovies2.data.FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI;
+import static me.gfred.popularmovies2.utils.ApiKey.API_KEY;
+import static me.gfred.popularmovies2.utils.ApiKey.createRetrofitApi;
 
 /**
  * Created by Gfred on 3/3/2018.
@@ -94,12 +94,14 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        if(intent.hasExtra("movie")) {
+        if (intent.hasExtra("movie")) {
             movie = intent.getParcelableExtra("movie");
-        }
 
-        if (movie != null) {
-            populateUI(movie);
+            if (movie != null) {
+                ApiInterface apiInterface = createRetrofitApi();
+                apiInterface.getMovieTrailers(movie.getId(), API_KEY).enqueue(movieTrailersCallback);
+                populateUI(movie);
+            }
         }
 
         context = this;
@@ -107,7 +109,6 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
 
     void populateUI(Movie movie) {
 
-        makeQuery(movie.getId());
         setTitle(movie.getOriginalTitle());
         String image = IMAGE_PARAM + movie.getPosterPath();
         Log.v("IMAGE_URL", image);
@@ -126,7 +127,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
                 null,
                 FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP);
 
-        if(cursor!= null) {
+        if (cursor != null) {
             isFavorite = cursor.getCount() == 1;
 
             cursor.close();
@@ -137,7 +138,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         MenuItem item = menu.getItem(0);
-        if(isFavorite) item.setTitle(R.string.remove_frm_favs);
+        if (isFavorite) item.setTitle(R.string.remove_frm_favs);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -145,15 +146,15 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.detail_favorite) {
+        if (id == R.id.detail_favorite) {
 
-            if(isFavorite) {
+            if (isFavorite) {
                 Uri uri = DBUtils.deleteFavorite(movie.getId());
                 getContentResolver().delete(uri, null, null);
-                    Toast.makeText(this, R.string.removed_from_favorites,
-                            Toast.LENGTH_SHORT).show();
-                    item.setTitle(R.string.add_to_favs);
-                    isFavorite = false;
+                Toast.makeText(this, R.string.removed_from_favorites,
+                        Toast.LENGTH_SHORT).show();
+                item.setTitle(R.string.add_to_favs);
+                isFavorite = false;
 
             } else {
                 ContentValues cv = DBUtils.addMovieToFavorite(movie);
@@ -177,46 +178,8 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_BASE_URL + url)));
     }
 
-    @SuppressLint("StaticFieldLeak")
-    public class TrailerReviewTask extends AsyncTask<URL, Void, String[]> {
 
-        @Override
-        protected String[] doInBackground(URL... urls) {
-            URL reviewURl = urls[0];
-            URL trailerURL = urls[1];
-
-            String[] jsonResults = new String[2];
-            jsonResults[0] = NetworkUtils.getResponseFromHttpUrl(reviewURl);
-            jsonResults[1] = NetworkUtils.getResponseFromHttpUrl(trailerURL);
-            return jsonResults;
-
-        }
-
-        @Override
-        protected void onPostExecute(String[] strings) {
-            List<Pair<String,String>> reviews = null;
-            List<Pair<String, String>> trailers = null;
-            try {
-                trailers = JsonUtils.parseTrailers(strings[0]);
-               reviews = JsonUtils.parseReviews(strings[1]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            if(reviews != null && reviews.size() > 0) {
-                movie.setReviews(reviews);
-                displayReviews(movie.getReviews());
-           }
-
-           if(trailers!= null && trailers.size() > 0) {
-               movie.setTrailers(trailers);
-              displayTrailers(movie.getTrailers());
-           }
-
-        }
-    }
-
-    private void displayTrailers(List<Pair<String, String>> trailers) {
+    private void displayTrailers(List<Trailers> trailers) {
         trailersText.setVisibility(View.VISIBLE);
 
         trailersAdapter = new TrailersAdapter(context, this);
@@ -226,9 +189,9 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         trailerRecyclerView.setClickable(true);
     }
 
-    void displayReviews(List<Pair<String, String>> reviews) {
+    void displayReviews(List<Reviews> reviews) {
 
-        if(reviewRecyclerView.getAdapter() == null) {
+        if (reviewRecyclerView.getAdapter() == null) {
 
             //enable visibility of reviews label, and scale height of recyclerview to display items
             reviewsTitle.setVisibility(View.VISIBLE);
@@ -249,11 +212,31 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         }
     }
 
+    Callback<List<Trailers>> movieTrailersCallback = new Callback<List<Trailers>>() {
+        @Override
+        public void onResponse(Call<List<Trailers>> call, Response<List<Trailers>> response) {
+            displayTrailers(response.body());
+            ApiInterface apiInterface = createRetrofitApi();
+            apiInterface.getMovieReviews(movie.getId(), API_KEY).enqueue(movieReviewsCallback);
 
-    private void makeQuery(int id) {
-        URL trailers = NetworkUtils.buildMovieTrailersQuery(id);
-        URL reviews = NetworkUtils.buildMovieReviewsQuery(id);
-        new TrailerReviewTask().execute(trailers, reviews);
-    }
+        }
+
+        @Override
+        public void onFailure(Call<List<Trailers>> call, Throwable t) {
+
+        }
+    };
+
+    Callback<List<Reviews>> movieReviewsCallback = new Callback<List<Reviews>>() {
+        @Override
+        public void onResponse(Call<List<Reviews>> call, Response<List<Reviews>> response) {
+            displayReviews(response.body());
+        }
+
+        @Override
+        public void onFailure(Call<List<Reviews>> call, Throwable t) {
+
+        }
+    };
 
 }
