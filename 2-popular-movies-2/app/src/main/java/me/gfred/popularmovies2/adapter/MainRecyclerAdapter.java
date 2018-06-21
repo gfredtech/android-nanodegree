@@ -37,8 +37,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
 
     public MainRecyclerAdapter(Context mContext, MovieClickListener clickListener) {
-        this.mCursor = null;
-        this.movies = null;
         this.mContext = mContext;
         this.mclickListener = clickListener;
         new FavoriteMoviesDBHelper(mContext).getReadableDatabase();

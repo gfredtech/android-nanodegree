@@ -70,22 +70,24 @@ public class MainActivity extends AppCompatActivity implements
             getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, this);
         } else {
             type = savedInstanceState.getString("state", "POPULAR");
-            popularMovies = savedInstanceState.getParcelable("popular_movies");
-            topRatedMovies = savedInstanceState.getParcelable("toprated_movies");
+            popularMovies = savedInstanceState.getParcelableArrayList("popular_movies");
+            topRatedMovies = savedInstanceState.getParcelableArrayList("toprated_movies");
 
             switch (type) {
                 case "POPULAR":
+                    Log.d("MainActivity", type + " loaded");
                     inflateView(popularMovies);
                     setTitle(R.string.popular_menu);
                     break;
 
                 case "TOP_RATED":
                     inflateView(topRatedMovies);
+                    Log.d("MainActivity", type + " loaded");
                     setTitle(R.string.toprated_menu);
                     break;
 
                 case "FAVORITE":
-                    getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, this);
+                    Log.d("MainActivity", type + " loaded");
                     setTitle(R.string.favorites);
                     break;
             }
@@ -98,12 +100,6 @@ public class MainActivity extends AppCompatActivity implements
         outState.putString("state", type);
         outState.putParcelableArrayList("popular_movies", (ArrayList<? extends Parcelable>) popularMovies);
         outState.putParcelableArrayList("toprated_movies", (ArrayList<? extends Parcelable>) topRatedMovies);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
     }
 
     @Override
@@ -329,7 +325,6 @@ public class MainActivity extends AppCompatActivity implements
 
     void inflateView(Cursor results) {
         cursorAdapter = new MainRecyclerAdapter(this, this);
-
         cursorAdapter.setDataSource(results);
         recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
         recyclerView.setAdapter(cursorAdapter);
