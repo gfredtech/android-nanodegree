@@ -30,9 +30,9 @@ import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.ReviewsAdapter;
 import me.gfred.popularmovies2.adapter.TrailersAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
-import me.gfred.popularmovies2.model.Movie;
-import me.gfred.popularmovies2.model.Reviews;
-import me.gfred.popularmovies2.model.Trailers;
+import me.gfred.popularmovies2.model.MovieResults;
+import me.gfred.popularmovies2.model.ReviewResults;
+import me.gfred.popularmovies2.model.TrailerResults;
 import me.gfred.popularmovies2.utils.ApiInterface;
 import me.gfred.popularmovies2.utils.DBUtils;
 import retrofit2.Call;
@@ -50,7 +50,7 @@ import static me.gfred.popularmovies2.utils.ApiKey.createRetrofitApi;
 public class DetailActivity extends AppCompatActivity implements TrailersAdapter.TrailerClickListener {
     static boolean isFavorite;
 
-    static Movie movie;
+    static MovieResults.Movie movie;
     Context context;
 
     static final String IMAGE_PARAM_LARGE = "http://image.tmdb.org/t/p/w500/";
@@ -107,7 +107,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         context = this;
     }
 
-    void populateUI(Movie movie) {
+    void populateUI(MovieResults.Movie movie) {
 
         setTitle(movie.getOriginalTitle());
         String image = IMAGE_PARAM_LARGE + movie.getPosterPath();
@@ -179,17 +179,17 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     }
 
 
-    private void displayTrailers(List<Trailers> trailers) {
+    private void displayTrailers(List<TrailerResults.Trailers> trailers) {
         trailersText.setVisibility(View.VISIBLE);
 
-        trailersAdapter = new TrailersAdapter(context, this);
+        trailersAdapter = new TrailersAdapter(DetailActivity.this, DetailActivity.this);
         trailersAdapter.setTrailers(trailers);
-        trailerRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+        trailerRecyclerView.setLayoutManager(new GridLayoutManager(DetailActivity.this, 2));
         trailerRecyclerView.setAdapter(trailersAdapter);
         trailerRecyclerView.setClickable(true);
     }
 
-    void displayReviews(List<Reviews> reviews) {
+    void displayReviews(List<ReviewResults.Reviews> reviews) {
 
         if (reviewRecyclerView.getAdapter() == null) {
 
@@ -204,37 +204,37 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
             reviewRecyclerView.setLayoutParams(params);
 
             //load reviews into recyclerview
-            reviewsAdapter = new ReviewsAdapter(context, reviews);
+            reviewsAdapter = new ReviewsAdapter(DetailActivity.this, reviews);
             reviewRecyclerView.setLayoutManager(new LinearLayoutManager(
-                    context, LinearLayoutManager.HORIZONTAL, false));
+                    DetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
             reviewRecyclerView.setAdapter(reviewsAdapter);
             reviewsAdapter.notifyDataSetChanged();
         }
     }
 
-    Callback<List<Trailers>> movieTrailersCallback = new Callback<List<Trailers>>() {
+    Callback<TrailerResults> movieTrailersCallback = new Callback<TrailerResults>() {
         @Override
-        public void onResponse(Call<List<Trailers>> call, Response<List<Trailers>> response) {
-            displayTrailers(response.body());
+        public void onResponse(Call<TrailerResults> call, Response<TrailerResults> response) {
+            displayTrailers(response.body().getResults());
             ApiInterface apiInterface = createRetrofitApi();
             apiInterface.getMovieReviews(movie.getId(), API_KEY).enqueue(movieReviewsCallback);
 
         }
 
         @Override
-        public void onFailure(Call<List<Trailers>> call, Throwable t) {
+        public void onFailure(Call<TrailerResults> call, Throwable t) {
 
         }
     };
 
-    Callback<List<Reviews>> movieReviewsCallback = new Callback<List<Reviews>>() {
+    Callback<ReviewResults> movieReviewsCallback = new Callback<ReviewResults>() {
         @Override
-        public void onResponse(Call<List<Reviews>> call, Response<List<Reviews>> response) {
-            displayReviews(response.body());
+        public void onResponse(Call<ReviewResults> call, Response<ReviewResults> response) {
+            displayReviews(response.body().getResults());
         }
 
         @Override
-        public void onFailure(Call<List<Reviews>> call, Throwable t) {
+        public void onFailure(Call<ReviewResults> call, Throwable t) {
 
         }
     };

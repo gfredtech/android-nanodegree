@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
-import me.gfred.popularmovies2.model.Movie;
+import me.gfred.popularmovies2.model.MovieResults;
 
 import static me.gfred.popularmovies2.utils.ApiKey.IMAGE_PARAM;
 
@@ -29,7 +29,7 @@ import static me.gfred.popularmovies2.utils.ApiKey.IMAGE_PARAM;
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<Movie> movies;
+    private List<MovieResults.Movie> movies;
 
     private Cursor mCursor;
 
@@ -42,7 +42,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         new FavoriteMoviesDBHelper(mContext).getReadableDatabase();
     }
 
-    public void setDataSource(List<Movie> movieList) {
+    public void setDataSource(List<MovieResults.Movie> movieList) {
         this.movies = movieList;
         this.mCursor = null;
         this.notifyDataSetChanged();
@@ -55,8 +55,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public interface MovieClickListener {
-        void onMovieClicked(Movie movie);
-        void onMovieLongClicked(Movie movie);
+        void onMovieClicked(MovieResults.Movie movie);
+
+        void onMovieLongClicked(MovieResults.Movie movie);
     }
 
 
@@ -134,7 +135,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onClick(View v) {
-            Movie movie;
+            MovieResults.Movie movie;
            if(movies!= null) movie = movies.get(getAdapterPosition());
            else {
                mCursor.moveToPosition(getAdapterPosition());
@@ -146,7 +147,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public boolean onLongClick(View v) {
-            Movie movie;
+            MovieResults.Movie movie;
             if(movies!= null) movie = movies.get(getAdapterPosition());
             else {
                 mCursor.moveToPosition(getAdapterPosition());
@@ -158,14 +159,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
-    private Movie cursorClick() {
+    private MovieResults.Movie cursorClick() {
         String name = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE));
         int id = mCursor.getInt(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID));
         String posterpath = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTERPATH));
         String overview = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_OVERVIEW));
         String release = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE));
         double vote = mCursor.getDouble(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_VOTEAVERAGE));
-        return new Movie(name, posterpath, overview, vote, release, id);
+        return new MovieResults.Movie(name, posterpath, overview, vote, release, id);
     }
 
 

@@ -1,7 +1,6 @@
 package me.gfred.popularmovies2.adapter;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -12,16 +11,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.gfred.popularmovies2.R;
-import me.gfred.popularmovies2.model.Reviews;
+import me.gfred.popularmovies2.model.ReviewResults;
 
 
 //adapter for movie reviews
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Reviews> reviews;
+    private List<ReviewResults.Reviews> reviews;
 
-    public ReviewsAdapter(Context context, List<Reviews> reviews) {
+    public ReviewsAdapter(Context context, List<ReviewResults.Reviews> reviews) {
         this.mContext = context;
         this.reviews = reviews;
     }

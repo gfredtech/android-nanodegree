@@ -1,7 +1,6 @@
 package me.gfred.popularmovies2.adapter;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +13,14 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import me.gfred.popularmovies2.R;
-import me.gfred.popularmovies2.model.Trailers;
+import me.gfred.popularmovies2.model.TrailerResults;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyViewHolder> {
     private static final String YOUTUBE_THUMBNAIL_BASE_URL= "http://img.youtube.com/vi/";
     private static final String YOUTUBE_THUMBNAIL_PARAM = "/0.jpg";
 
     private Context mContext;
-    private List<Trailers> mTrailers;
+    private List<TrailerResults.Trailers> mTrailers;
 
     final private TrailerClickListener mTrailerClickListener;
 
@@ -30,7 +29,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
         this.mTrailerClickListener = mTrailerClickListener;
     }
 
-    public void setTrailers(List<Trailers> trailers) {
+    public void setTrailers(List<TrailerResults.Trailers> trailers) {
         this.mTrailers = trailers;
     }
 

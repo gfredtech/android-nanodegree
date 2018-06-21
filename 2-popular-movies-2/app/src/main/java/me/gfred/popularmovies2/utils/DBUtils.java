@@ -4,13 +4,13 @@ import android.content.ContentValues;
 import android.net.Uri;
 
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
-import me.gfred.popularmovies2.model.Movie;
+import me.gfred.popularmovies2.model.MovieResults;
 
 import static me.gfred.popularmovies2.data.FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI;
 
 public class DBUtils {
 
-    public static ContentValues addMovieToFavorite(Movie movie) {
+    public static ContentValues addMovieToFavorite(MovieResults.Movie movie) {
         ContentValues cv = new ContentValues();
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getId());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE, movie.getOriginalTitle());

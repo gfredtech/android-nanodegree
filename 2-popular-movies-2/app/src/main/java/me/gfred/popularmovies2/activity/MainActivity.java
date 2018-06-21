@@ -28,8 +28,7 @@ import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.adapter.MainRecyclerAdapter;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
-import me.gfred.popularmovies2.model.Movie;
-import me.gfred.popularmovies2.model.Results;
+import me.gfred.popularmovies2.model.MovieResults;
 import me.gfred.popularmovies2.utils.ApiInterface;
 import me.gfred.popularmovies2.utils.DBUtils;
 import retrofit2.Call;
@@ -46,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements
     private static final int FAVORITE_LOADER_ID = 0;
     private static String type = "POPULAR";
 
-    static List<Movie> popularMovies;
-    static List<Movie> topRatedMovies;
+    static List<MovieResults.Movie> popularMovies;
+    static List<MovieResults.Movie> topRatedMovies;
     Cursor favoriteMovies;
 
     MainRecyclerAdapter adapter;
@@ -103,14 +102,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMovieClicked(Movie movie) {
+    public void onMovieClicked(MovieResults.Movie movie) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra("movie", movie);
         startActivity(intent);
     }
 
     @Override
-    public void onMovieLongClicked(Movie movie) {
+    public void onMovieLongClicked(MovieResults.Movie movie) {
         AlertDialog dialog = getDialog(movie);
         dialog.show();
     }
@@ -170,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    AlertDialog getDialog(final Movie movie) {
+    AlertDialog getDialog(final MovieResults.Movie movie) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         final Cursor cursor = getContentResolver().query(DBUtils.queryFavorite(movie.getId()),
@@ -277,12 +276,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+        if (cursorAdapter != null) {
+            cursorAdapter.swapCursor(null);
+        }
     }
 
-    Callback<Results> popularMoviesCallback = new Callback<Results>() {
+    Callback<MovieResults> popularMoviesCallback = new Callback<MovieResults>() {
         @Override
-        public void onResponse(Call<Results> call, Response<Results> response) {
+        public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
             popularMovies = response.body().getResults();
             Log.d("MainActivity", "Phase 1");
             Log.d("MainActivity", popularMovies.get(0).getOriginalTitle());
@@ -292,15 +293,15 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onFailure(Call<Results> call, Throwable t) {
+        public void onFailure(Call<MovieResults> call, Throwable t) {
             t.printStackTrace();
         }
     };
 
 
-    Callback<Results> topRatedMoviesCallback = new Callback<Results>() {
+    Callback<MovieResults> topRatedMoviesCallback = new Callback<MovieResults>() {
         @Override
-        public void onResponse(Call<Results> call, Response<Results> response) {
+        public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
             Log.d("MainActivity", "Phase 2");
             topRatedMovies = response.body().getResults();
             inflateView(type.equals("POPULAR") ? popularMovies : topRatedMovies);
@@ -308,12 +309,12 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onFailure(Call<Results> call, Throwable t) {
+        public void onFailure(Call<MovieResults> call, Throwable t) {
             t.printStackTrace();
         }
     };
 
-    void inflateView(List<Movie> results) {
+    void inflateView(List<MovieResults.Movie> results) {
         adapter = new MainRecyclerAdapter(MainActivity.this,
                 MainActivity.this);
 
