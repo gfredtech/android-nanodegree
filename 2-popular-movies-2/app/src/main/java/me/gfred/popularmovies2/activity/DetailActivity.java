@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -82,6 +83,9 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
 
     @BindView(R.id.trailers_text)
     TextView trailersText;
+
+    @BindView(R.id.detail_layout)
+    ConstraintLayout detailLayout;
 
     TrailersAdapter trailersAdapter;
     ReviewsAdapter reviewsAdapter;
@@ -151,8 +155,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
             if (isFavorite) {
                 Uri uri = DBUtils.deleteFavorite(movie.getId());
                 getContentResolver().delete(uri, null, null);
-                Toast.makeText(this, R.string.removed_from_favorites,
-                        Toast.LENGTH_SHORT).show();
+                Snackbar.make(detailLayout, R.string.removed_from_favorites, Snackbar.LENGTH_SHORT).show();
                 item.setTitle(R.string.add_to_favs);
                 isFavorite = false;
 
@@ -161,8 +164,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
                 Uri uri = getContentResolver().insert(CONTENT_URI, cv);
 
                 if (uri != null) {
-                    Toast.makeText(this, R.string.added_to_favorites,
-                            Toast.LENGTH_SHORT).show();
+                    Snackbar.make(detailLayout, R.string.added_to_favorites, Snackbar.LENGTH_SHORT).show();
                     item.setTitle(R.string.remove_frm_favs);
 
                     isFavorite = true;
@@ -223,6 +225,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
 
         @Override
         public void onFailure(Call<TrailerResults> call, Throwable t) {
+            t.printStackTrace();
 
         }
     };
@@ -235,7 +238,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
 
         @Override
         public void onFailure(Call<ReviewResults> call, Throwable t) {
-
+            t.printStackTrace();
         }
     };
 

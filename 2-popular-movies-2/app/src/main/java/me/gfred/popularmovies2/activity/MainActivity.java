@@ -2,12 +2,14 @@ package me.gfred.popularmovies2.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -15,10 +17,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
 
+    @BindView(R.id.main_layout)
+    LinearLayout mainLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             ApiInterface apiInterface = createRetrofitApi();
             apiInterface.getPopularMovies(API_KEY).enqueue(popularMoviesCallback);
-
 
             getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, this);
         } else {
@@ -159,9 +164,10 @@ public class MainActivity extends AppCompatActivity implements
             return true;
 
         } else if (id == R.id.favorite) {
-            inflateView(favoriteMovies);
+            inflateView();
             if (recyclerView.getLayoutManager().getItemCount() == 0)
-                Toast.makeText(this, "You have no favorite movies yet.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(mainLayout, "You have no favorite movies yet.", Snackbar.LENGTH_SHORT).show();
+
             setTitle(R.string.favorites);
             type = "FAVORITE";
             return true;
@@ -191,9 +197,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     getContentResolver().delete(DBUtils.deleteFavorite(movie.getId()), null, null);
                     getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, MainActivity.this);
-                    Toast.makeText(builder.getContext(), "Removed from favorites",
-                            Toast.LENGTH_SHORT).show();
-
+                    Snackbar.make(mainLayout, R.string.removed_from_favorites, Snackbar.LENGTH_SHORT).show();
 
                     dialog.dismiss();
 
@@ -202,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements
                     ContentValues cv = DBUtils.addMovieToFavorite(movie);
                     Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
                     if (uri != null) {
-                        Toast.makeText(builder.getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mainLayout, R.string.added_to_favorites, Snackbar.LENGTH_SHORT).show();
                         getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, MainActivity.this);
                         dialog.dismiss();
                     }
@@ -269,7 +273,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(cursorAdapter != null) {
+        if (cursorAdapter == null) {
+            cursorAdapter = new MainRecyclerAdapter(this, this);
+            cursorAdapter.setDataSource(data);
+        } else {
             cursorAdapter.swapCursor(data);
         }
     }
@@ -285,8 +292,6 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
             popularMovies = response.body().getResults();
-            Log.d("MainActivity", "Phase 1");
-            Log.d("MainActivity", popularMovies.get(0).getOriginalTitle());
             ApiInterface apiInterface = createRetrofitApi();
             apiInterface.getTopRatedMovies(API_KEY).enqueue(topRatedMoviesCallback);
 
@@ -302,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements
     Callback<MovieResults> topRatedMoviesCallback = new Callback<MovieResults>() {
         @Override
         public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
-            Log.d("MainActivity", "Phase 2");
             topRatedMovies = response.body().getResults();
             inflateView(type.equals("POPULAR") ? popularMovies : topRatedMovies);
 
@@ -315,20 +319,26 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     void inflateView(List<MovieResults.Movie> results) {
-        adapter = new MainRecyclerAdapter(MainActivity.this,
-                MainActivity.this);
-
-        Log.d("MainActivity", "Phase 1");
+        adapter = new MainRecyclerAdapter(this,
+                this);
         adapter.setDataSource(results);
-        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, calculateSpanCount(this)));
         recyclerView.setAdapter(adapter);
     }
 
-    void inflateView(Cursor results) {
-        cursorAdapter = new MainRecyclerAdapter(this, this);
-        cursorAdapter.setDataSource(results);
-        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+    void inflateView() {
+        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, calculateSpanCount(this)));
         recyclerView.setAdapter(cursorAdapter);
 
+    }
+
+    public static int calculateSpanCount(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if (noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
     }
 }

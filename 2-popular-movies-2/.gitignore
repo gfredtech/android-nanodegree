@@ -6,3 +6,4 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/java/me/gfred/popularmovies2/utils/ApiKey.java
