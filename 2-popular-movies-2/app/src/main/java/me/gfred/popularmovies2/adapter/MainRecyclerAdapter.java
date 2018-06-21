@@ -11,47 +11,53 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.gfred.popularmovies2.R;
 import me.gfred.popularmovies2.data.FavoriteMoviesContract;
 import me.gfred.popularmovies2.data.FavoriteMoviesDBHelper;
 import me.gfred.popularmovies2.model.Movie;
-import me.gfred.popularmovies2.model.Results;
+
+import static me.gfred.popularmovies2.utils.ApiKey.IMAGE_PARAM;
 
 /**
  * Created by Gfred on 2/27/2018.
  */
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.MyViewHolder> {
-    private static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w185/";
+
     private Context mContext;
-    private Results movies;
+    private List<Movie> movies;
 
     private Cursor mCursor;
 
     final private MovieClickListener mclickListener;
 
-    public void setDataSource(Cursor cursor) {
-        this.mCursor = cursor;
+
+    public MainRecyclerAdapter(Context mContext, MovieClickListener clickListener) {
+        this.mCursor = null;
         this.movies = null;
+        this.mContext = mContext;
+        this.mclickListener = clickListener;
         new FavoriteMoviesDBHelper(mContext).getReadableDatabase();
     }
 
-    public void setDataSource(Results movies) {
-        this.movies = movies;
+    public void setDataSource(List<Movie> movieList) {
+        this.movies = movieList;
         this.mCursor = null;
+        this.notifyDataSetChanged();
     }
 
-
-    public MainRecyclerAdapter(Context mContext, MovieClickListener clickListener) {
-        this.mContext = mContext;
-        this.mclickListener = clickListener;
+    public void setDataSource(Cursor results) {
+        this.mCursor = results;
+        this.movies = null;
+        this.notifyDataSetChanged();
     }
 
     public interface MovieClickListener {
         void onMovieClicked(Movie movie);
-
         void onMovieLongClicked(Movie movie);
     }
 
@@ -66,17 +72,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        if (movies != null) {
+        if(movies != null) {
 
-            holder.mMovieTitle.setText(movies.getResults().get(position).getOriginalTitle());
-            String image = IMAGE_PARAM + movies.getResults().get(position).getPosterPath();
+            holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
+            String image = IMAGE_PARAM + movies.get(position).getPosterPath();
             Picasso.with(mContext)
                     .load(image)
                     .into(holder.mMovieImage);
 
-        } else if (mCursor != null) {
+        } else if(mCursor != null) {
 
-            if (!mCursor.moveToPosition(position)) return;
+            if(!mCursor.moveToPosition(position)) return;
 
             String name = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TITLE));
             holder.mMovieTitle.setText(name);
@@ -91,32 +97,38 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
 
+
     @Override
     public int getItemCount() {
-        if (movies != null) return movies.getResults().size();
-        else if (mCursor != null) return mCursor.getCount();
+        if(movies != null) return movies.size();
+        else if(mCursor!= null) return mCursor.getCount();
         return -1;
     }
 
     public void swapCursor(Cursor cursor) {
 
-        if (mCursor != null) mCursor.close();
+        if(mCursor != null) {
+            mCursor.close();
+        }
 
         mCursor = cursor;
 
-        if (cursor != null) this.notifyDataSetChanged();
+        if(cursor != null) {
+            this.notifyDataSetChanged();
+        }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
+        @BindView(R.id.movie_title)
         TextView mMovieTitle;
 
+        @BindView(R.id.movie_image)
         ImageView mMovieImage;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            mMovieTitle = itemView.findViewById(R.id.movie_title);
-            mMovieImage = itemView.findViewById(R.id.movie_image);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
 
@@ -125,12 +137,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public void onClick(View v) {
             Movie movie;
-            if (movies != null) {
-                movie = movies.getResults().get(getAdapterPosition());
-            } else {
-                mCursor.moveToPosition(getAdapterPosition());
-                movie = cursorClick();
-            }
+           if(movies!= null) movie = movies.get(getAdapterPosition());
+           else {
+               mCursor.moveToPosition(getAdapterPosition());
+               movie = cursorClick();
+           }
 
             mclickListener.onMovieClicked(movie);
         }
@@ -138,9 +149,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public boolean onLongClick(View v) {
             Movie movie;
-            if (movies != null) {
-                movie = movies.getResults().get(getAdapterPosition());
-            } else {
+            if(movies!= null) movie = movies.get(getAdapterPosition());
+            else {
                 mCursor.moveToPosition(getAdapterPosition());
                 movie = cursorClick();
             }

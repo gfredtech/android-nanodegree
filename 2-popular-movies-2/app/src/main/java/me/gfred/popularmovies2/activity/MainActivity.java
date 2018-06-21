@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -18,6 +19,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,11 +46,12 @@ public class MainActivity extends AppCompatActivity implements
     private static final int FAVORITE_LOADER_ID = 0;
     private static String type = "POPULAR";
 
-    static Results popularMovies;
-    static Results topRatedMovies;
+    static List<Movie> popularMovies;
+    static List<Movie> topRatedMovies;
     Cursor favoriteMovies;
 
     MainRecyclerAdapter adapter;
+    MainRecyclerAdapter cursorAdapter;
 
     @BindView(R.id.movie_recyclerview)
     RecyclerView recyclerView;
@@ -57,18 +62,16 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        recyclerView = new RecyclerView(this);
-        adapter = new MainRecyclerAdapter(MainActivity.this,
-                MainActivity.this);
-
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             ApiInterface apiInterface = createRetrofitApi();
             apiInterface.getPopularMovies(API_KEY).enqueue(popularMoviesCallback);
+
+
+            getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, this);
         } else {
             type = savedInstanceState.getString("state", "POPULAR");
             popularMovies = savedInstanceState.getParcelable("popular_movies");
             topRatedMovies = savedInstanceState.getParcelable("toprated_movies");
-            favoriteMovies = savedInstanceState.getParcelable("favorite_movies");
 
             switch (type) {
                 case "POPULAR":
@@ -82,22 +85,25 @@ public class MainActivity extends AppCompatActivity implements
                     break;
 
                 case "FAVORITE":
-                    inflateView(favoriteMovies);
+                    getSupportLoaderManager().restartLoader(FAVORITE_LOADER_ID, null, this);
                     setTitle(R.string.favorites);
                     break;
             }
-
         }
-
-        getSupportLoaderManager().initLoader(FAVORITE_LOADER_ID, null, this);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("state", type);
-        outState.putParcelable("popular_movies", popularMovies);
-        outState.putParcelable("toprated_movies", topRatedMovies);
+        outState.putParcelableArrayList("popular_movies", (ArrayList<? extends Parcelable>) popularMovies);
+        outState.putParcelableArrayList("toprated_movies", (ArrayList<? extends Parcelable>) topRatedMovies);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
     }
 
     @Override
@@ -268,19 +274,22 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-       adapter.swapCursor(data);
+        if(cursorAdapter != null) {
+            cursorAdapter.swapCursor(data);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        cursorAdapter.swapCursor(null);
     }
 
     Callback<Results> popularMoviesCallback = new Callback<Results>() {
         @Override
         public void onResponse(Call<Results> call, Response<Results> response) {
-            popularMovies = response.body();
+            popularMovies = response.body().getResults();
             Log.d("MainActivity", "Phase 1");
+            Log.d("MainActivity", popularMovies.get(0).getOriginalTitle());
             ApiInterface apiInterface = createRetrofitApi();
             apiInterface.getTopRatedMovies(API_KEY).enqueue(topRatedMoviesCallback);
 
@@ -297,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onResponse(Call<Results> call, Response<Results> response) {
             Log.d("MainActivity", "Phase 2");
-            topRatedMovies = response.body();
+            topRatedMovies = response.body().getResults();
             inflateView(type.equals("POPULAR") ? popularMovies : topRatedMovies);
 
         }
@@ -308,7 +317,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     };
 
-    void inflateView(Results results) {
+    void inflateView(List<Movie> results) {
+        adapter = new MainRecyclerAdapter(MainActivity.this,
+                MainActivity.this);
+
         Log.d("MainActivity", "Phase 1");
         adapter.setDataSource(results);
         recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
@@ -316,8 +328,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     void inflateView(Cursor results) {
-        adapter.setDataSource(results);
+        cursorAdapter = new MainRecyclerAdapter(this, this);
+
+        cursorAdapter.setDataSource(results);
         recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(cursorAdapter);
+
     }
 }

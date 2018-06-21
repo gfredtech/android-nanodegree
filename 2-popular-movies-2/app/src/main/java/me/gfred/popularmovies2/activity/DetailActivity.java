@@ -53,7 +53,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     static Movie movie;
     Context context;
 
-    static final String IMAGE_PARAM = "http://image.tmdb.org/t/p/w500/";
+    static final String IMAGE_PARAM_LARGE = "http://image.tmdb.org/t/p/w500/";
     static final String YOUTUBE_BASE_URL = "http://www.youtube.com/watch?v=";
 
     @BindView(R.id.image_iv)
@@ -110,7 +110,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
     void populateUI(Movie movie) {
 
         setTitle(movie.getOriginalTitle());
-        String image = IMAGE_PARAM + movie.getPosterPath();
+        String image = IMAGE_PARAM_LARGE + movie.getPosterPath();
         Log.v("IMAGE_URL", image);
 
         Picasso.with(DetailActivity.this)

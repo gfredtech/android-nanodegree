@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.gfred.popularmovies2">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
@@ -14,7 +14,7 @@
         android:supportsRtl="true">
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/AppTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,19 +23,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.DetailActivity"
+        <activity
+            android:name=".activity.DetailActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.gfred.popularmovies2.activity.MainActivity" />
         </activity>
-        
-        <provider
-            android:authorities="me.gfred.popularmovies2"
-            android:exported="false"
-            android:name="me.gfred.popularmovies2.data.FavoriteMoviesContentProvider"/>
-    </application>
 
+        <provider
+            android:name="me.gfred.popularmovies2.data.FavoriteMoviesContentProvider"
+            android:authorities="me.gfred.popularmovies2"
+            android:exported="false" />
+    </application>
 
 
 </manifest>
