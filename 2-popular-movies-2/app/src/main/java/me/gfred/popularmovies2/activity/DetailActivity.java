@@ -117,8 +117,7 @@ public class DetailActivity extends AppCompatActivity implements TrailersAdapter
         String image = IMAGE_PARAM_LARGE + movie.getPosterPath();
         Log.v("IMAGE_URL", image);
 
-        Picasso.with(DetailActivity.this)
-                .load(image).into(imageView);
+        Picasso.get().load(image).into(imageView);
 
         title.setText(movie.getOriginalTitle());
         overview.setText(movie.getOverview());

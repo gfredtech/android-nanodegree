@@ -75,9 +75,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             holder.mMovieTitle.setText(movies.get(position).getOriginalTitle());
             String image = IMAGE_PARAM + movies.get(position).getPosterPath();
-            Picasso.with(mContext)
-                    .load(image)
-                    .into(holder.mMovieImage);
+            Picasso.get().load(image).into(holder.mMovieImage);
 
         } else if(mCursor != null) {
 
@@ -87,9 +85,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.mMovieTitle.setText(name);
             String image = IMAGE_PARAM + mCursor.getString
                     (mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTERPATH));
-            Picasso.with(mContext)
-                    .load(image)
-                    .into(holder.mMovieImage);
+            Picasso.get().load(image).into(holder.mMovieImage);
         }
 
 

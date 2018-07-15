@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements
 
     static List<MovieResults.Movie> popularMovies;
     static List<MovieResults.Movie> topRatedMovies;
-    Cursor favoriteMovies;
 
     MainRecyclerAdapter adapter;
     MainRecyclerAdapter cursorAdapter;

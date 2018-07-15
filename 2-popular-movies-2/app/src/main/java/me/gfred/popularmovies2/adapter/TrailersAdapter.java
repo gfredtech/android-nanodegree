@@ -52,9 +52,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.MyView
         String title = mTrailers.get(position).getName();
         String imageURL = YOUTUBE_THUMBNAIL_BASE_URL + mTrailers.get(position).getKey() + YOUTUBE_THUMBNAIL_PARAM;
         holder.trailerTextView.setText(title);
-        Picasso.with(mContext)
-                .load(imageURL)
-                .into(holder.trailerThumbnail);
+        Picasso.get().load(imageURL).into(holder.trailerThumbnail);
 
     }
 
