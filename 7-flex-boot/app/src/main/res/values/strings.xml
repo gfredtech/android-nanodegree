@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Flex Boot</string>
+    <string name="steps_description">Number of steps since reboot:</string>
 </resources>
